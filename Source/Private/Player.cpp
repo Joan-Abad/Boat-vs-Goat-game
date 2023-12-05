@@ -4,18 +4,28 @@
 #include "NetworkingManager.h"
 #include "NetworkingManagerClient.h"
 
-Player::Player(sf::Window& window) : playerLifes(3)
+Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath) : playerLifes(3)
 {
 	this->window = &window;
 
-	action_Space.SetKey(sf::Keyboard::Key::Space);
-	auto address = &Player::PrintPressed;
-	action_Space.OnKeyTriggered = BindAction(&Player::PrintPressed, this);
-	action_Space.OnKeyOnGoing = BindAction(&Player::PrintRndomMessage, this);
-	action_Space.OnKeyReleased = BindAction(&Player::PrintReleased, this);
+	//Player Input Actions
+	this->IsPlayerPlayable = PlayerPlayable;
+	if (PlayerPlayable)
+	{
+		action_Space.SetKey(sf::Keyboard::Key::Space);
+		auto address = &Player::PrintPressed;
+		action_Space.OnKeyTriggered = BindAction(&Player::PrintPressed, this);
+		action_Space.OnKeyOnGoing = BindAction(&Player::PrintRndomMessage, this);
+		action_Space.OnKeyReleased = BindAction(&Player::PrintReleased, this);
 
-	action_P.SetKey(sf::Keyboard::Key::P);
-	action_P.OnKeyTriggered = BindAction(&Player::SendTestPacket, this);
+		action_P.SetKey(sf::Keyboard::Key::P);
+		action_P.OnKeyTriggered = BindAction(&Player::SendTestPacket, this);
+	}
+
+	if (!playerTexture.loadFromFile(texturePath))
+		std::cerr << "BackgroundPath error\n";
+
+	playerSprite.setTexture(playerTexture);
 }
 
 void Player::HandlePlayerInput(float DeltaSeconds)
@@ -58,6 +68,21 @@ void Player::CheckKeyPressed(InputAction& inputAction)
 		}
 		inputAction.SetIsKeyPressed(false);
 	}
+}
+
+void Player::Draw(sf::RenderWindow& window)
+{
+	window.draw(playerSprite);
+}
+
+void Player::SetPosition(sf::Vector2f newPosition)
+{
+	playerSprite.setPosition(newPosition);
+}
+
+void Player::SetRotation(float angle)
+{
+	playerSprite.setRotation(angle);
 }
 
 void Player::PrintPressed()

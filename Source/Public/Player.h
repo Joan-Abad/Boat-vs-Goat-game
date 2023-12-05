@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 
+#define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
+#define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
+
 class InputAction
 {
 	//On Key Pressed fnc
@@ -41,11 +44,16 @@ class Player
 {
 
 public:
-	Player(sf::Window & window);
+	Player(sf::Window & window, bool PlayerPlayable, const char* texturePath);
 
 	void HandlePlayerInput(float DeltaSeconds);
 
 	void CheckKeyPressed(InputAction& inputAction);
+
+	void Draw(sf::RenderWindow& window);
+
+	void SetPosition(sf::Vector2f newPosition);
+	void SetRotation(float angle);
 private: 
 	void PrintPressed();
 	void PrintRndomMessage();
@@ -60,6 +68,9 @@ private:
 	
 	InputAction action_Space;
 	InputAction action_P;
+
+	//Check if this player should handle input by this process
+	bool IsPlayerPlayable;
 
 	//The total life of the player
 	int playerLifes;  

@@ -18,9 +18,13 @@ void Window::Update()
 	Draw();
 }
 
-void Window::Draw()
+void Window::ClearWindow()
 {
 	m_window->clear();
+}
+
+void Window::Draw()
+{
 	m_window->display();
 }
 

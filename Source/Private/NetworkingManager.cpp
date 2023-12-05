@@ -40,7 +40,7 @@ void NetworkingManager::ListenIncomingPackages()
 		std::string message;
 		packet >> message;
 
-		std::cout << "Received message from " << clientAddress << ":" << clientPort << ": " << message << std::endl;
+   		std::cout << "Received message from " << clientAddress << ":" << clientPort << ": " << message << std::endl;
 	}
 }
 

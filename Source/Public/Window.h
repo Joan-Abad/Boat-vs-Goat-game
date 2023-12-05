@@ -10,6 +10,9 @@ public:
 	//Code that gets executed each tick 
 	void Update();
 
+	//Clears the previous graphs
+	void ClearWindow();
+
 	//Draws the content of the window
 	void Draw();
 
