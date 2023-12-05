@@ -4,7 +4,8 @@
 #include "NetworkingManager.h"
 #include "NetworkingManagerClient.h"
 
-Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath) : playerLifes(3)
+Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath) : 
+	playerLifes(3), boatAcceleration({0.f,0.f})
 {
 	this->window = &window;
 
@@ -12,14 +13,20 @@ Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath)
 	this->IsPlayerPlayable = PlayerPlayable;
 	if (PlayerPlayable)
 	{
+		//Test space
 		action_Space.SetKey(sf::Keyboard::Key::Space);
 		auto address = &Player::PrintPressed;
 		action_Space.OnKeyTriggered = BindAction(&Player::PrintPressed, this);
 		action_Space.OnKeyOnGoing = BindAction(&Player::PrintRndomMessage, this);
 		action_Space.OnKeyReleased = BindAction(&Player::PrintReleased, this);
 
+		//Test networking
 		action_P.SetKey(sf::Keyboard::Key::P);
 		action_P.OnKeyTriggered = BindAction(&Player::SendTestPacket, this);
+
+		//Boat actions
+		action_W.SetKey(sf::Keyboard::Key::W);
+		action_W.OnKeyOnGoing = BindAction(&Player::AccelerateBoat, this);
 	}
 
 	if (!playerTexture.loadFromFile(texturePath))
@@ -28,7 +35,7 @@ Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath)
 	playerSprite.setTexture(playerTexture);
 }
 
-void Player::HandlePlayerInput(float DeltaSeconds)
+void Player::HandlePlayerInput()
 {
 	sf::Event inputEvent;
 	while (window->pollEvent(inputEvent))
@@ -39,6 +46,7 @@ void Player::HandlePlayerInput(float DeltaSeconds)
 	
 	CheckKeyPressed(action_Space);
 	CheckKeyPressed(action_P);
+	CheckKeyPressed(action_W);
 }
 
 void Player::CheckKeyPressed(InputAction& inputAction)
@@ -103,6 +111,15 @@ void Player::SendTestPacket()
 
 	NetworkingManager* netManager = &NetworkingManager::GetNetworkingManager<NetworkingManagerClient>();
 	netManager->AddPacketToSend(packet);
+}
+
+void Player::AccelerateBoat()
+{
+	std::cout << "Accelerating Boat\n";
+}
+
+void Player::DecelerateBoat()
+{
 }
 
 void Player::PrintRndomMessage()

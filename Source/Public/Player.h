@@ -46,7 +46,7 @@ class Player
 public:
 	Player(sf::Window & window, bool PlayerPlayable, const char* texturePath);
 
-	void HandlePlayerInput(float DeltaSeconds);
+	void HandlePlayerInput();
 
 	void CheckKeyPressed(InputAction& inputAction);
 
@@ -60,6 +60,11 @@ private:
 	void PrintReleased();
 	void SendTestPacket();
 
+	void AccelerateBoat();
+	void DecelerateBoat();
+	
+	sf::Vector2f boatAcceleration;
+
 	template<typename FncAdd, typename FncObject>
 	auto BindAction(FncAdd FunctionAddress, FncObject ObjectOwningFunction)
 	{
@@ -68,6 +73,7 @@ private:
 	
 	InputAction action_Space;
 	InputAction action_P;
+	InputAction action_W;
 
 	//Check if this player should handle input by this process
 	bool IsPlayerPlayable;

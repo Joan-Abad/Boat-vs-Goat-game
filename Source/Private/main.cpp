@@ -5,6 +5,8 @@
 #include "NetworkingManagerClient.h"
 #include "NetworkingManagerServer.h"
 #include "Map.h"
+#include <iostream>
+#include "ApplicationHelper.h"
 
 #define SCREEN_WIDTH 1920.f
 #define SCREEN_HEIGHT 1080.f
@@ -25,6 +27,7 @@ int main()
 {
     TypePlayer typePlayer;
     bool bCanPlayPlayer1, bCanPlayPlayer2;
+
 #if _SERVER
     typePlayer = TypePlayer::Server;
     bCanPlayPlayer1 = true;
@@ -47,25 +50,29 @@ int main()
     if (!window)
         return -1; 
 
-    Player player(window->GetWindow(), bCanPlayPlayer1, PLAYER1TEXTPATH);
-    player.SetPosition({ SCREEN_WIDTH / 8.f , SCREEN_HEIGHT / 2.5f});
-    player.SetRotation(-90.f);
-    Player player2(window->GetWindow(), bCanPlayPlayer2, PLAYER2TEXTPATH);
-    player2.SetPosition({ SCREEN_WIDTH * 0.8f , SCREEN_HEIGHT / 2.5f });
-    player2.SetRotation(90.f);
+    window->GetWindow().setFramerateLimit(60);
+    Player* player1 = new Player(window->GetWindow(), bCanPlayPlayer1, PLAYER1TEXTPATH);
+    Player* player2 = new Player(window->GetWindow(), bCanPlayPlayer2, PLAYER2TEXTPATH);
+    player1->SetPosition({ SCREEN_WIDTH / 8.f , SCREEN_HEIGHT / 2.5f});
+    player1->SetRotation(-90.f);
+    player2->SetPosition({ SCREEN_WIDTH * 0.8f , SCREEN_HEIGHT / 2.5f });
+    player2->SetRotation(90.f);
 
     while (bIsGameOpened)
     {
+        ApplicationHelper::SetDeltaTime();
+
         //Recieve networking info
         networkingManager->ListenIncomingPackages();
 
         //TODO: Change. Not the best way but will do for now
 #if _SERVER
         //Input
-        player.HandlePlayerInput(0.f);
+        player1->HandlePlayerInput();
 #elif _CLIENT
-        player2.HandlePlayerInput(0.f);
+        player2->HandlePlayerInput();
 #endif
+        
 
         //Send networking packages
         networkingManager->SendPackages();
@@ -73,8 +80,8 @@ int main()
         //Drawing
         window->ClearWindow();
         DrawGame(window->GetWindow());
-        player.Draw(window->GetWindow());
-        player2.Draw(window->GetWindow());
+        player1->Draw(window->GetWindow());
+        player2->Draw(window->GetWindow());
         window->Draw();
     }
 
