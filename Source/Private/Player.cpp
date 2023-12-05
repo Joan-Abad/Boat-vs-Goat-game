@@ -59,9 +59,6 @@ Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath)
 	}
 
 	forwardVector = sf::Vector2f(0.f, 1.0f);
-	forwardVector = ApplicationHelper::rotateVector(forwardVector, -90);
-
-
 
 	if (!playerTexture.loadFromFile(texturePath))
 		std::cerr << "BackgroundPath error\n";
@@ -136,6 +133,7 @@ void Player::SetPosition(sf::Vector2f newPosition)
 
 void Player::SetRotation(float angle)
 {
+	forwardVector = ApplicationHelper::rotateVector(sf::Vector2f(0.0f, 1.0f), angle);
 	playerSprite.setRotation(angle);
 }
 
@@ -188,7 +186,6 @@ void Player::RotateBoatLeft()
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
 	SetRotation(newAngleRotation);
-	forwardVector = ApplicationHelper::rotateVector(forwardVector, tickRotation);
 }
 
 void Player::RotateBoatRight()
@@ -197,8 +194,6 @@ void Player::RotateBoatRight()
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
 	SetRotation(newAngleRotation );
-	forwardVector = ApplicationHelper::rotateVector(forwardVector, tickRotation);
-
 }
 
 void Player::PrintRndomMessage()
