@@ -52,6 +52,7 @@ public:
 
 	void Draw(sf::RenderWindow& window);
 
+	float GetRotation();
 	void SetPosition(sf::Vector2f newPosition);
 	void SetRotation(float angle);
 private: 
@@ -62,8 +63,16 @@ private:
 
 	void AccelerateBoat();
 	void DecelerateBoat();
+	void RotateBoatLeft();
+	void RotateBoatRight();
+
+	sf::Vector2f forwardVector; 
+	sf::Vector2f rightVector; 
 	
 	sf::Vector2f boatAcceleration;
+
+	float speed; 
+	float angleBoatSpeedEachSecond; 
 
 	template<typename FncAdd, typename FncObject>
 	auto BindAction(FncAdd FunctionAddress, FncObject ObjectOwningFunction)
@@ -74,6 +83,9 @@ private:
 	InputAction action_Space;
 	InputAction action_P;
 	InputAction action_W;
+	InputAction action_S;
+	InputAction action_RotateLeft;
+	InputAction action_RotateRight;
 
 	//Check if this player should handle input by this process
 	bool IsPlayerPlayable;
