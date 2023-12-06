@@ -21,13 +21,13 @@
     <ClCompile Include="Source\Private\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\NetworkingManager.cpp">
+    <ClCompile Include="Source\Private\Networking\NetworkingManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\NetWorkingManagerClient.cpp">
+    <ClCompile Include="Source\Private\Networking\NetWorkingManagerClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\NetworkingManagerServer.cpp">
+    <ClCompile Include="Source\Private\Networking\NetworkingManagerServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Player.cpp">
@@ -45,18 +45,27 @@
     <ClCompile Include="Source\Private\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Private\Input\PlayerController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Input\BoatController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Public\Input\BoatController.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\NetworkingManager.h">
+    <ClInclude Include="Source\Public\Networking\NetworkingManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\NetworkingManagerClient.h">
+    <ClInclude Include="Source\Public\Networking\NetworkingManagerClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\NetworkingManagerServer.h">
+    <ClInclude Include="Source\Public\Networking\NetworkingManagerServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Player.h">
@@ -72,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\GameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Input\PlayerController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

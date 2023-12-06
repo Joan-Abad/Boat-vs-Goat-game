@@ -1,6 +1,8 @@
 #include "AppManager.h"
 #include <iostream>
-#include "NetworkingManager.h"
+#include "Networking/NetworkingManager.h"
+#include "Networking/NetworkingManagerServer.h"
+#include "Networking/NetworkingManagerClient.h"
 #include "Map.h"
 #include "Window.h"
 #include "GameManager.h"
