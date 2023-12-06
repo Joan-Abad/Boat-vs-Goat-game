@@ -1,15 +1,21 @@
 #include "GameManager.h"
 #include <iostream>
 #include "NetworkingManager.h"
+#include "Map.h"
+#include "Window.h"
+
+GameManager* GameManager::instance = nullptr;
+
 
 GameManager::GameManager() : playerType(EPlayerType::ENotAssigned)
 {
+	currentGameMap = new Map("Art/Background/Water.jpg");
 }
 
 void GameManager::InitGame()
 {
 	std::cout << "Welcome to boat vs goat! A game where you have to destoy the other boats to turn into the real goat\n";
-	std::cout << "Do you want to be the server or the client? 0 for server and 1 client\n";
+	std::cout << "Do you want to be the server +or the client? 0 for server and 1 client\n";
 
 	//Assign server or client
 	while(playerType == EPlayerType::ENotAssigned)
@@ -76,10 +82,20 @@ void GameManager::Update()
 	while (!bCloseGame)
 	{
 		NetworkManager->UpdateNetworkData();
+
+		if(bDrawGame)
+			currentGameMap->DrawWap(*window);
 	}
 }
 
 void GameManager::CloseGame()
 {
+
+}
+
+void GameManager::SetStartGame(bool bDrawGame)
+{
+	this->bDrawGame = bDrawGame;
+	window = new Window(WINDOW_NAME, WINDOW_SIZE);
 
 }

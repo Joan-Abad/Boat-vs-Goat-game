@@ -205,12 +205,10 @@
     <ClCompile Include="Source\Private\NetWorkingManagerClient.cpp" />
     <ClCompile Include="Source\Private\NetworkingManagerServer.cpp" />
     <ClCompile Include="Source\Private\Window.cpp" />
-    <ClCompile Include="Source\Private\Controller.cpp" />
     <ClCompile Include="Source\Private\ApplicationHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
-    <ClInclude Include="Source\Public\Controller.h" />
     <ClInclude Include="Source\Public\GameManager.h" />
     <ClInclude Include="Source\Public\Map.h" />
     <ClInclude Include="Source\Public\NetworkingManager.h" />

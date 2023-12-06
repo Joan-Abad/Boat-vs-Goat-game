@@ -1,5 +1,6 @@
 #include "Map.h"
 #include <iostream>
+#include "Window.h"
 
 Map::Map(const char* backgroundPath)
 {
@@ -9,7 +10,7 @@ Map::Map(const char* backgroundPath)
 	backgroundSprite.setTexture(texture);
 }
 
-void Map::DrawWap(sf::RenderWindow& window)
+void Map::DrawWap(Window& window)
 {
-	window.draw(backgroundSprite);
+	window.GetWindow().draw(backgroundSprite);
 }
