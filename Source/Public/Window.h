@@ -14,7 +14,7 @@ public:
 	void ClearWindow();
 
 	//Draws the content of the window
-	void Draw();
+	void Display();
 
 	//Handles all the input used when the window is active
 	void HandleInput();

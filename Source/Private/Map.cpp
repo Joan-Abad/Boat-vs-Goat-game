@@ -12,5 +12,7 @@ Map::Map(const char* backgroundPath)
 
 void Map::DrawWap(Window& window)
 {
+	window.ClearWindow();
 	window.GetWindow().draw(backgroundSprite);
+	window.Display();
 }

@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <json.h>
 #include "GameManager.h"
+#include "AppManager.h"
 
 #define LAN 1
 
@@ -198,7 +199,7 @@ private:
 			sf::Socket::Status status = udpSocket.send(packet_StartTheGame, player.second.ipAddress, player.second.port);
 		}
 		serverManagementData = EServerManagementData::EPlayMatch;
-		GameManager::GetGameManager()->SetStartGame(true);
+		GameManager::GetGameManager()->InitGame();
 	}
 
 	//This array holds the info to recieve and send information of the players
@@ -315,7 +316,7 @@ private:
 				if (bStartMatch)
 				{
 					clientManagementData = EClientManagementData::EPlayMatch;
-					GameManager::GetGameManager()->SetStartGame(true);
+					GameManager::GetGameManager()->InitGame();
 				}
 				else
 					std::cout << "Data not correct\n";

@@ -1,18 +1,8 @@
-#include "Window.h"
-#include "SFML/Network.hpp"
-#include "Player.h"
-#include "NetworkingManager.h"
-#include "NetworkingManagerClient.h"
-#include "NetworkingManagerServer.h"
-#include "Map.h"
-#include <iostream>
-#include "ApplicationHelper.h"
-#include <json.h>
-#include "GameManager.h"
+#include "AppManager.h"
 
 int main()
 {
-    GameManager* gameManager = GameManager::GetGameManager();
+    AppManager* gameManager = AppManager::GetAppManager();
 
     gameManager->InitGame();
     gameManager->Update();

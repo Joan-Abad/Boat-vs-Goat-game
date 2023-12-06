@@ -15,7 +15,7 @@ Window::~Window()
 
 void Window::Update()
 {
-	Draw();
+	Display();
 }
 
 void Window::ClearWindow()
@@ -23,7 +23,7 @@ void Window::ClearWindow()
 	m_window->clear();
 }
 
-void Window::Draw()
+void Window::Display()
 {
 	m_window->display();
 }

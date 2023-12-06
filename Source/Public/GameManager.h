@@ -1,30 +1,17 @@
 #pragma once
-#include <iostream>
-#include <SFML/Graphics.hpp>
+#include <vector>
+#include <unordered_map>
+#include <string>
 
-class NetworkingManager; 
 class Map; 
 class Window; 
-
 
 #define WINDOW_NAME "BOAT VS GOAT"
 #define WINDOW_SIZE sf::Vector2f(720,480)
 
-#if _DEBUG
-#define FORCE_SERVER_IP 0
-#define SERVER_IP "192.168.0.15"
-#endif
-
-enum class EPlayerType
-{
-	EServer,
-	EClient,
-	ENotAssigned
-};
-
 class GameManager
 {
-public: 
+public:
 	static GameManager* GetGameManager()
 	{
 		if (!instance)
@@ -33,30 +20,26 @@ public:
 		return instance; 
 	}
 
-	//Init the application asking the player if wants to be the server or client
+	~GameManager();
+	
 	void InitGame();
 	void Update();
-	void CloseGame();
-	
-	void SetStartGame(bool bDrawGame);
+	void AddGameMap(const std::string& mapName, Map* map);
+	Map* GetMap(std::string MapName);
 private: 
 	GameManager();
 
-	//Handles all network data that needs to be processed by the application
-	NetworkingManager* NetworkManager; 
-
-	//Stores if the player is server or client
-	EPlayerType playerType; 
-
-	//Handles the lifetime of the applcation
-	bool bCloseGame = false; 
-
-	bool bDrawGame = false; 
+	//string = name of the map
+	//Map = current game map
+	std::unordered_map<std::string, Map*> gameMaps;
 
 	//The current Map displayed on the window
-	Map* currentGameMap; 
+	Map* currentGameMap;
 
-	Window* window; 
+	//Window of the game
+	Window* window;
+
+	const std::string LakeMap = "Lake";
 
 	static GameManager* instance; 
 };
