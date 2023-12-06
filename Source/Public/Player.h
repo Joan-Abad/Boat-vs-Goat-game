@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <functional>
+#include <json.h>
 
 #define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
 #define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
@@ -53,6 +54,7 @@ public:
 	void Draw(sf::RenderWindow& window);
 
 	float GetRotation();
+	void Update();
 	void SetPosition(sf::Vector2f newPosition);
 	void SetRotation(float angle);
 private: 
@@ -65,6 +67,7 @@ private:
 	void DecelerateBoat();
 	void RotateBoatLeft();
 	void RotateBoatRight();
+	void UpdaetPlayerInfo(const std::string& NetworkData);
 
 	sf::Vector2f forwardVector; 
 	sf::Vector2f rightVector; 
@@ -73,6 +76,8 @@ private:
 
 	float speed; 
 	float angleBoatSpeedEachSecond; 
+
+	Json::Value root; 
 
 	template<typename FncAdd, typename FncObject>
 	auto BindAction(FncAdd FunctionAddress, FncObject ObjectOwningFunction)

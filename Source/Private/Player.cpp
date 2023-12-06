@@ -2,8 +2,11 @@
 #include <iostream>
 #include <SFML/Network.hpp>
 #include "NetworkingManager.h"
+#include "NetworkingManagerServer.h"
 #include "NetworkingManagerClient.h"
 #include "ApplicationHelper.h"
+#include <json.h>
+#include <vector>
 
 sf::Vector2f calculateForwardVectorDegrees(float angleDegrees) {
 	float angleRadians = angleDegrees * 3.14159265358979323846f / 180.f; // Convert degrees to radians
@@ -67,6 +70,18 @@ Player::Player(sf::Window& window, bool PlayerPlayable, const char* texturePath)
 
 	// Set the origin to the center of the sprite
 	playerSprite.setOrigin(playerSprite.getLocalBounds().width / 2, playerSprite.getLocalBounds().height / 2);
+	if (!IsPlayerPlayable)
+	{
+//		NetworkingManager* manager;
+//#if _SERVER
+//		manager = &NetworkingManager::GetNetworkingManager<NetworkingManagerServer>();
+//#elif _CLIENT
+//		manager = &NetworkingManager::GetNetworkingManager<NetworkingManagerClient>();
+//#endif
+//		//manager->.push_back()
+//		manager->AddNetworkDataCallback(&Player::UpdaetPlayerInfo, this);
+	}
+	root.clear();
 
 }
 
@@ -126,15 +141,43 @@ float Player::GetRotation()
 	return playerSprite.getRotation();
 }
 
+void Player::Update()
+{
+	if (!root.empty() && IsPlayerPlayable)
+	{		
+		Json::StreamWriterBuilder writerBuilder;
+		std::string msgToSend = Json::writeString(writerBuilder, root);;
+
+		sf::Packet packet;
+		packet << msgToSend;
+
+		NetworkingManager* netManager;
+//
+//#if _SERVER
+//		netManager = &NetworkingManager::GetNetworkingManager<NetworkingManagerServer>();
+//#elif _CLIENT
+//		netManager = &NetworkingManager::GetNetworkingManager<NetworkingManagerClient>();
+//#endif
+//		netManager->AddPacketToSend(packet);
+		root.clear();
+	}
+}
+
 void Player::SetPosition(sf::Vector2f newPosition)
 {
 	playerSprite.setPosition(newPosition);
+	Json::Value floatArray; 
+	floatArray.append(newPosition.x);
+	floatArray.append(newPosition.y);
+
+	root["playerPosition"] = floatArray;
 }
 
 void Player::SetRotation(float angle)
 {
 	forwardVector = ApplicationHelper::rotateVector(sf::Vector2f(0.0f, 1.0f), angle);
 	playerSprite.setRotation(angle);
+	root["playerAngle"] = angle;
 }
 
 void Player::PrintPressed()
@@ -153,8 +196,8 @@ void Player::SendTestPacket()
 	std::string msgToSend = "Bon dia";
 	packet << msgToSend;
 
-	NetworkingManager* netManager = &NetworkingManager::GetNetworkingManager<NetworkingManagerClient>();
-	netManager->AddPacketToSend(packet);
+	//NetworkingManager* netManager = &NetworkingManager::GetNetworkingManager<NetworkingManagerClient>();
+	//netManager->AddPacketToSend(packet);
 }
 
 void Player::AccelerateBoat()
@@ -168,7 +211,7 @@ void Player::AccelerateBoat()
 	position += forwardVector * speed;
 
 	//position.y -= 100 * ApplicationHelper::GetDeltaTime();
-	playerSprite.setPosition(position);
+	SetPosition(position);
 }
 
 void Player::DecelerateBoat()
@@ -194,6 +237,23 @@ void Player::RotateBoatRight()
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
 	SetRotation(newAngleRotation );
+}
+
+void Player::UpdaetPlayerInfo(const std::string& NetworkData)
+{
+	if (!IsPlayerPlayable)
+	{
+		//Extract the data and update player info
+		Json::Value root;
+		Json::Reader reader;
+		bool parsingSuccessful = reader.parse(NetworkData, root);
+		Json::Value coordinatesArray = root["playerPosition"];
+		float a = coordinatesArray[0].asFloat();
+		float b = coordinatesArray[1].asFloat();
+		float angle = root["playerAngle"].asFloat();
+		SetPosition(sf::Vector2f(a,b));
+		SetRotation(angle);
+	}
 }
 
 void Player::PrintRndomMessage()

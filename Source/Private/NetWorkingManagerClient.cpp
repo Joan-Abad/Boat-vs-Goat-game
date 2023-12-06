@@ -1,6 +1,7 @@
 #include "NetworkingManagerClient.h"
 #include <iostream>
 
+/*
 NetworkingManagerClient::NetworkingManagerClient()
 {
 	std::cout << "PLAYING ON Client\n";
@@ -9,12 +10,11 @@ NetworkingManagerClient::NetworkingManagerClient()
 
 void NetworkingManagerClient::Bind(int port)
 {
-
+	this->port = port;
+	socket->bind(port);
+	socket->setBlocking(false);
 }
 
-void NetworkingManagerClient::RecievePackage()
-{
-}
 
 void NetworkingManagerClient::SendPackages()
 {
@@ -27,4 +27,4 @@ void NetworkingManagerClient::SendPackages()
 	}
 	packetsToSend.clear();
 }
-
+*/

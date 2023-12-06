@@ -164,7 +164,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugClient|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Public;$(SolutionDir)Dependencies\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Public;$(SolutionDir)Dependencies\SFML-2.6.1\include;$(SolutionDir)Dependencies\JsonCpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <WarningLevel>Level3</WarningLevel>
@@ -173,15 +173,15 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML-2.6.1\lib;$(SolutionDir)Dependencies\JsonCpp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugServer|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Public;$(SolutionDir)Dependencies\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Public;$(SolutionDir)Dependencies\SFML-2.6.1\include;$(SolutionDir)Dependencies\JsonCpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
       <WarningLevel>Level3</WarningLevel>
@@ -190,13 +190,14 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML-2.6.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML-2.6.1\lib;$(SolutionDir)Dependencies\JsonCpp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-audio-d.lib;sfml-graphics-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Private\GameManager.cpp" />
     <ClCompile Include="Source\Private\Map.cpp" />
     <ClCompile Include="Source\Private\Player.cpp" />
     <ClCompile Include="Source\Private\main.cpp" />
@@ -205,11 +206,12 @@
     <ClCompile Include="Source\Private\NetworkingManagerServer.cpp" />
     <ClCompile Include="Source\Private\Window.cpp" />
     <ClCompile Include="Source\Private\Controller.cpp" />
-    <ClCompile Include="Source\Public\ApplicationHelper.cpp" />
+    <ClCompile Include="Source\Private\ApplicationHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
     <ClInclude Include="Source\Public\Controller.h" />
+    <ClInclude Include="Source\Public\GameManager.h" />
     <ClInclude Include="Source\Public\Map.h" />
     <ClInclude Include="Source\Public\NetworkingManager.h" />
     <ClInclude Include="Source\Public\NetworkingManagerClient.h" />

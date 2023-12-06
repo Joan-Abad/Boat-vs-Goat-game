@@ -7,6 +7,8 @@
 #include "Map.h"
 #include <iostream>
 #include "ApplicationHelper.h"
+#include <json.h>
+#include "GameManager.h"
 
 #define SCREEN_WIDTH 1920.f
 #define SCREEN_HEIGHT 1080.f
@@ -23,6 +25,19 @@ Map map("Art/Background/Water.jpg");
 void DrawGame(sf::RenderWindow& window);
 void InitNetworkingManager(NetworkingManager*& networkingManager, TypePlayer typePlayer);
 
+int main()
+{
+    GameManager* gameManager = new GameManager();
+
+    gameManager->InitGame();
+    gameManager->Update();
+    gameManager->CloseGame();
+
+    delete gameManager; 
+    return 0; 
+}
+
+/*
 int main()
 {
     TypePlayer typePlayer;
@@ -69,10 +84,11 @@ int main()
 #if _SERVER
         //Input
         player1->HandlePlayerInput();
+        player1->Update();
 #elif _CLIENT
         player2->HandlePlayerInput();
+        player2->Update();
 #endif
-        
 
         //Send networking packages
         networkingManager->SendPackages();
@@ -89,7 +105,8 @@ int main()
     delete window; 
     return 0;
 }
-
+    */
+/*
 void InitNetworkingManager(NetworkingManager*& _networkingManager, TypePlayer typePlayer)
 {
     if (typePlayer == TypePlayer::Server)
@@ -103,7 +120,7 @@ void InitNetworkingManager(NetworkingManager*& _networkingManager, TypePlayer ty
         _networkingManager->Bind(53001);
     }
 }
-
+*/
 void DrawGame(sf::RenderWindow& window)
 {
     map.DrawWap(window);

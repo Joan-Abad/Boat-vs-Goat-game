@@ -39,7 +39,10 @@
     <ClCompile Include="Source\Private\Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Public\ApplicationHelper.cpp">
+    <ClCompile Include="Source\Private\ApplicationHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\ApplicationHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
