@@ -1,14 +1,15 @@
-#include "GameManager.h"
-#include "Map.h"
+#include "Managers/GameManager.h"
+#include "Map/Map.h"
+#include "Map/Lake.h"
 #include "Window.h"
 
 GameManager* GameManager::instance = nullptr;
 
 GameManager::GameManager()
 {
-	AddGameMap(LakeMap, new Map("Art/Background/Water.jpg"));
-
+	AddGameMap(LakeMap, new Map_Lake());
 	currentGameMap = GetMap(LakeMap);
+
 }
 
 GameManager::~GameManager()
@@ -20,9 +21,14 @@ GameManager::~GameManager()
 	}
 }
 
-void GameManager::InitGame()
+void GameManager::InitGameWindow()
 {
 	window = new Window(WINDOW_NAME, WINDOW_SIZE);
+}
+
+void GameManager::InitGameMap(Map* map)
+{
+	currentGameMap = map;
 }
 
 void GameManager::Update()

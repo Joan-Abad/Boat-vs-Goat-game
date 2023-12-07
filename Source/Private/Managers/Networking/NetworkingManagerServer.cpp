@@ -1,7 +1,8 @@
-#include "Networking/NetworkingManagerServer.h"
+#include "Managers/Networking/NetworkingManagerServer.h"
 #include <iostream>
 #include <SFML/Network.hpp>
 #include <json.h>
+#include "Managers/GameManager.h"
 
 NetworkingManagerServer::NetworkingManagerServer() : serverManagementData(EServerManagementData::EWaitingPlayers), numPlayersToStartTheGame(2)
 {
@@ -112,7 +113,11 @@ void NetworkingManagerServer::StartGameServerAndClients()
 		sf::Socket::Status status = udpSocket.send(packet_StartTheGame, player.second.ipAddress, player.second.port);
 	}
 	serverManagementData = EServerManagementData::EPlayMatch;
-	GameManager::GetGameManager()->InitGame();
+	GameManager::GetGameManager()->InitGameWindow();
+	GameManager* gm = GameManager::GetGameManager();
+	
+	GameManager::GetGameManager()->InitGameMap(gm->GetMap(gm->LakeMap));
+
 }
 
 void NetworkingManagerServer::OnInit()

@@ -4,8 +4,7 @@
 #include <functional>
 #include <json.h>
 
-#define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
-#define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
+
 
 class InputAction
 {
@@ -20,11 +19,11 @@ public:
 	InputAction(sf::Keyboard::Key key);
 
 	//Triggered when a key is pressed
-	FOnKeyTriggered OnKeyTriggered;
+	FOnKeyTriggered OnKeyTriggered = nullptr;
 	//Triggered when a key is being pressed
-	FOnKeyOnGoing OnKeyOnGoing;
+	FOnKeyOnGoing OnKeyOnGoing = nullptr;
 	//Triggered when a key is released
-	FOnKeyReleased OnKeyReleased;
+	FOnKeyReleased OnKeyReleased = nullptr;
 	
 	//Setters
 	void SetKey(sf::Keyboard::Key key);
@@ -34,10 +33,19 @@ public:
 	inline bool GetIsKeyPressed() { return bIsKeyPressed; };
 	inline sf::Keyboard::Key GetKey() { return key; };
 private:
-	sf::Keyboard::Key key;
+	//Key assigned to this action
+	sf::Keyboard::Key key = sf::Keyboard::Key::Unknown;
 	
 	//Tracks the space key state
-	bool bIsKeyPressed;
+	bool bIsKeyPressed = false;
+};
+
+struct PlayerInitialInfo
+{
+	unsigned short uniqueID;
+	sf::Vector2f playerPosition;
+	float angle;
+	const char* playerTexturePath; 
 };
 
 //A representation of the game object + its input as it is an easy game
@@ -45,38 +53,37 @@ class Player
 {
 
 public:
-	Player(sf::Window & window, bool PlayerPlayable, const char* texturePath);
+	Player(sf::Window & window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
 
-	void HandlePlayerInput();
+	//Always call this function for window responsiveness from child classes
+	virtual void HandlePlayerInput();
 
+	//If you want to add more stuff to the character, override this function but also call the parent class to draw character sprite
+	virtual void Draw(sf::RenderWindow& window);
+
+	//Gets the rotation of the player sprite in angles
+	float GetRotation();
+
+	//Function that gets called each tick
+	void Update();
+
+	//Sets the position in the screen of the player
+	void SetPosition(sf::Vector2f newPosition);
+
+	//Sets the rotation in the screen of the player
+	void SetRotation(float angle);
+
+protected: 
+	//Check if a key is pressed
 	void CheckKeyPressed(InputAction& inputAction);
 
-	void Draw(sf::RenderWindow& window);
-
-	float GetRotation();
-	void Update();
-	void SetPosition(sf::Vector2f newPosition);
-	void SetRotation(float angle);
 private: 
-	void PrintPressed();
-	void PrintRndomMessage();
-	void PrintReleased();
-	void SendTestPacket();
 
-	void AccelerateBoat();
-	void DecelerateBoat();
-	void RotateBoatLeft();
-	void RotateBoatRight();
+	
 	void UpdaetPlayerInfo(const std::string& NetworkData);
 
-	sf::Vector2f forwardVector; 
-	sf::Vector2f rightVector; 
 	
-	sf::Vector2f boatAcceleration;
-
-	float speed; 
-	float angleBoatSpeedEachSecond; 
-
+	//Json root value. We should add here all the information we want to send by network
 	Json::Value root; 
 
 	template<typename FncAdd, typename FncObject>
@@ -85,18 +92,15 @@ private:
 		return std::bind(FunctionAddress, ObjectOwningFunction);
 	}
 	
-	InputAction action_Space;
-	InputAction action_P;
-	InputAction action_W;
-	InputAction action_S;
-	InputAction action_RotateLeft;
-	InputAction action_RotateRight;
-
 	//Check if this player should handle input by this process
-	bool IsPlayerPlayable;
+	bool bIsLocallyControlled;
 
-	//The total life of the player
-	int playerLifes;  
+protected: 
+
+	//The forward vector of the player
+	sf::Vector2f forwardVector;
+	//The right vector of the player
+	sf::Vector2f rightVector;
 
 	//Windows window where the player lives
 	sf::Window* window; 

@@ -1,4 +1,4 @@
-#include "Networking/NetworkingManager.h"
+#include "Managers/Networking/NetworkingManager.h"
 #include <iostream>
 
 unsigned short NetworkingManager::gamePort = 53001;

@@ -39,6 +39,8 @@ private:
 
 	void StartGameServerAndClients();
 
+
+
 	//This array holds the info to recieve and send information of the players
 	std::unordered_map<std::string, PlayerConnectionInfo> players;
 

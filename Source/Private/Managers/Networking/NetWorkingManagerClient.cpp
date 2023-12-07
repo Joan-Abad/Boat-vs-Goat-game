@@ -1,4 +1,4 @@
-#include "Networking/NetworkingManagerClient.h"
+#include "Managers/Networking/NetworkingManagerClient.h"
 #include <iostream>
 
 unsigned short NetworkingManagerClient::processPort = 53001;
@@ -102,7 +102,7 @@ void NetworkingManagerClient::WaitForGameStart()
 			if (bStartMatch)
 			{
 				clientManagementData = EClientManagementData::EPlayMatch;
-				GameManager::GetGameManager()->InitGame();
+				GameManager::GetGameManager()->InitGameWindow();
 			}
 			else
 				std::cout << "Data not correct\n";

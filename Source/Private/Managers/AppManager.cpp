@@ -1,11 +1,11 @@
-#include "AppManager.h"
+#include "Managers/AppManager.h"
 #include <iostream>
-#include "Networking/NetworkingManager.h"
-#include "Networking/NetworkingManagerServer.h"
-#include "Networking/NetworkingManagerClient.h"
-#include "Map.h"
+#include "Managers/Networking/NetworkingManager.h"
+#include "Managers/Networking/NetworkingManagerServer.h"
+#include "Managers/Networking/NetworkingManagerClient.h"
+#include "Map/Map.h"
 #include "Window.h"
-#include "GameManager.h"
+#include "Managers/GameManager.h"
 
 AppManager* AppManager::instance = nullptr;
 

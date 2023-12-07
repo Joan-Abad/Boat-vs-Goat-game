@@ -7,8 +7,8 @@
 #include <iostream>
 #include <unordered_map>
 #include <json.h>
-#include "GameManager.h"
-#include "AppManager.h"
+#include "Managers/GameManager.h"
+#include "Managers/AppManager.h"
 
 #define LAN 1
 

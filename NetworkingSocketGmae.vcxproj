@@ -197,31 +197,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Private\AppManager.cpp" />
-    <ClCompile Include="Source\Private\GameManager.cpp" />
+    <ClCompile Include="Source\Private\Managers\AppManager.cpp" />
+    <ClCompile Include="Source\Private\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Private\Input\BoatController.cpp" />
     <ClCompile Include="Source\Private\Input\PlayerController.cpp" />
-    <ClCompile Include="Source\Private\Map.cpp" />
-    <ClCompile Include="Source\Private\Player.cpp" />
+    <ClCompile Include="Source\Private\Map\Lake.cpp" />
+    <ClCompile Include="Source\Private\Map\Map.cpp" />
+    <ClCompile Include="Source\Private\Player\Boat.cpp" />
+    <ClCompile Include="Source\Private\Player\Player.cpp" />
     <ClCompile Include="Source\Private\main.cpp" />
-    <ClCompile Include="Source\Private\Networking\NetworkingManager.cpp" />
-    <ClCompile Include="Source\Private\Networking\NetWorkingManagerClient.cpp" />
-    <ClCompile Include="Source\Private\Networking\NetworkingManagerServer.cpp" />
+    <ClCompile Include="Source\Private\Managers\Networking\NetworkingManager.cpp" />
+    <ClCompile Include="Source\Private\Managers\Networking\NetWorkingManagerClient.cpp" />
+    <ClCompile Include="Source\Private\Managers\Networking\NetworkingManagerServer.cpp" />
     <ClCompile Include="Source\Private\Window.cpp" />
     <ClCompile Include="Source\Private\ApplicationHelper.cpp" />
     <ClCompile Include="Source\Public\Input\BoatController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
-    <ClInclude Include="Source\Public\AppManager.h" />
-    <ClInclude Include="Source\Public\GameManager.h" />
+    <ClInclude Include="Source\Public\Helpers.h" />
+    <ClInclude Include="Source\Public\Managers\AppManager.h" />
+    <ClInclude Include="Source\Public\Managers\GameManager.h" />
     <ClInclude Include="Source\Public\Input\PlayerController.h" />
-    <ClInclude Include="Source\Public\Map.h" />
-    <ClInclude Include="Source\Public\Networking\NetworkingManager.h" />
-    <ClInclude Include="Source\Public\Networking\NetworkingManagerClient.h" />
-    <ClInclude Include="Source\Public\Networking\NetworkingManagerServer.h" />
-    <ClInclude Include="Source\Public\Player.h" />
+    <ClInclude Include="Source\Public\Map\Lake.h" />
+    <ClInclude Include="Source\Public\Map\Map.h" />
+    <ClInclude Include="Source\Public\Managers\Networking\NetworkingManager.h" />
+    <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerClient.h" />
+    <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerServer.h" />
+    <ClInclude Include="Source\Public\Player\Boat.h" />
+    <ClInclude Include="Source\Public\Player\Player.h" />
     <ClInclude Include="Source\Public\Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Art\Background\Water.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

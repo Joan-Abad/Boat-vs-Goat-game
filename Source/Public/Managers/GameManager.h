@@ -22,10 +22,14 @@ public:
 
 	~GameManager();
 	
-	void InitGame();
+	void InitGameWindow();
+	void InitGameMap(Map* map);
 	void Update();
 	void AddGameMap(const std::string& mapName, Map* map);
 	Map* GetMap(std::string MapName);
+
+	const std::string LakeMap = "Lake";
+
 private: 
 	GameManager();
 
@@ -38,8 +42,6 @@ private:
 
 	//Window of the game
 	Window* window;
-
-	const std::string LakeMap = "Lake";
 
 	static GameManager* instance; 
 };

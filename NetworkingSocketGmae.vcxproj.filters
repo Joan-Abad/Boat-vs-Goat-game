@@ -21,28 +21,28 @@
     <ClCompile Include="Source\Private\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Networking\NetworkingManager.cpp">
+    <ClCompile Include="Source\Private\Managers\Networking\NetworkingManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Networking\NetWorkingManagerClient.cpp">
+    <ClCompile Include="Source\Private\Managers\Networking\NetWorkingManagerClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Networking\NetworkingManagerServer.cpp">
+    <ClCompile Include="Source\Private\Managers\Networking\NetworkingManagerServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Player.cpp">
+    <ClCompile Include="Source\Private\Player\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Map.cpp">
+    <ClCompile Include="Source\Private\Map\Map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\ApplicationHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\AppManager.cpp">
+    <ClCompile Include="Source\Private\Managers\AppManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\GameManager.cpp">
+    <ClCompile Include="Source\Private\Managers\GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Input\PlayerController.cpp">
@@ -54,37 +54,57 @@
     <ClCompile Include="Source\Public\Input\BoatController.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Private\Map\Lake.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Player\Boat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Networking\NetworkingManager.h">
+    <ClInclude Include="Source\Public\Managers\Networking\NetworkingManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Networking\NetworkingManagerClient.h">
+    <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Networking\NetworkingManagerServer.h">
+    <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Player.h">
+    <ClInclude Include="Source\Public\Player\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Map.h">
+    <ClInclude Include="Source\Public\Map\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\ApplicationHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\AppManager.h">
+    <ClInclude Include="Source\Public\Managers\AppManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\GameManager.h">
+    <ClInclude Include="Source\Public\Managers\GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Input\PlayerController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Map\Lake.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Player\Boat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Art\Background\Water.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
