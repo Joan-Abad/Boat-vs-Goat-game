@@ -11,6 +11,8 @@ public:
 
 	virtual void HandlePlayerInput();
 
+	//Function that gets called each tick
+	virtual void Update() override;
 private:
 	//Boat mechanics
 	void AccelerateBoat();
@@ -27,6 +29,7 @@ private:
 	float angleBoatSpeedEachSecond;
 
 	//Input Actions
+	//Wasted memory on objects that are not controlled by the player. With the creation of a player controller that just gets spawned for the application owner could solve this
 	InputAction action_Space;
 	InputAction action_P;
 	InputAction action_W;

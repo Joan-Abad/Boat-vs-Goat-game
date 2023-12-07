@@ -98,27 +98,34 @@ void NetworkingManagerServer::WaitForClientsToConnect()
 
 void NetworkingManagerServer::StartGameServerAndClients()
 {
+	//
+	int internalPlayerID = 0; 
 	for (auto& player : players)
 	{
-		//Send the start the game flag to clients
-		sf::Packet packet_StartTheGame;
-		Json::Value root;
-		root[startGameKey] = true;
-		root[numPlayers] = numPlayersToStartTheGame;
+		//Ommit sever send data to itself. 
+		if (internalPlayerID != 0)
+		{
+			//Send the start the game flag to clients
+			sf::Packet packet_StartTheGame;
+			Json::Value root;
+			root[startGameKey] = true;
+			root[numPlayers] = numPlayersToStartTheGame;
+			root[key_PlayerID] = internalPlayerID;
+			Json::StreamWriterBuilder writerBuilder;
+			std::string msgToSend = Json::writeString(writerBuilder, root);
+			packet_StartTheGame << msgToSend;
 
-		//root[]
-
-		Json::StreamWriterBuilder writerBuilder;
-		std::string msgToSend = Json::writeString(writerBuilder, root);
-		packet_StartTheGame << msgToSend;
-
-		sf::Socket::Status status = udpSocket.send(packet_StartTheGame, player.second.ipAddress, player.second.port);
+			sf::Socket::Status status = udpSocket.send(packet_StartTheGame, player.second.ipAddress, player.second.port);
+		}
+		internalPlayerID++;
 	}
+
+	//Player Server initializes its own game
 	serverManagementData = EServerManagementData::EPlayMatch;
 	GameManager::GetGameManager()->InitGameWindow();
 	GameManager* gm = GameManager::GetGameManager();
 	
-	GameManager::GetGameManager()->InitGameMap(gm->GetMap(gm->LakeMap), players.size());
+	gm->InitGameMap(gm->GetMap(gm->LakeMap), players.size());
 
 }
 

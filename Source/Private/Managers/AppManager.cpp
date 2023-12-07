@@ -6,6 +6,7 @@
 #include "Map/Map.h"
 #include "Window.h"
 #include "Managers/GameManager.h"
+#include "ApplicationHelper.h"
 
 AppManager* AppManager::instance = nullptr;
 
@@ -82,13 +83,19 @@ void AppManager::InitGame()
 	}
 
 	if (NetworkManager)
+	{
+		gameManager->networkManager = NetworkManager;
 		NetworkManager->OnInit();
+	}
 }
 
 void AppManager::Update()
 {
 	while (!bCloseGame)
 	{
+		//Shoulw be on app manager and not on applcation helper
+		ApplicationHelper::SetDeltaTime();
+
 		NetworkManager->UpdateNetworkData();
 
 		gameManager->Update();

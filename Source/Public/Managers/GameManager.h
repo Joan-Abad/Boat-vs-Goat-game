@@ -11,6 +11,8 @@ class Window;
 
 class GameManager
 {
+	friend class NetworkingManager;
+	friend class AppManager; 
 public:
 	static GameManager* GetGameManager()
 	{
@@ -42,6 +44,9 @@ private:
 
 	//Window of the game
 	Window* window;
+
+	//Not owning pointer to the Network Manager
+	NetworkingManager* networkManager; 
 
 	static GameManager* instance; 
 };

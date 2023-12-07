@@ -2,14 +2,33 @@
 #include <iostream>
 #include "ApplicationHelper.h"
 
-Boat::Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(window, PlayerPlayable, playerInitialInfo)
+Boat::Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(window, PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f)
 {
+	if (PlayerPlayable)
+	{
+		action_W.SetKey(sf::Keyboard::Key::W);
+		action_RotateLeft.SetKey(sf::Keyboard::Key::Q);
+		action_RotateRight.SetKey(sf::Keyboard::Key::E);
 
+		action_W.OnKeyOnGoing = BindAction(&Boat::AccelerateBoat, this);
+		action_RotateLeft.OnKeyOnGoing = BindAction(&Boat::RotateBoatLeft, this);
+		action_RotateRight.OnKeyOnGoing = BindAction(&Boat::RotateBoatRight, this);
+	}
 }
 
 void Boat::HandlePlayerInput()
 {
 	Player::HandlePlayerInput();
+
+	CheckKeyPressed(action_W);
+	CheckKeyPressed(action_RotateLeft);
+	CheckKeyPressed(action_RotateRight);
+}
+
+void Boat::Update()
+{
+	Player::Update();
+
 }
 
 void Boat::AccelerateBoat()
@@ -37,6 +56,7 @@ void Boat::DecelerateBoat()
 
 void Boat::RotateBoatLeft()
 {
+	std::cout << "Rotating boat left\n";
 	float tickRotation = -angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
@@ -45,6 +65,7 @@ void Boat::RotateBoatLeft()
 
 void Boat::RotateBoatRight()
 {
+	std::cout << "Rotating boat right\n";
 	float tickRotation = angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;

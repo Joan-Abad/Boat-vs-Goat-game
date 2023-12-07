@@ -100,6 +100,8 @@ void NetworkingManagerClient::WaitForGameStart()
 		{
 			bool bStartMatch = root[startGameKey].asBool();
 			unsigned short matchNumPlayers = root[numPlayers].asInt();
+			playerID = root[key_PlayerID].asInt();
+
 			if (bStartMatch)
 			{
 				clientManagementData = EClientManagementData::EPlayMatch;

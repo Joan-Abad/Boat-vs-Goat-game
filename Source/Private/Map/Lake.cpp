@@ -4,6 +4,8 @@
 #include "Managers/GameManager.h"
 #include "Player/Boat.h"
 #include "Managers/TextureManager.h"
+#include "Managers/AppManager.h"
+#include "Managers/Networking/NetworkingManager.h"
 
 Map_Lake::Map_Lake()
 {
@@ -28,24 +30,35 @@ Map_Lake::~Map_Lake()
 
 void Map_Lake::InitMap(Window& window, int playersQuantity)
 {
+	bool playerLocallyControlled = false;
+	const unsigned short playerID = AppManager::GetAppManager()->GetNetworkManager()->GetPlayerID();
+	
 	for (int i = 0; i < playersQuantity; i++)
 	{
+
+		if (playerID == i)
+			playerLocallyControlled = true;
+		else
+			playerLocallyControlled = false;
+		
+		Boat* newBoat; 
+
 		if(i == 0)
 		{
-			Boat player(window.GetWindow(), false, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.15f, WINDOW_SIZE.y * 0.5f), -90.f, boat1Path));
-			AddPlayer(std::move(player));
+			newBoat = new Boat(window.GetWindow(), playerLocallyControlled, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.15f, WINDOW_SIZE.y * 0.5f), 90.f, boat1Path));
+			AddPlayer(*newBoat);
 		}
 		else if (i == 1)
 		{
-			Boat player(window.GetWindow(), false, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), 90.f, boat2Path));
-			AddPlayer(std::move(player));
+			newBoat = new Boat(window.GetWindow(), playerLocallyControlled, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), -90.f, boat2Path));
+			AddPlayer(*newBoat);
 		}
 	}
 }
 
 void Map_Lake::UpdateMap()
 {
-
+	Map::UpdateMap();
 }
 
 void Map_Lake::DrawWap(Window& window)
@@ -58,7 +71,7 @@ void Map_Lake::DrawWap(Window& window)
 
 	for (auto& boat : players)
 	{
-		boat.Draw(sfmlWindow);
+		boat->Draw(sfmlWindow);
 	}
 
 	window.Display();

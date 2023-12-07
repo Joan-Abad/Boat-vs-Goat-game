@@ -109,6 +109,7 @@ float Player::GetRotation()
 
 void Player::Update()
 {
+	HandlePlayerInput();
 }
 
 void Player::SetPosition(sf::Vector2f newPosition)
@@ -123,7 +124,7 @@ void Player::SetPosition(sf::Vector2f newPosition)
 
 void Player::SetRotation(float angle)
 {
-	forwardVector = ApplicationHelper::rotateVector(sf::Vector2f(0.0f, 1.0f), angle);
+	forwardVector = ApplicationHelper::rotateVector(sf::Vector2f(0.0f, -1.0f), angle);
 	playerSprite.setRotation(angle);
 	root["playerAngle"] = angle;
 }

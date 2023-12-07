@@ -30,6 +30,7 @@ void GameManager::InitGameMap(Map* map, unsigned short playerQuantity)
 {
 	currentGameMap = map;
 	currentGameMap->InitMap(*window, playerQuantity);
+
 }
 
 void GameManager::Update()
@@ -46,7 +47,10 @@ void GameManager::Update()
 
 	//Draw the game
 	if (currentGameMap && window)
+	{
+		currentGameMap->UpdateMap();
 		currentGameMap->DrawWap(*window);
+	}
 }
 
 void GameManager::AddGameMap(const std::string &mapName, Map* map)

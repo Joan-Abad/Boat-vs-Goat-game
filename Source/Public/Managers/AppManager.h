@@ -23,6 +23,7 @@ enum class EPlayerType
 //Class that handles all the Application
 class AppManager
 {
+	friend class GameManager; 
 public: 
 	static AppManager* GetAppManager()
 	{
@@ -36,8 +37,8 @@ public:
 	void InitGame();
 	void Update();
 	void CloseGame();
-	
 	~AppManager();
+	inline NetworkingManager* GetNetworkManager() { return NetworkManager; };
 
 private: 
 	AppManager();

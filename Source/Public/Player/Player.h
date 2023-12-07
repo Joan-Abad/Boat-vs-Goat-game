@@ -74,7 +74,7 @@ public:
 	float GetRotation();
 
 	//Function that gets called each tick
-	void Update();
+	virtual void Update();
 
 	//Sets the position in the screen of the player
 	void SetPosition(sf::Vector2f newPosition);
@@ -86,6 +86,11 @@ protected:
 	//Check if a key is pressed
 	void CheckKeyPressed(InputAction& inputAction);
 
+	template<typename FncAdd, typename FncObject>
+	auto BindAction(FncAdd FunctionAddress, FncObject ObjectOwningFunction)
+	{
+		return std::bind(FunctionAddress, ObjectOwningFunction);
+	}
 private: 
 
 	
@@ -95,11 +100,7 @@ private:
 	//Json root value. We should add here all the information we want to send by network
 	Json::Value root; 
 
-	template<typename FncAdd, typename FncObject>
-	auto BindAction(FncAdd FunctionAddress, FncObject ObjectOwningFunction)
-	{
-		return std::bind(FunctionAddress, ObjectOwningFunction);
-	}
+	
 	
 	//Check if this player should handle input by this process
 	bool bIsLocallyControlled;
