@@ -42,6 +42,13 @@ private:
 
 struct PlayerInitialInfo
 {
+	PlayerInitialInfo(unsigned short uniqueID, sf::Vector2f playerPosition, float angle, const char* playerTexturePath)
+	{
+		this->uniqueID = uniqueID;
+		this->playerPosition = playerPosition;
+		this->angle = angle; 
+		this->playerTexturePath = playerTexturePath;
+	}
 	unsigned short uniqueID;
 	sf::Vector2f playerPosition;
 	float angle;
@@ -53,7 +60,9 @@ class Player
 {
 
 public:
+
 	Player(sf::Window & window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
+	~Player();
 
 	//Always call this function for window responsiveness from child classes
 	virtual void HandlePlayerInput();

@@ -99,10 +99,13 @@ void NetworkingManagerClient::WaitForGameStart()
 		if (parsingSuccessful)
 		{
 			bool bStartMatch = root[startGameKey].asBool();
+			unsigned short matchNumPlayers = root[numPlayers].asInt();
 			if (bStartMatch)
 			{
 				clientManagementData = EClientManagementData::EPlayMatch;
-				GameManager::GetGameManager()->InitGameWindow();
+				GameManager* gm = GameManager::GetGameManager();
+				gm->InitGameWindow();
+				gm->InitGameMap(gm->GetMap(gm->LakeMap), matchNumPlayers);
 			}
 			else
 				std::cout << "Data not correct\n";

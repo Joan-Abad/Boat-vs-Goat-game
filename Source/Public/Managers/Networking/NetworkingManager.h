@@ -36,6 +36,7 @@ protected:
 	const static std::string accessKey;
 	const static std::string connectionWithServer; 
 	const static std::string startGameKey;
+	const static std::string numPlayers;
 	
 	static unsigned short gamePort;
 }; 

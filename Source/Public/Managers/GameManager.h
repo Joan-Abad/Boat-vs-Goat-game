@@ -7,7 +7,7 @@ class Map;
 class Window; 
 
 #define WINDOW_NAME "BOAT VS GOAT"
-#define WINDOW_SIZE sf::Vector2f(720,480)
+#define WINDOW_SIZE sf::Vector2f(1080,720)
 
 class GameManager
 {
@@ -23,7 +23,7 @@ public:
 	~GameManager();
 	
 	void InitGameWindow();
-	void InitGameMap(Map* map);
+	void InitGameMap(Map* map, unsigned short playerQuantity);
 	void Update();
 	void AddGameMap(const std::string& mapName, Map* map);
 	Map* GetMap(std::string MapName);

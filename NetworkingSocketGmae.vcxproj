@@ -201,6 +201,7 @@
     <ClCompile Include="Source\Private\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Private\Input\BoatController.cpp" />
     <ClCompile Include="Source\Private\Input\PlayerController.cpp" />
+    <ClCompile Include="Source\Private\Managers\TextureManager.cpp" />
     <ClCompile Include="Source\Private\Map\Lake.cpp" />
     <ClCompile Include="Source\Private\Map\Map.cpp" />
     <ClCompile Include="Source\Private\Player\Boat.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Source\Public\Managers\AppManager.h" />
     <ClInclude Include="Source\Public\Managers\GameManager.h" />
     <ClInclude Include="Source\Public\Input\PlayerController.h" />
+    <ClInclude Include="Source\Public\Managers\TextureManager.h" />
     <ClInclude Include="Source\Public\Map\Lake.h" />
     <ClInclude Include="Source\Public\Map\Map.h" />
     <ClInclude Include="Source\Public\Managers\Networking\NetworkingManager.h" />

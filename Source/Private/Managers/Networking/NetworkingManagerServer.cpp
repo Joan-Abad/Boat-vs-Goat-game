@@ -104,6 +104,8 @@ void NetworkingManagerServer::StartGameServerAndClients()
 		sf::Packet packet_StartTheGame;
 		Json::Value root;
 		root[startGameKey] = true;
+		root[numPlayers] = numPlayersToStartTheGame;
+
 		//root[]
 
 		Json::StreamWriterBuilder writerBuilder;
@@ -116,7 +118,7 @@ void NetworkingManagerServer::StartGameServerAndClients()
 	GameManager::GetGameManager()->InitGameWindow();
 	GameManager* gm = GameManager::GetGameManager();
 	
-	GameManager::GetGameManager()->InitGameMap(gm->GetMap(gm->LakeMap));
+	GameManager::GetGameManager()->InitGameMap(gm->GetMap(gm->LakeMap), players.size());
 
 }
 

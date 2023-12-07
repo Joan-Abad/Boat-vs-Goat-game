@@ -26,9 +26,10 @@ void GameManager::InitGameWindow()
 	window = new Window(WINDOW_NAME, WINDOW_SIZE);
 }
 
-void GameManager::InitGameMap(Map* map)
+void GameManager::InitGameMap(Map* map, unsigned short playerQuantity)
 {
 	currentGameMap = map;
+	currentGameMap->InitMap(*window, playerQuantity);
 }
 
 void GameManager::Update()

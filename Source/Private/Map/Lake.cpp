@@ -1,22 +1,45 @@
 #include "Map/Lake.h"
 #include <iostream>
 #include "Window.h"
+#include "Managers/GameManager.h"
+#include "Player/Boat.h"
+#include "Managers/TextureManager.h"
 
 Map_Lake::Map_Lake()
 {
-	if (!backgroundTexture.loadFromFile(backgroundLakePath))
-		std::cerr << "ERROR LOADING LAKE TEXTURE\n";
+	TextureManager& TM = TextureManager::GetTextureManager();
 
-	backgroundSprite.setTexture(backgroundTexture);
+	TM.AddTexture(backgroundLakePath);
+	TM.AddTexture(boat1Path);
+	TM.AddTexture(boat2Path);
+
+	backgroundSprite.setTexture(*TM.GetTexture(backgroundLakePath));
 }
 
-void Map_Lake::InitMap(int playersQuantity)
+Map_Lake::~Map_Lake()
+{
+	TextureManager& TM = TextureManager::GetTextureManager();
+
+	TM.RemoveTexture(backgroundLakePath);
+	TM.RemoveTexture(boat1Path);
+	TM.RemoveTexture(boat2Path);
+}
+
+
+void Map_Lake::InitMap(Window& window, int playersQuantity)
 {
 	for (int i = 0; i < playersQuantity; i++)
 	{
-		//Init new boat player
-		//Player player;
-		//players.push_back(player);
+		if(i == 0)
+		{
+			Boat player(window.GetWindow(), false, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.15f, WINDOW_SIZE.y * 0.5f), -90.f, boat1Path));
+			AddPlayer(std::move(player));
+		}
+		else if (i == 1)
+		{
+			Boat player(window.GetWindow(), false, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), 90.f, boat2Path));
+			AddPlayer(std::move(player));
+		}
 	}
 }
 
@@ -32,6 +55,11 @@ void Map_Lake::DrawWap(Window& window)
 	window.ClearWindow();
 
 	sfmlWindow.draw(backgroundSprite);
+
+	for (auto& boat : players)
+	{
+		boat.Draw(sfmlWindow);
+	}
 
 	window.Display();
 }

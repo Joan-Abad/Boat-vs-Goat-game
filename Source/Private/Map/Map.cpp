@@ -4,5 +4,5 @@
 
 void Map::AddPlayer(Player player)
 {
-	players.push_back(player);
+	players.emplace_back(player);
 }

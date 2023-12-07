@@ -9,7 +9,7 @@ class Map
 {
 public:
 	Map() = default;
-	virtual void InitMap(int playersQuantity) = 0;
+	virtual void InitMap(Window& window, int playersQuantity) = 0;
 	virtual void UpdateMap() = 0; 
 	virtual void DrawWap(Window& window) = 0;
 	virtual void EndMap() = 0;

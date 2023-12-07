@@ -7,6 +7,7 @@
 #include "ApplicationHelper.h"
 #include <json.h>
 #include <vector>
+#include "Managers/TextureManager.h"
 
 sf::Vector2f calculateForwardVectorDegrees(float angleDegrees) {
 	float angleRadians = angleDegrees * 3.14159265358979323846f / 180.f; // Convert degrees to radians
@@ -34,10 +35,10 @@ Player::Player(sf::Window& window, bool isLocallyController, PlayerInitialInfo I
 
 	forwardVector = sf::Vector2f(0.f, 1.0f);
 
-	if (!playerTexture.loadFromFile(InitialInfo.playerTexturePath))
-		std::cerr << "BackgroundPath error\n";
 
-	playerSprite.setTexture(playerTexture);
+	TextureManager& textureManager = TextureManager::GetTextureManager();
+
+	playerSprite.setTexture(*textureManager.GetTexture(InitialInfo.playerTexturePath));
 
 	// Set the origin to the center of the sprite
 	playerSprite.setOrigin(playerSprite.getLocalBounds().width / 2, playerSprite.getLocalBounds().height / 2);
@@ -47,6 +48,11 @@ Player::Player(sf::Window& window, bool isLocallyController, PlayerInitialInfo I
 
 	root.clear();
 
+}
+
+Player::~Player()
+{
+	int i = 0; 
 }
 
 void Player::HandlePlayerInput()
