@@ -37,7 +37,7 @@ void NetworkingManagerClient::UpdateNetworkData()
 	case EClientManagementData::EStartingTheMatch:
 		break;
 	case EClientManagementData::EPlayMatch:
-		std::cout << "Client on match! \n";
+		SendGameDataToServer();
 		break;
 	case EClientManagementData::EEndMatch:
 		break;
@@ -114,6 +114,25 @@ void NetworkingManagerClient::WaitForGameStart()
 		}
 	}
 }
+
+void NetworkingManagerClient::SendGameDataToServer()
+{
+	//If root data has some content to send, proceed. 
+	if (!GetRootData().empty())
+	{
+		sf::Packet packet;
+
+		Json::StreamWriterBuilder writerBuilder;
+		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
+
+		packet << msgToSend;
+
+		udpSocket.send(packet, serverAddress, gamePort);
+
+		ClearRootData();
+	}
+}
+
 
 void NetworkingManagerClient::SetInitialPacketToServer()
 {

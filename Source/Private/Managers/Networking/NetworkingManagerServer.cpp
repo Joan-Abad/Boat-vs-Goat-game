@@ -3,6 +3,8 @@
 #include <SFML/Network.hpp>
 #include <json.h>
 #include "Managers/GameManager.h"
+#include "Player/Boat.h"
+#include "Map/Map.h"
 
 NetworkingManagerServer::NetworkingManagerServer() : serverManagementData(EServerManagementData::EWaitingPlayers), numPlayersToStartTheGame(2)
 {
@@ -25,6 +27,7 @@ void NetworkingManagerServer::UpdateNetworkData()
 		break;
 	case EServerManagementData::EPlayMatch:
 		std::cout << "Server On Match\n";
+		RecieveGameDataFromClients();
 		break;
 	case EServerManagementData::EEndMatch:
 		break;
@@ -127,6 +130,62 @@ void NetworkingManagerServer::StartGameServerAndClients()
 	
 	gm->InitGameMap(gm->GetMap(gm->LakeMap), players.size());
 
+}
+
+void NetworkingManagerServer::RecieveGameDataFromClients()
+{
+	sf::Packet packet;
+	sf::IpAddress clientAddress;
+	unsigned short clientPort;
+
+	//recieve packet from clients and check if they want to access the game 
+	if (udpSocket.receive(packet, clientAddress, clientPort) == sf::Socket::Done)
+	{
+		std::string message;
+		packet >> message;
+
+		std::cout << "Server: Recieved a message from " << clientAddress << " on port " << clientPort << ": \n";
+		std::cout << message;
+
+		Json::Value root;
+		Json::Reader reader;
+		bool parsingSuccessful = reader.parse(message, root);
+		if (parsingSuccessful)
+		{
+			//Move the boat
+			int boatID = -1;
+			if (root.isMember(Boat::key_AccelerateBoatID))
+			{
+				boatID = root[Boat::key_AccelerateBoatID].asInt();
+			}
+			bool rotateLeft = false, rotateRight = false;
+			if (root.isMember(Boat::key_RotateBoatLeftID))
+			{
+				rotateLeft = true;
+			}
+			if (root.isMember(Boat::key_RotateBoatRightID))
+			{
+				rotateRight = true;
+			}
+
+			if (boatID != -1)
+			{
+				//TODO: remove this code from here to its own class. 
+				Player* player = GameManager::GetGameManager()->GetCurrentMap()->GetPlayers()[boatID];
+
+				Boat* boat = dynamic_cast<Boat*>(player);
+				if (boat)
+				{
+					boat->AccelerateBoat();
+					if (rotateLeft)
+						boat->RotateBoatLeft();
+					if (rotateRight)
+						boat->RotateBoatRight();
+
+				}
+			}
+		}
+	}
 }
 
 void NetworkingManagerServer::OnInit()

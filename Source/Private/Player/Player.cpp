@@ -8,23 +8,7 @@
 #include <json.h>
 #include <vector>
 #include "Managers/TextureManager.h"
-
-sf::Vector2f calculateForwardVectorDegrees(float angleDegrees) {
-	float angleRadians = angleDegrees * 3.14159265358979323846f / 180.f; // Convert degrees to radians
-	return sf::Vector2f(std::cos(angleRadians), std::sin(angleRadians));
-}
-
-sf::Vector2f normalize(const sf::Vector2f& vector) {
-	float length = std::sqrt(vector.x * vector.x + vector.y * vector.y);
-
-	if (length != 0) {
-		return sf::Vector2f(vector.x / length, vector.y / length);
-	}
-	else {
-		// Handle division by zero or zero-length vectors
-		return sf::Vector2f(0.f, 0.f);
-	}
-}
+#include "Managers/AppManager.h"
 
 Player::Player(sf::Window& window, bool isLocallyController, PlayerInitialInfo InitialInfo)
 {
@@ -127,6 +111,11 @@ void Player::SetRotation(float angle)
 	forwardVector = ApplicationHelper::rotateVector(sf::Vector2f(0.0f, -1.0f), angle);
 	playerSprite.setRotation(angle);
 	root["playerAngle"] = angle;
+}
+
+NetworkingManager* Player::GetNetworkingManager()
+{
+	return AppManager::GetAppManager()->GetNetworkManager();
 }
 
 void Player::UpdaetPlayerInfo(const std::string& NetworkData)

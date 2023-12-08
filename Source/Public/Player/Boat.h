@@ -6,6 +6,7 @@
 
 class Boat : public Player
 {
+	friend class NetworkingManagerServer; 
 public: 
 	Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
 
@@ -13,6 +14,7 @@ public:
 
 	//Function that gets called each tick
 	virtual void Update() override;
+
 private:
 	//Boat mechanics
 	void AccelerateBoat();
@@ -37,4 +39,7 @@ private:
 	InputAction action_RotateLeft;
 	InputAction action_RotateRight;
 
+	static const char* key_AccelerateBoatID;
+	static const char* key_RotateBoatLeftID;
+	static const char* key_RotateBoatRightID;
 };

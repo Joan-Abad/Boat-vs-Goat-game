@@ -37,9 +37,10 @@ private:
 	//Code that waits for clients to connect and pass througt the Strarting Match state
 	void WaitForClientsToConnect();
 
+	//When all data flags are recieved from players that are ready, send a flag to start the match! 
 	void StartGameServerAndClients();
 
-
+	void RecieveGameDataFromClients();
 
 	//This array holds the info to recieve and send information of the players
 	std::unordered_map<std::string, PlayerConnectionInfo> players;

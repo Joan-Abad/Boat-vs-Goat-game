@@ -13,12 +13,7 @@ class GameManager;
 #define SERVER_IP "192.168.0.15"
 #endif
 
-enum class EPlayerType
-{
-	EServer,
-	EClient,
-	ENotAssigned
-};
+
 
 //Class that handles all the Application
 class AppManager
@@ -38,7 +33,7 @@ public:
 	void Update();
 	void CloseGame();
 	~AppManager();
-	inline NetworkingManager* GetNetworkManager() { return NetworkManager; };
+	NetworkingManager* GetNetworkManager() { return NetworkManager; };
 
 private: 
 	AppManager();
@@ -48,9 +43,6 @@ private:
 
 	//Handles all related to the game
 	GameManager* gameManager; 
-
-	//Stores if the player is server or client
-	EPlayerType playerType; 
 
 	//Handles the lifetime of the applcation
 	bool bCloseGame = false; 

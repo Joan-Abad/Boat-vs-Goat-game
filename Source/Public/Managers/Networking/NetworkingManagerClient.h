@@ -28,6 +28,7 @@ private:
 	//Waits for the server to start playing the game
 	void WaitForGameStart();
 
+	void SendGameDataToServer();
 	//ip address of the server
 	sf::IpAddress serverAddress;
 

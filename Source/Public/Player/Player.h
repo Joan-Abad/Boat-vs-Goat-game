@@ -4,7 +4,7 @@
 #include <functional>
 #include <json.h>
 
-
+class NetworkingManager; 
 
 class InputAction
 {
@@ -58,12 +58,12 @@ struct PlayerInitialInfo
 //A representation of the game object + its input as it is an easy game
 class Player
 {
-
+	friend class AppManager; 
 public:
 
 	Player(sf::Window & window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
 	~Player();
-
+	
 	//Always call this function for window responsiveness from child classes
 	virtual void HandlePlayerInput();
 
@@ -81,6 +81,8 @@ public:
 
 	//Sets the rotation in the screen of the player
 	void SetRotation(float angle);
+
+	NetworkingManager* GetNetworkingManager();
 
 protected: 
 	//Check if a key is pressed
@@ -106,6 +108,7 @@ private:
 	bool bIsLocallyControlled;
 
 protected: 
+	
 
 	//The forward vector of the player
 	sf::Vector2f forwardVector;
