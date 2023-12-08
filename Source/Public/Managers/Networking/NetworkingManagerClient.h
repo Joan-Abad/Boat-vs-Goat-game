@@ -28,6 +28,7 @@ private:
 	//Waits for the server to start playing the game
 	void WaitForGameStart();
 
+	void RecieveDataFromServer();
 	void SendGameDataToServer();
 	//ip address of the server
 	sf::IpAddress serverAddress;
@@ -36,6 +37,7 @@ private:
 	bool bDisplayMessageWaitingOtherPlayers = true;
 	//Client port
 	static unsigned short processPort;
+	static unsigned short serverPort; 
 
 	//Manages the network data of the game from the client side
 	EClientManagementData clientManagementData;

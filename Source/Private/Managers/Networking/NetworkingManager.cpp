@@ -6,12 +6,17 @@ const std::string NetworkingManager::accessKey = "bWantsToPlay";
 const std::string NetworkingManager::connectionWithServer = "bAcceptedByServer";
 const std::string NetworkingManager::startGameKey = "bStartGame";
 const std::string NetworkingManager::numPlayers = "numPlayers";
-const std::string NetworkingManager::key_PlayerID = "playerID";
+const const char* NetworkingManager::key_PlayerID = "playerID";
 
 
 NetworkingManager::NetworkingManager() : bIsServer(false)
 {
 
+}
+
+void NetworkingManager::AddPacketHeader()
+{
+	rootData[key_PlayerID] = playerID;
 }
 
 void NetworkingManager::ClearRootData()

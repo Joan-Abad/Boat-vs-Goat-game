@@ -14,12 +14,13 @@ void Map::UpdateMap()
 	{
 		player->HandlePlayerInput();
 		player->Update();
+		player->EndUpdate();
 	}
 }
 
 void Map::AddDataToSendServer()
 {
-
+	
 }
 
 void Map::AddPlayer(Player& player)

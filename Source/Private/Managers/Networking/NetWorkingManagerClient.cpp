@@ -1,7 +1,11 @@
 #include "Managers/Networking/NetworkingManagerClient.h"
 #include <iostream>
+#include "Player/Boat.h"
+#include "Managers/GameManager.h"
+#include "Map/Map.h"
 
 unsigned short NetworkingManagerClient::processPort = 53001;
+unsigned short NetworkingManagerClient::serverPort = 53001;
 
 NetworkingManagerClient::NetworkingManagerClient(const sf::IpAddress& ipAddress, const unsigned int port) : clientManagementData(EClientManagementData::EConnectingToServer)
 {
@@ -37,6 +41,7 @@ void NetworkingManagerClient::UpdateNetworkData()
 	case EClientManagementData::EStartingTheMatch:
 		break;
 	case EClientManagementData::EPlayMatch:
+		RecieveDataFromServer();
 		SendGameDataToServer();
 		break;
 	case EClientManagementData::EEndMatch:
@@ -115,6 +120,56 @@ void NetworkingManagerClient::WaitForGameStart()
 	}
 }
 
+void NetworkingManagerClient::RecieveDataFromServer()
+{
+	sf::Packet packet;
+	sf::IpAddress ipAddress; 
+	unsigned short port; 
+	//recieve packet from clients and check if they want to access the game 
+	if (udpSocket.receive(packet, ipAddress, port) == sf::Socket::Done)
+	{
+		std::string message;
+		packet >> message;
+
+		std::cout << "Client: Recieved a message from " << serverAddress << " on port " << gamePort << ": \n";
+		std::cout << message;
+
+		Json::Value root;
+		Json::Reader reader;
+		bool parsingSuccessful = reader.parse(message, root);
+		if (parsingSuccessful)
+		{
+			bool hasPlayerID = -1;
+			if (root.isMember(NetworkingManager::key_PlayerID))
+			{
+				hasPlayerID = root[NetworkingManager::key_PlayerID].asInt();
+				if (hasPlayerID != -1)
+				{
+					Player* player = GameManager::GetGameManager()->GetCurrentMap()->GetPlayers()[hasPlayerID];
+
+					if (player)
+					{
+						//Set position
+						if (root.isMember(Boat::key_boatPosition))
+						{
+							const Json::Value& boatPositionArray = root[Boat::key_boatPosition];
+							sf::Vector2f boatPosition = sf::Vector2f(boatPositionArray[0].asFloat(), boatPositionArray[1].asFloat());
+							player->SetPosition(boatPosition);
+						}
+						//Set rotation
+						if (root.isMember(Boat::key_boatAngle))
+						{
+							float angle = root[Boat::key_boatAngle].asFloat();
+							player->SetRotation(angle);
+						}
+					}
+				}
+			}
+		}
+
+	}
+}
+
 void NetworkingManagerClient::SendGameDataToServer()
 {
 	//If root data has some content to send, proceed. 
@@ -123,6 +178,9 @@ void NetworkingManagerClient::SendGameDataToServer()
 		sf::Packet packet;
 
 		Json::StreamWriterBuilder writerBuilder;
+		//Work around
+		AddPacketHeader();
+		//finish workAround
 		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
 
 		packet << msgToSend;

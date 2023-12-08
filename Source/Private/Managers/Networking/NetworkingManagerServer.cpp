@@ -27,6 +27,7 @@ void NetworkingManagerServer::UpdateNetworkData()
 		break;
 	case EServerManagementData::EPlayMatch:
 		RecieveGameDataFromClients();
+		SendGameDataToClients();
 		break;
 	case EServerManagementData::EEndMatch:
 		break;
@@ -131,6 +132,31 @@ void NetworkingManagerServer::StartGameServerAndClients()
 
 }
 
+void NetworkingManagerServer::SendGameDataToClients()
+{
+	if (!GetRootData().empty())
+	{
+		sf::Packet packet;
+
+		//AddPacketHeader();
+		Json::StreamWriterBuilder writerBuilder;
+		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
+
+		packet << msgToSend;
+		//send a packet to all connected clients
+		int i = 0; 
+		for (auto& player : players)
+		{
+			if(i != 0)
+				udpSocket.send(packet, player.second.ipAddress, player.second.port);
+
+			i++;
+		}
+
+		ClearRootData();
+	}
+}
+
 void NetworkingManagerServer::RecieveGameDataFromClients()
 {
 	sf::Packet packet;
@@ -153,7 +179,7 @@ void NetworkingManagerServer::RecieveGameDataFromClients()
 		{
 			//Move the boat
 			int boatID = -1;
-			if (root.isMember(Boat::key_AccelerateBoatID))
+			if (root.isMember(NetworkingManager::key_PlayerID))
 			{
 				boatID = root[Boat::key_AccelerateBoatID].asInt();
 			}

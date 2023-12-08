@@ -67,6 +67,7 @@ struct PlayerInitialInfo
 class Player
 {
 	friend class AppManager; 
+	friend class NetworkingManager;
 public:
 
 	Player(sf::Window & window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
@@ -83,6 +84,9 @@ public:
 
 	//Function that gets called each tick
 	virtual void Update();
+
+	//Called after update
+	virtual void EndUpdate();
 
 	//Sets the position in the screen of the player
 	void SetPosition(sf::Vector2f newPosition);
@@ -101,14 +105,27 @@ protected:
 	}
 
 	inline std::vector<InputAction*>& GetPlayerActions(){ return playerActions; };
+	
+	//Adds the data that will be send at the end of the frame
+	//Value needs to be a supported JSON type (string, number, Json Object, array, bool or null)
+	template <typename Value>
+	void AddLocalNetworkDataToSend(const char* KEY, Value valueToSend)
+	{
+			localRootData[KEY] = valueToSend;
+	}
+
+	static int playerTrackerID;
+	int playerID;
 private: 
 
 	
 	void UpdaetPlayerInfo(const std::string& NetworkData);
 
+	void AddLocalNetworkDataToRootData();
+
 	
 	//Json root value. We should add here all the information we want to send by network
-	Json::Value root; 
+	Json::Value localRootData;
 
 	
 	

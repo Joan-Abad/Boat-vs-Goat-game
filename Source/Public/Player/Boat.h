@@ -6,6 +6,7 @@
 
 class Boat : public Player
 {
+	friend class NetworkingManagerClient;
 	friend class NetworkingManagerServer; 
 public: 
 	Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
@@ -42,4 +43,8 @@ private:
 	static const char* key_AccelerateBoatID;
 	static const char* key_RotateBoatLeftID;
 	static const char* key_RotateBoatRightID;
+	static const char* key_boatPosition;
+	static const char* key_boatAngle;
+	static const char* key_boatID;
+
 };

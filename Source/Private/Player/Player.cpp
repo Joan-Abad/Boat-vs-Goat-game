@@ -12,6 +12,7 @@
 #include "Input/InputManager.h"
 
 std::vector<sf::Keyboard::Key> InputAction::keysPressed;
+int Player::playerTrackerID = 0;
 
 Player::Player(sf::Window& window, bool isLocallyController, PlayerInitialInfo InitialInfo)
 {
@@ -33,7 +34,10 @@ Player::Player(sf::Window& window, bool isLocallyController, PlayerInitialInfo I
 	SetRotation(InitialInfo.angle);
 	SetPosition(InitialInfo.playerPosition);
 
-	root.clear();
+	playerID = playerTrackerID;
+	playerTrackerID++;
+
+	localRootData.clear();
 
 }
 
@@ -74,6 +78,16 @@ void Player::Update()
 	HandlePlayerInput();
 }
 
+void Player::EndUpdate()
+{
+	
+	if (!localRootData.empty() && (!GetNetworkingManager()->GetIsServer() && bIsLocallyControlled || GetNetworkingManager()->GetIsServer()))
+	{
+		AddLocalNetworkDataToSend(NetworkingManager::key_PlayerID, playerID);
+		AddLocalNetworkDataToRootData();
+	}
+}
+
 void Player::SetPosition(sf::Vector2f newPosition)
 {
 	playerSprite.setPosition(newPosition);
@@ -81,14 +95,14 @@ void Player::SetPosition(sf::Vector2f newPosition)
 	floatArray.append(newPosition.x);
 	floatArray.append(newPosition.y);
 
-	root["playerPosition"] = floatArray;
+	//root["playerPosition"] = floatArray;
 }
 
 void Player::SetRotation(float angle)
 {
 	forwardVector = ApplicationHelper::rotateVector(sf::Vector2f(0.0f, -1.0f), angle);
 	playerSprite.setRotation(angle);
-	root["playerAngle"] = angle;
+	//root["playerAngle"] = angle;
 }
 
 NetworkingManager* Player::GetNetworkingManager()
@@ -110,6 +124,16 @@ void Player::UpdaetPlayerInfo(const std::string& NetworkData)
 		float angle = root["playerAngle"].asFloat();
 		SetPosition(sf::Vector2f(a,b));
 		SetRotation(angle);
+	}
+}
+
+void Player::AddLocalNetworkDataToRootData()
+{
+	if (!localRootData.empty())
+	{
+		Json::Value& value = AppManager::GetAppManager()->GetNetworkManager()->GetRootData();
+		value.copy(localRootData);
+		localRootData.clear();
 	}
 }
 

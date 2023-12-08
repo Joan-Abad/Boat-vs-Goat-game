@@ -40,6 +40,7 @@ private:
 	//When all data flags are recieved from players that are ready, send a flag to start the match! 
 	void StartGameServerAndClients();
 
+	void SendGameDataToClients();
 	void RecieveGameDataFromClients();
 
 	//This array holds the info to recieve and send information of the players
