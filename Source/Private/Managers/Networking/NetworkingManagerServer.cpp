@@ -26,7 +26,6 @@ void NetworkingManagerServer::UpdateNetworkData()
 	case EServerManagementData::EStartTheMatch:
 		break;
 	case EServerManagementData::EPlayMatch:
-		std::cout << "Server On Match\n";
 		RecieveGameDataFromClients();
 		break;
 	case EServerManagementData::EEndMatch:

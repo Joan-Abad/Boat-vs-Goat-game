@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include <json.h>
+#include <unordered_map>
 
 class NetworkingManager; 
 
@@ -15,8 +16,6 @@ class InputAction
 	//On Key Released fnc
 	using FOnKeyReleased = std::function<void()>;
 public:
-	InputAction();
-	InputAction(sf::Keyboard::Key key);
 
 	//Triggered when a key is pressed
 	FOnKeyTriggered OnKeyTriggered = nullptr;
@@ -24,7 +23,11 @@ public:
 	FOnKeyOnGoing OnKeyOnGoing = nullptr;
 	//Triggered when a key is released
 	FOnKeyReleased OnKeyReleased = nullptr;
-	
+
+	static InputAction* CreateInputAction(std::vector<InputAction*>& playerActions, sf::Keyboard::Key key);
+
+	bool CheckIfTriggerAction(sf::Keyboard::Key inComingKey);
+
 	//Setters
 	void SetKey(sf::Keyboard::Key key);
 	void SetIsKeyPressed(bool keyPressed);
@@ -32,12 +35,17 @@ public:
 	//Getters
 	inline bool GetIsKeyPressed() { return bIsKeyPressed; };
 	inline sf::Keyboard::Key GetKey() { return key; };
+	static std::vector<sf::Keyboard::Key> keysPressed; 
 private:
+	InputAction();
+	InputAction(sf::Keyboard::Key key);
+
 	//Key assigned to this action
 	sf::Keyboard::Key key = sf::Keyboard::Key::Unknown;
 	
 	//Tracks the space key state
 	bool bIsKeyPressed = false;
+
 };
 
 struct PlayerInitialInfo
@@ -62,7 +70,7 @@ class Player
 public:
 
 	Player(sf::Window & window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
-	~Player();
+	virtual ~Player();
 	
 	//Always call this function for window responsiveness from child classes
 	virtual void HandlePlayerInput();
@@ -85,14 +93,14 @@ public:
 	NetworkingManager* GetNetworkingManager();
 
 protected: 
-	//Check if a key is pressed
-	void CheckKeyPressed(InputAction& inputAction);
 
 	template<typename FncAdd, typename FncObject>
 	auto BindAction(FncAdd FunctionAddress, FncObject ObjectOwningFunction)
 	{
 		return std::bind(FunctionAddress, ObjectOwningFunction);
 	}
+
+	inline std::vector<InputAction*>& GetPlayerActions(){ return playerActions; };
 private: 
 
 	
@@ -107,6 +115,9 @@ private:
 	//Check if this player should handle input by this process
 	bool bIsLocallyControlled;
 
+	//Stores all the player actions 
+	std::vector<InputAction*> playerActions; 
+	std::unordered_multimap<sf::Keyboard::Key, InputAction*> playerActionsMulti; 
 protected: 
 	
 

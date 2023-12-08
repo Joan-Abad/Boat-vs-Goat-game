@@ -197,6 +197,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Private\Input\InputManager.cpp" />
     <ClCompile Include="Source\Private\Managers\AppManager.cpp" />
     <ClCompile Include="Source\Private\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Private\Input\BoatController.cpp" />
@@ -218,6 +219,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
     <ClInclude Include="Source\Public\Helpers.h" />
+    <ClInclude Include="Source\Public\Input\InputManager.h" />
     <ClInclude Include="Source\Public\Managers\AppManager.h" />
     <ClInclude Include="Source\Public\Managers\GameManager.h" />
     <ClInclude Include="Source\Public\Input\PlayerController.h" />

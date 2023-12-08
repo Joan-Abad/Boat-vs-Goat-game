@@ -3,11 +3,12 @@
 #include "Managers/Networking/NetworkingManager.h"
 #include "Managers/Networking/NetworkingManagerServer.h"
 #include "Managers/Networking/NetworkingManagerClient.h"
+#include "Input/InputManager.h"
+
 #include "Map/Map.h"
 #include "Window.h"
 #include "Managers/GameManager.h"
 #include "ApplicationHelper.h"
-
 AppManager* AppManager::instance = nullptr;
 
 
@@ -85,12 +86,15 @@ void AppManager::Update()
 {
 	while (!bCloseGame)
 	{
-		//Shoulw be on app manager and not on applcation helper
-		ApplicationHelper::SetDeltaTime();
-
 		NetworkManager->UpdateNetworkData();
+		if (GameManager::GetGameManager()->bHasGameStarted)
+		{
+			//Shoulw be on app manager and not on applcation helper
+			ApplicationHelper::SetDeltaTime();
+			InputManager::GetInputManager()->Update();
 
-		gameManager->Update();
+			gameManager->Update();
+		}
 	}
 }
 

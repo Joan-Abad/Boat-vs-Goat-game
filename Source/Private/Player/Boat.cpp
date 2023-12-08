@@ -11,23 +11,19 @@ Boat::Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInit
 {
 	if (PlayerPlayable)
 	{
-		action_W.SetKey(sf::Keyboard::Key::W);
-		action_RotateLeft.SetKey(sf::Keyboard::Key::Q);
-		action_RotateRight.SetKey(sf::Keyboard::Key::E);
+		action_W = InputAction::CreateInputAction(GetPlayerActions(), sf::Keyboard::Key::W);
+		action_RotateLeft = InputAction::CreateInputAction(GetPlayerActions(), sf::Keyboard::Key::Q);
+		action_RotateRight = InputAction::CreateInputAction(GetPlayerActions(), sf::Keyboard::Key::E);
 
-		action_W.OnKeyOnGoing = BindAction(&Boat::AccelerateBoat, this);
-		action_RotateLeft.OnKeyOnGoing = BindAction(&Boat::RotateBoatLeft, this);
-		action_RotateRight.OnKeyOnGoing = BindAction(&Boat::RotateBoatRight, this);
+		action_W->OnKeyOnGoing = BindAction(&Boat::AccelerateBoat, this);
+		action_RotateLeft->OnKeyOnGoing = BindAction(&Boat::RotateBoatLeft, this);
+		action_RotateRight->OnKeyOnGoing = BindAction(&Boat::RotateBoatRight, this);
 	}
 }
 
 void Boat::HandlePlayerInput()
 {
 	Player::HandlePlayerInput();
-
-	CheckKeyPressed(action_W);
-	CheckKeyPressed(action_RotateLeft);
-	CheckKeyPressed(action_RotateRight);
 }
 
 void Boat::Update()
@@ -50,6 +46,11 @@ void Boat::AccelerateBoat()
 
 		//position.y -= 100 * ApplicationHelper::GetDeltaTime();
 		SetPosition(position);
+
+#if _DEBUG
+		timesAccelerated++;
+		std::cout << "Times accelerated: " << timesAccelerated << std::endl;
+#endif
 	}
 	else
 	{

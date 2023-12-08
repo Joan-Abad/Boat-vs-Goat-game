@@ -22,6 +22,9 @@ private:
 	void RotateBoatLeft();
 	void RotateBoatRight();
 
+#if _DEBUG
+	int timesAccelerated = 0; 
+#endif
 private: 
 	//How fast the boat accelerates each frame
 	sf::Vector2f boatAcceleration;
@@ -32,12 +35,9 @@ private:
 
 	//Input Actions
 	//Wasted memory on objects that are not controlled by the player. With the creation of a player controller that just gets spawned for the application owner could solve this
-	InputAction action_Space;
-	InputAction action_P;
-	InputAction action_W;
-	InputAction action_S;
-	InputAction action_RotateLeft;
-	InputAction action_RotateRight;
+	InputAction* action_W;
+	InputAction* action_RotateLeft;
+	InputAction* action_RotateRight;
 
 	static const char* key_AccelerateBoatID;
 	static const char* key_RotateBoatLeftID;

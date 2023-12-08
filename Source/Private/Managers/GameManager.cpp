@@ -2,10 +2,11 @@
 #include "Map/Map.h"
 #include "Map/Lake.h"
 #include "Window.h"
+#include "Input/InputManager.h"
 
 GameManager* GameManager::instance = nullptr;
 
-GameManager::GameManager()
+GameManager::GameManager() : bHasGameStarted(false)
 {
 	AddGameMap(LakeMap, new Map_Lake());
 	currentGameMap = GetMap(LakeMap);
@@ -24,6 +25,8 @@ GameManager::~GameManager()
 void GameManager::InitGameWindow()
 {
 	window = new Window(WINDOW_NAME, WINDOW_SIZE);
+	window->GetWindow().setFramerateLimit(60);
+	bHasGameStarted = true; 
 }
 
 void GameManager::InitGameMap(Map* map, unsigned short playerQuantity)
@@ -35,16 +38,6 @@ void GameManager::InitGameMap(Map* map, unsigned short playerQuantity)
 
 void GameManager::Update()
 {
-	sf::Event event;
-	if (window)
-	{
-		while (window->GetWindow().pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window->GetWindow().close();
-		}
-	}
-
 	//Draw the game
 	if (currentGameMap && window)
 	{

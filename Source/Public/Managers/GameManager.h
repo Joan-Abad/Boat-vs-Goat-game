@@ -34,7 +34,7 @@ public:
 	//GETTERS
 	Map* GetMap(std::string MapName);
 	Map* GetCurrentMap() { return currentGameMap; };
-
+	Window* GetGameWindow() { return window; };
 private: 
 	GameManager();
 
@@ -50,6 +50,8 @@ private:
 
 	//Not owning pointer to the Network Manager
 	NetworkingManager* networkManager; 
+
+	bool bHasGameStarted;
 
 	static GameManager* instance; 
 };
