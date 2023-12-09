@@ -6,47 +6,7 @@
 #include <unordered_map>
 
 class NetworkingManager; 
-
-class InputAction
-{
-	//On Key Pressed fnc
-	using FOnKeyTriggered = std::function<void()>;
-	//On Key OnGoing fnc
-	using FOnKeyOnGoing = std::function<void()>;
-	//On Key Released fnc
-	using FOnKeyReleased = std::function<void()>;
-public:
-
-	//Triggered when a key is pressed
-	FOnKeyTriggered OnKeyTriggered = nullptr;
-	//Triggered when a key is being pressed
-	FOnKeyOnGoing OnKeyOnGoing = nullptr;
-	//Triggered when a key is released
-	FOnKeyReleased OnKeyReleased = nullptr;
-
-	static InputAction* CreateInputAction(std::vector<InputAction*>& playerActions, sf::Keyboard::Key key);
-
-	bool CheckIfTriggerAction(sf::Keyboard::Key inComingKey);
-
-	//Setters
-	void SetKey(sf::Keyboard::Key key);
-	void SetIsKeyPressed(bool keyPressed);
-
-	//Getters
-	inline bool GetIsKeyPressed() { return bIsKeyPressed; };
-	inline sf::Keyboard::Key GetKey() { return key; };
-	static std::vector<sf::Keyboard::Key> keysPressed; 
-private:
-	InputAction();
-	InputAction(sf::Keyboard::Key key);
-
-	//Key assigned to this action
-	sf::Keyboard::Key key = sf::Keyboard::Key::Unknown;
-	
-	//Tracks the space key state
-	bool bIsKeyPressed = false;
-
-};
+class InputAction;
 
 struct PlayerInitialInfo
 {

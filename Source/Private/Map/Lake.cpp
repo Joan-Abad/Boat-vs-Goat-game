@@ -53,6 +53,11 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 			newBoat = new Boat(window.GetWindow(), playerLocallyControlled, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), -90.f, boat2Path));
 			AddPlayer(*newBoat);
 		}
+		else if (i == 2)
+		{
+			newBoat = new Boat(window.GetWindow(), playerLocallyControlled, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.5f, WINDOW_SIZE.y * 0.1f), -180.f, boat2Path));
+			AddPlayer(*newBoat);
+		}
 	}
 }
 

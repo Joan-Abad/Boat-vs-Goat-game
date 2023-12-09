@@ -49,18 +49,18 @@ Player::~Player()
 
 void Player::HandlePlayerInput()
 {
-	if (bIsLocallyControlled)
-	{
-		for (auto& keyPressedEvent : InputManager::GetInputManager()->GetKeysPressed())
-		{
-			for (auto& playerAction : playerActions)
-			{
-				//Will handle for now only one action for keyboard key
-				if (playerAction->CheckIfTriggerAction(keyPressedEvent))
-					break;
-			}
-		}
-	}
+	//if (bIsLocallyControlled)
+	//{
+	//	for (auto& keyPressedEvent : InputManager::GetInputManager()->GetKeysPressed())
+	//	{
+	//		for (auto& playerAction : playerActions)
+	//		{
+	//			//Will handle for now only one action for keyboard key
+	//			if (playerAction->CheckIfTriggerAction(keyPressedEvent))
+	//				break;
+	//		}
+	//	}
+	//}
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -137,65 +137,3 @@ void Player::AddLocalNetworkDataToRootData()
 	}
 }
 
-InputAction::InputAction()
-{
-}
-
-InputAction::InputAction(sf::Keyboard::Key key)
-{
-	this->key = key;
-}
-
-InputAction* InputAction::CreateInputAction(std::vector<InputAction*> &playerActions, sf::Keyboard::Key key)
-{
-	// TODO: insert return statement here
-
-	InputAction* newAction = new InputAction(key);
-	if (newAction)
-		playerActions.push_back(newAction);
-	else
-		std::cerr << "Could not create the input action\n";
-
-	return newAction;
-}
-
-bool InputAction::CheckIfTriggerAction(sf::Keyboard::Key inComingKey)
-{
-	bool bIsSpacePressedThisFrame = inComingKey == key;
-
-	if (bIsSpacePressedThisFrame)
-	{
-		//On Trigger
-		if (!GetIsKeyPressed())
-		{
-			SetIsKeyPressed(true);
-			if (OnKeyTriggered)
-				OnKeyTriggered();
-		}
-		//On Going
-		if (OnKeyOnGoing)
-			OnKeyOnGoing();
-	}
-	else
-	{
-		//On Released
-		if (GetIsKeyPressed())
-		{
-			if (OnKeyReleased)
-				OnKeyReleased();
-		}
-		SetIsKeyPressed(false);
-	}
-
-	return bIsSpacePressedThisFrame;
-}
-
-void InputAction::SetKey(sf::Keyboard::Key key)
-{
-	this->key = key;
-}
-
-void InputAction::SetIsKeyPressed(bool keyPressed)
-{
-	bIsKeyPressed = keyPressed;
-}

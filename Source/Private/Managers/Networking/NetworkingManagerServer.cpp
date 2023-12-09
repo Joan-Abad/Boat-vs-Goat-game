@@ -181,32 +181,27 @@ void NetworkingManagerServer::RecieveGameDataFromClients()
 			int boatID = -1;
 			if (root.isMember(NetworkingManager::key_PlayerID))
 			{
-				boatID = root[Boat::key_AccelerateBoatID].asInt();
-			}
-			bool rotateLeft = false, rotateRight = false;
-			if (root.isMember(Boat::key_RotateBoatLeftID))
-			{
-				rotateLeft = true;
-			}
-			if (root.isMember(Boat::key_RotateBoatRightID))
-			{
-				rotateRight = true;
-			}
+				boatID = root[NetworkingManager::key_PlayerID].asInt();
 
-			if (boatID != -1)
-			{
-				//TODO: remove this code from here to its own class. 
 				Player* player = GameManager::GetGameManager()->GetCurrentMap()->GetPlayers()[boatID];
-
+				//TODO: change from here to a more dynamic way
 				Boat* boat = dynamic_cast<Boat*>(player);
 				if (boat)
 				{
-					boat->AccelerateBoat();
-					if (rotateLeft)
-						boat->RotateBoatLeft();
-					if (rotateRight)
-						boat->RotateBoatRight();
-
+					bool bAccelerateBoat = false;
+					if (root.isMember(Boat::key_AccelerateBoatID))
+					{
+						boat->SetIsAccelerating(root[Boat::key_AccelerateBoatID].asBool());
+					}
+					bool rotateLeft = false, rotateRight = false;
+					if (root.isMember(Boat::key_RotateBoatLeftID))
+					{
+						boat->SetIsRotatingLeft(root[Boat::key_RotateBoatLeftID].asBool());
+					}
+					if (root.isMember(Boat::key_RotateBoatRightID))
+					{
+						boat->SetIsRotatingRight(root[Boat::key_RotateBoatRightID].asBool());
+					}
 				}
 			}
 		}

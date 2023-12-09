@@ -15,18 +15,33 @@ public:
 
 	//Function that gets called each tick
 	virtual void Update() override;
-
+	void SetIsAccelerating(bool bIsAcelerating);
+	void SetIsRotatingLeft(bool bRotatingLeft);
+	void SetIsRotatingRight(bool bRotatingRight);
 private:
 	//Boat mechanics
+	void StartAccelerateBoat();
 	void AccelerateBoat();
-	void DecelerateBoat();
-	void RotateBoatLeft();
-	void RotateBoatRight();
+	void StopAccelerateBoat();
 
+	//Not used for now
+	void DecelerateBoat();
+
+	void StartRotateBoatLeft();
+	void RotateBoatLeft();
+	void StopRotateBoatLeft();
+
+	void StartRotateBoatRight();
+	void RotateBoatRight();
+	void StopRotateBoatRight();
 #if _DEBUG
 	int timesAccelerated = 0; 
 #endif
 private: 
+	bool bIsBoatAccelerating;
+	bool bIsBoatRotatingLeft; 
+	bool bIsBoatRotatingRight;
+
 	//How fast the boat accelerates each frame
 	sf::Vector2f boatAcceleration;
 	//The speed of the boat is frame
@@ -46,5 +61,6 @@ private:
 	static const char* key_boatPosition;
 	static const char* key_boatAngle;
 	static const char* key_boatID;
+	static const uint32_t key_accelerateBoat;
 
 };
