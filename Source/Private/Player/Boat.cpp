@@ -50,12 +50,15 @@ void Boat::Update()
 {
 	Player::Update();
 
-	if (bIsBoatAccelerating)
-		AccelerateBoat();
-	if (bIsBoatRotatingLeft)
-		RotateBoatLeft();
-	if (bIsBoatRotatingRight)
-		RotateBoatRight();
+	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	{
+		if (bIsBoatAccelerating)
+			AccelerateBoat();
+		if (bIsBoatRotatingLeft)
+			RotateBoatLeft();
+		if (bIsBoatRotatingRight)
+			RotateBoatRight();
+	}
 }
 
 void Boat::SetIsAccelerating(bool bIsAcelerating)
@@ -91,7 +94,7 @@ void Boat::AccelerateBoat()
 	//sf::Vector2f position = ApplicationHelper::Normalize(position);
 	sf::Vector2f position = playerSprite.getPosition();
 
-	speed = 500 * ApplicationHelper::GetDeltaTime();
+	speed = 750 * ApplicationHelper::GetDeltaTime();
 
 	position += forwardVector * speed;
 

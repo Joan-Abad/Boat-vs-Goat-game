@@ -149,6 +149,9 @@ void NetworkingManagerClient::RecieveDataFromServer()
 
 					if (player)
 					{
+						if (root.isMember(Boat::key_boatPosition) && root.isMember(Boat::key_boatAngle))
+							int i = 0; 
+
 						//Set position
 						if (root.isMember(Boat::key_boatPosition))
 						{
