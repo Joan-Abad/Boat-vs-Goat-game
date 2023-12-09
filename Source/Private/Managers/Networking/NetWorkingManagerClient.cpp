@@ -1,6 +1,6 @@
 #include "Managers/Networking/NetworkingManagerClient.h"
 #include <iostream>
-#include "Player/Boat.h"
+#include "GameObjects/Players/Boat.h"
 #include "Managers/GameManager.h"
 #include "Map/Map.h"
 

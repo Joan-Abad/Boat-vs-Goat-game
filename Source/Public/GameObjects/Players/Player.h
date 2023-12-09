@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObjects/GameObject.h"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <functional>
@@ -23,8 +24,8 @@ struct PlayerInitialInfo
 	const char* playerTexturePath; 
 };
 
-//A representation of the game object + its input as it is an easy game
-class Player
+//A representation of the game object + its input
+class Player : public GameObject
 {
 	friend class AppManager; 
 	friend class NetworkingManager;
@@ -63,8 +64,6 @@ protected:
 	{
 		return std::bind(FunctionAddress, ObjectOwningFunction);
 	}
-
-	inline std::vector<InputAction*>& GetPlayerActions(){ return playerActions; };
 	
 	//Adds the data that will be send at the end of the frame
 	//Value needs to be a supported JSON type (string, number, Json Object, array, bool or null)
@@ -75,26 +74,16 @@ protected:
 	}
 
 	static int playerTrackerID;
-	int playerID;
-private: 
-
 	
-	void UpdaetPlayerInfo(const std::string& NetworkData);
+	int playerID;
+
+private: 
 
 	void AddLocalNetworkDataToRootData();
 
-	
-	//Json root value. We should add here all the information we want to send by network
-	Json::Value localRootData;
-
-	
-	
 	//Check if this player should handle input by this process
 	bool bIsLocallyControlled;
 
-	//Stores all the player actions 
-	std::vector<InputAction*> playerActions; 
-	std::unordered_multimap<sf::Keyboard::Key, InputAction*> playerActionsMulti; 
 protected: 
 	
 

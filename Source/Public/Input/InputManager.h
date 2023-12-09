@@ -68,14 +68,10 @@ public:
 	InputAction* GetInputAction(sf::Keyboard::Key key);
 private: 
 	InputManager();
+	~InputManager();
 	std::unordered_set<sf::Keyboard::Key> KeysPressed;
 	Window* window; 
 	std::vector<InputAction*> ProjectInputActions; 
 	static InputManager* instance; 
 	std::unordered_map<sf::Keyboard::Key, InputAction*> keyInputActionMappings; 
-
-	//Input actions available in the project
-	InputAction* action_W; 
-	InputAction* action_Q;
-	InputAction* action_E;
 };

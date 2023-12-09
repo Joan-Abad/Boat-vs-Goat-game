@@ -3,7 +3,7 @@
 #include <SFML/Network.hpp>
 #include <json.h>
 #include "Managers/GameManager.h"
-#include "Player/Boat.h"
+#include "GameObjects/Players/Boat.h"
 #include "Map/Map.h"
 
 NetworkingManagerServer::NetworkingManagerServer() : serverManagementData(EServerManagementData::EWaitingPlayers), numPlayersToStartTheGame(2)
@@ -169,8 +169,8 @@ void NetworkingManagerServer::RecieveGameDataFromClients()
 		std::string message;
 		packet >> message;
 
-		std::cout << "Server: Recieved a message from " << clientAddress << " on port " << clientPort << ": \n";
-		std::cout << message;
+		//std::cout << "Server: Recieved a message from " << clientAddress << " on port " << clientPort << ": \n";
+		//std::cout << message;
 
 		Json::Value root;
 		Json::Reader reader;
@@ -201,6 +201,10 @@ void NetworkingManagerServer::RecieveGameDataFromClients()
 					if (root.isMember(Boat::key_RotateBoatRightID))
 					{
 						boat->SetIsRotatingRight(root[Boat::key_RotateBoatRightID].asBool());
+					}
+					if (root.isMember(Boat::key_ShootBoatID))
+					{
+						boat->SetIsShooting(root[Boat::key_ShootBoatID].asBool());
 					}
 				}
 			}

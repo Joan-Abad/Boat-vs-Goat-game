@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <Player/Player.h>
+#include <GameObjects/Players/Player.h>
 #include <SFML/Network.hpp>
 class Window; 
 

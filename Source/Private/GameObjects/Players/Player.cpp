@@ -1,4 +1,4 @@
-#include "Player/Player.h"
+#include "GameObjects/Players/Player.h"
 #include <iostream>
 #include <SFML/Network.hpp>
 #include "Managers/Networking/NetworkingManager.h"
@@ -43,24 +43,12 @@ Player::Player(sf::Window& window, bool isLocallyController, PlayerInitialInfo I
 
 Player::~Player()
 {
-	for (auto& playerAction : playerActions)
-		delete playerAction; 
+
 }
 
 void Player::HandlePlayerInput()
 {
-	//if (bIsLocallyControlled)
-	//{
-	//	for (auto& keyPressedEvent : InputManager::GetInputManager()->GetKeysPressed())
-	//	{
-	//		for (auto& playerAction : playerActions)
-	//		{
-	//			//Will handle for now only one action for keyboard key
-	//			if (playerAction->CheckIfTriggerAction(keyPressedEvent))
-	//				break;
-	//		}
-	//	}
-	//}
+
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -108,23 +96,6 @@ void Player::SetRotation(float angle)
 NetworkingManager* Player::GetNetworkingManager()
 {
 	return AppManager::GetAppManager()->GetNetworkManager();
-}
-
-void Player::UpdaetPlayerInfo(const std::string& NetworkData)
-{
-	if (!bIsLocallyControlled)
-	{
-		//Extract the data and update player info
-		Json::Value root;
-		Json::Reader reader;
-		bool parsingSuccessful = reader.parse(NetworkData, root);
-		Json::Value coordinatesArray = root["playerPosition"];
-		float a = coordinatesArray[0].asFloat();
-		float b = coordinatesArray[1].asFloat();
-		float angle = root["playerAngle"].asFloat();
-		SetPosition(sf::Vector2f(a,b));
-		SetRotation(angle);
-	}
 }
 
 void Player::AddLocalNetworkDataToRootData()

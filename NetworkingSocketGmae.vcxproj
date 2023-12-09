@@ -204,8 +204,9 @@
     <ClCompile Include="Source\Private\Managers\TextureManager.cpp" />
     <ClCompile Include="Source\Private\Map\Lake.cpp" />
     <ClCompile Include="Source\Private\Map\Map.cpp" />
-    <ClCompile Include="Source\Private\Player\Boat.cpp" />
-    <ClCompile Include="Source\Private\Player\Player.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Players\Boat.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\GameObject.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Players\Player.cpp" />
     <ClCompile Include="Source\Private\main.cpp" />
     <ClCompile Include="Source\Private\Managers\Networking\NetworkingManager.cpp" />
     <ClCompile Include="Source\Private\Managers\Networking\NetWorkingManagerClient.cpp" />
@@ -216,7 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
-    <ClInclude Include="Source\Public\Helpers.h" />
+    <ClInclude Include="Source\Public\GameObjects\GameObject.h" />
     <ClInclude Include="Source\Public\Input\InputManager.h" />
     <ClInclude Include="Source\Public\Managers\AppManager.h" />
     <ClInclude Include="Source\Public\Managers\GameManager.h" />
@@ -226,8 +227,8 @@
     <ClInclude Include="Source\Public\Managers\Networking\NetworkingManager.h" />
     <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerClient.h" />
     <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerServer.h" />
-    <ClInclude Include="Source\Public\Player\Boat.h" />
-    <ClInclude Include="Source\Public\Player\Player.h" />
+    <ClInclude Include="Source\Public\GameObjects\Players\Boat.h" />
+    <ClInclude Include="Source\Public\GameObjects\Players\Player.h" />
     <ClInclude Include="Source\Public\Window.h" />
   </ItemGroup>
   <ItemGroup>

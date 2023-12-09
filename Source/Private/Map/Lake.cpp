@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Window.h"
 #include "Managers/GameManager.h"
-#include "Player/Boat.h"
+#include "GameObjects/Players/Boat.h"
 #include "Managers/TextureManager.h"
 #include "Managers/AppManager.h"
 #include "Managers/Networking/NetworkingManager.h"
@@ -41,7 +41,7 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 		else
 			playerLocallyControlled = false;
 		
-		Boat* newBoat; 
+		Boat* newBoat = nullptr; 
 
 		if(i == 0)
 		{
@@ -58,6 +58,9 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 			newBoat = new Boat(window.GetWindow(), playerLocallyControlled, PlayerInitialInfo(i, sf::Vector2f(WINDOW_SIZE.x * 0.5f, WINDOW_SIZE.y * 0.1f), -180.f, boat2Path));
 			AddPlayer(*newBoat);
 		}
+
+		if (newBoat)
+			newBoat->Init();
 	}
 }
 

@@ -1,4 +1,4 @@
-#include "Player/Boat.h"
+#include "GameObjects/Players/Boat.h"
 #include <iostream>
 #include "ApplicationHelper.h"
 #include "Managers/Networking/NetworkingManager.h"
@@ -10,32 +10,37 @@ const char* Boat::key_RotateBoatRightID = "RotateBoatRightID";
 const char* Boat::key_boatPosition = "boatPosition";
 const char* Boat::key_boatAngle = "boatAngle";
 const char* Boat::key_boatID= "boatID";
+const char* Boat::key_ShootBoatID = "shootBoat";
 
 
 Boat::Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(window, PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f), 
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false)
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f)
 {
 	if (PlayerPlayable)
 	{
 		InputManager* im = InputManager::GetInputManager();
+		//Get input actions references
 		action_W = im->GetInputAction(sf::Keyboard::W);
 		action_RotateLeft = im->GetInputAction(sf::Keyboard::Key::Q);
 		action_RotateRight = im->GetInputAction(sf::Keyboard::Key::E);
+		action_ShootBoat = im->GetInputAction(sf::Keyboard::Key::Space);
 
+		//Accelerate Boat
 		action_W->OnKeyTriggered.push_back(BindAction(&Boat::StartAccelerateBoat, this));
-		//action_W->OnKeyOnGoing = BindAction(&Boat::AccelerateBoat, this);
 		action_W->OnKeyReleased.push_back(BindAction(&Boat::StopAccelerateBoat, this));
 
+		//Rotate left
 		action_RotateLeft->OnKeyTriggered.push_back(BindAction(&Boat::StartRotateBoatLeft, this));
-		//action_W->OnKeyOnGoing = BindAction(&Boat::AccelerateBoat, this);
 		action_RotateLeft->OnKeyReleased.push_back(BindAction(&Boat::StopRotateBoatLeft, this));
 
+		//Rotate Right
 		action_RotateRight->OnKeyTriggered.push_back(BindAction(&Boat::StartRotateBoatRight, this));
-		//action_W->OnKeyOnGoing = BindAction(&Boat::AccelerateBoat, this);
 		action_RotateRight->OnKeyReleased.push_back(BindAction(&Boat::StopRotateBoatRight, this));
 
-		//action_RotateLeft->OnKeyOnGoing = BindAction(&Boat::RotateBoatLeft, this);
-		//action_RotateRight->OnKeyOnGoing = BindAction(&Boat::RotateBoatRight, this);
+		//Shoot boat
+		action_ShootBoat->OnKeyTriggered.push_back(BindAction(&Boat::StartShootBullet, this));
+		action_ShootBoat->OnKeyReleased.push_back(BindAction(&Boat::StopShootBullet, this));
+
 		playerSprite.setColor(sf::Color::Red);
 	}
 
@@ -44,6 +49,11 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 void Boat::HandlePlayerInput()
 {
 	Player::HandlePlayerInput();
+}
+
+void Boat::Init()
+{
+	timer.restart();
 }
 
 void Boat::Update()
@@ -58,6 +68,8 @@ void Boat::Update()
 			RotateBoatLeft();
 		if (bIsBoatRotatingRight)
 			RotateBoatRight();
+		if (bBoatIsShooting)
+			BoatShootBullet();
 	}
 }
 
@@ -74,6 +86,11 @@ void Boat::SetIsRotatingLeft(bool bRotatingLeft)
 void Boat::SetIsRotatingRight(bool bRotatingRight)
 {
 	bIsBoatRotatingRight = bRotatingRight;
+}
+
+void Boat::SetIsShooting(bool bIsShooting)
+{
+	bBoatIsShooting = bIsShooting;
 }
 
 void Boat::StartAccelerateBoat()
@@ -164,6 +181,37 @@ void Boat::StopRotateBoatLeft()
 	}
 }
 
+void Boat::StartShootBullet()
+{
+	bBoatIsShooting = true;
+	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	{
+		AddLocalNetworkDataToSend(key_ShootBoatID, bBoatIsShooting);
+	}
+		
+}
+
+void Boat::BoatShootBullet()
+{
+	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	{
+		sf::Time elapsedTime = timer.getElapsedTime();
+		if (elapsedTime.asSeconds() >= shootingCD) {
+			std::cout << "Spawn Bullet\n";
+			timer.restart();
+		}
+	}
+}
+
+void Boat::StopShootBullet()
+{
+	bBoatIsShooting = false;
+	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	{
+		AddLocalNetworkDataToSend(key_ShootBoatID, bBoatIsShooting);
+	}
+}
+
 void Boat::StartRotateBoatRight()
 {
 	bIsBoatRotatingRight = true;
@@ -185,9 +233,6 @@ void Boat::RotateBoatRight()
 		float newAngleRotation = previousRotation + tickRotation;
 		SetRotation(newAngleRotation);
 		AddLocalNetworkDataToSend(key_boatAngle, GetRotation());
-
-
-	
 }
 
 void Boat::StopRotateBoatRight()

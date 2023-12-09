@@ -30,7 +30,7 @@
     <ClCompile Include="Source\Private\Managers\Networking\NetworkingManagerServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Player\Player.cpp">
+    <ClCompile Include="Source\Private\GameObjects\Players\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Map\Map.cpp">
@@ -54,13 +54,16 @@
     <ClCompile Include="Source\Private\Map\Lake.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Player\Boat.cpp">
+    <ClCompile Include="Source\Private\GameObjects\Players\Boat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Managers\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Input\InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\GameObjects\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +80,7 @@
     <ClInclude Include="Source\Public\Managers\Networking\NetworkingManagerServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Player\Player.h">
+    <ClInclude Include="Source\Public\GameObjects\Players\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Map\Map.h">
@@ -95,16 +98,16 @@
     <ClInclude Include="Source\Public\Map\Lake.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\Helpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Public\Player\Boat.h">
+    <ClInclude Include="Source\Public\GameObjects\Players\Boat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Managers\TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Input\InputManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\GameObjects\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

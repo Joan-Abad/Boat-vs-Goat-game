@@ -28,11 +28,17 @@ void InputAction::SetIsKeyPressed(bool keyPressed)
 InputManager::InputManager()
 {
 	//Create project input actions
-	action_W = CreateInputAction(sf::Keyboard::Key::W);
-	action_Q = CreateInputAction(sf::Keyboard::Key::Q);
-	action_E = CreateInputAction(sf::Keyboard::Key::E);
+	CreateInputAction(sf::Keyboard::Key::W);
+	CreateInputAction(sf::Keyboard::Key::Q);
+	CreateInputAction(sf::Keyboard::Key::E);	
+	CreateInputAction(sf::Keyboard::Key::Space);
 
+}
 
+InputManager::~InputManager()
+{
+	for (auto projectInputAction : ProjectInputActions)
+		delete projectInputAction;
 }
 
 void InputManager::Update()

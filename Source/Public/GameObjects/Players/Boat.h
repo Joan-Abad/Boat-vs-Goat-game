@@ -1,5 +1,5 @@
 #pragma once
-#include "Player/Player.h"
+#include "GameObjects/Players/Player.h"
 
 #define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
 #define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
@@ -13,11 +13,13 @@ public:
 
 	virtual void HandlePlayerInput();
 
+	virtual void Init() override;
 	//Function that gets called each tick
 	virtual void Update() override;
 	void SetIsAccelerating(bool bIsAcelerating);
 	void SetIsRotatingLeft(bool bRotatingLeft);
 	void SetIsRotatingRight(bool bRotatingRight);
+	void SetIsShooting(bool bIsShooting);
 private:
 	//Boat mechanics
 	void StartAccelerateBoat();
@@ -31,6 +33,10 @@ private:
 	void RotateBoatLeft();
 	void StopRotateBoatLeft();
 
+	void StartShootBullet();
+	void BoatShootBullet();
+	void StopShootBullet();
+
 	void StartRotateBoatRight();
 	void RotateBoatRight();
 	void StopRotateBoatRight();
@@ -38,6 +44,7 @@ private:
 	int timesAccelerated = 0; 
 #endif
 private: 
+	bool bBoatIsShooting;
 	bool bIsBoatAccelerating;
 	bool bIsBoatRotatingLeft; 
 	bool bIsBoatRotatingRight;
@@ -54,10 +61,17 @@ private:
 	InputAction* action_W;
 	InputAction* action_RotateLeft;
 	InputAction* action_RotateRight;
+	InputAction* action_ShootBoat;
+
+	// Create a clock
+	sf::Clock timer;
+
+	float shootingCD;
 
 	static const char* key_AccelerateBoatID;
 	static const char* key_RotateBoatLeftID;
 	static const char* key_RotateBoatRightID;
+	static const char* key_ShootBoatID;
 	static const char* key_boatPosition;
 	static const char* key_boatAngle;
 	static const char* key_boatID;
