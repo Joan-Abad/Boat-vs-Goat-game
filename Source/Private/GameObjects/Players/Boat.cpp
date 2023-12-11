@@ -6,6 +6,7 @@
 #include "Managers/TextureManager.h"
 #include "Map/Map.h"
 #include "GameObjects/BoatBullet.h"
+#include "Managers/SoundManager.h"
 
 const char* Boat::key_AccelerateBoatID = "AccelerateBoatID";
 const char* Boat::key_RotateBoatLeftID = "RotateBoatLeftID";
@@ -20,13 +21,18 @@ Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(Pl
 bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f)
 {
 
+	//Graphics part
 	if (boatCounter == 0)
 		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER1TEXTPATH));
 	else /*(boatCounter == 1)*/
 		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER2TEXTPATH));
 
 	initialSprite.setOrigin(initialSprite.getLocalBounds().width / 2, initialSprite.getLocalBounds().height / 2);
+	//End Graphic part
 
+	//Sound part
+	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+	//End sound part
 
 	boatCounter++;
 
@@ -210,6 +216,12 @@ void Boat::BoatShootBullet()
 			Map& currentMap = *GameManager::GetGameManager()->GetCurrentMap();
 			BoatBullet* bb = currentMap.SpawnGameObject<BoatBullet>(GameObjectInitialInfo(GetPosition(), 0));
 			bb->SetGameObjectTransform(GetShootingLocation(), GetRotation(), bb->GetScale());
+			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+			if (sound)
+			{
+				sound->SetVolume(20.f);
+				sound->PlaySound();
+			}
 			timer.restart();
 		}
 	}

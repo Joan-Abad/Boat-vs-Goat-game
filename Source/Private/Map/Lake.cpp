@@ -6,6 +6,7 @@
 #include "Managers/TextureManager.h"
 #include "Managers/AppManager.h"
 #include "Managers/Networking/NetworkingManager.h"
+#include "Managers/SoundManager.h"
 
 Map_Lake::Map_Lake()
 {
@@ -15,6 +16,12 @@ Map_Lake::Map_Lake()
 	TM.AddTexture(boat1Path);
 	TM.AddTexture(boat2Path);
 	TM.AddTexture(bulletPath);
+
+	SoundManager* SM = SoundManager::Get();
+	if (SM)
+	{
+		SM->CreateSound("Sound/Boat/blaster.wav");
+	}
 
 	backgroundSprite.setTexture(*TM.GetTexture(backgroundLakePath));
 }

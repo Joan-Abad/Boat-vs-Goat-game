@@ -4,6 +4,8 @@
 #define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
 #define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
 
+class Sound;  
+
 class Boat : public Player
 {
 	friend class NetworkingManagerClient;
@@ -67,6 +69,8 @@ private:
 
 	// Create a clock
 	sf::Clock timer;
+
+	Sound* shootingSound; 
 
 	float shootingCD;
 
