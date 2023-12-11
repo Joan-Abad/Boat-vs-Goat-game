@@ -10,7 +10,7 @@ bool TextureManager::AddTexture(const char* texturePath)
 		{
 			if (!texture->loadFromFile(texturePath))
 			{
-				std::cerr << "Could not load the following texture: " << texturePath << std::endl;;
+				std::cerr << "Could not load the following texture: " << texturePath << std::endl;
 				delete texture;
 				return false;
 			}

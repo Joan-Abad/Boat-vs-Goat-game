@@ -9,9 +9,7 @@ class Boat : public Player
 	friend class NetworkingManagerClient;
 	friend class NetworkingManagerServer; 
 public: 
-	Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
-
-	virtual void HandlePlayerInput();
+	Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
 
 	virtual void Init() override;
 	//Function that gets called each tick
@@ -49,8 +47,12 @@ private:
 	bool bIsBoatRotatingLeft; 
 	bool bIsBoatRotatingRight;
 
+	static unsigned short boatCounter; 
+
 	//How fast the boat accelerates each frame
 	sf::Vector2f boatAcceleration;
+	//Shooting socket
+	sf::Vector2f GetShootingLocation();
 	//The speed of the boat is frame
 	float speed;
 	//Angle the boat turns around each second

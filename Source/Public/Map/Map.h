@@ -16,10 +16,19 @@ public:
 	virtual void DrawWap(Window& window) = 0;
 	virtual void EndMap() = 0;
 	inline std::vector<Player*>& GetPlayers() { return players;  };
+	void CreateGameObject(sf::Vector2f);
+
+	template<typename ActorToSpawn>
+	ActorToSpawn* SpawnGameObject(GameObjectInitialInfo objectInitialInfo) 
+	{
+		ActorToSpawn* spawnedActor = new ActorToSpawn(objectInitialInfo);
+		levelGameObjects.emplace_back(spawnedActor);
+		return spawnedActor;
+	}
 protected: 
 	void AddPlayer(Player& player);
 	std::vector<Player*> players; 
-
+	std::vector<GameObject*> levelGameObjects;
 private:
 
 

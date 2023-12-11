@@ -3,6 +3,9 @@
 #include "ApplicationHelper.h"
 #include "Managers/Networking/NetworkingManager.h"
 #include "Input/InputManager.h"
+#include "Managers/TextureManager.h"
+#include "Map/Map.h"
+#include "GameObjects/BoatBullet.h"
 
 const char* Boat::key_AccelerateBoatID = "AccelerateBoatID";
 const char* Boat::key_RotateBoatLeftID = "RotateBoatLeftID";
@@ -11,11 +14,23 @@ const char* Boat::key_boatPosition = "boatPosition";
 const char* Boat::key_boatAngle = "boatAngle";
 const char* Boat::key_boatID= "boatID";
 const char* Boat::key_ShootBoatID = "shootBoat";
+unsigned short Boat::boatCounter = 0; 
 
-
-Boat::Boat(sf::Window& window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(window, PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f), 
+Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f), 
 bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f)
 {
+
+	if (boatCounter == 0)
+		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER1TEXTPATH));
+	else /*(boatCounter == 1)*/
+		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER2TEXTPATH));
+
+	initialSprite.setOrigin(initialSprite.getLocalBounds().width / 2, initialSprite.getLocalBounds().height / 2);
+
+
+	boatCounter++;
+
+
 	if (PlayerPlayable)
 	{
 		InputManager* im = InputManager::GetInputManager();
@@ -41,14 +56,8 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 		action_ShootBoat->OnKeyTriggered.push_back(BindAction(&Boat::StartShootBullet, this));
 		action_ShootBoat->OnKeyReleased.push_back(BindAction(&Boat::StopShootBullet, this));
 
-		playerSprite.setColor(sf::Color::Red);
+		initialSprite.setColor(sf::Color::Cyan);
 	}
-
-}
-
-void Boat::HandlePlayerInput()
-{
-	Player::HandlePlayerInput();
 }
 
 void Boat::Init()
@@ -109,7 +118,7 @@ void Boat::AccelerateBoat()
 
 	//std::cout << "Accelerating Boat\n";
 	//sf::Vector2f position = ApplicationHelper::Normalize(position);
-	sf::Vector2f position = playerSprite.getPosition();
+	sf::Vector2f position = initialSprite.getPosition();
 
 	speed = 750 * ApplicationHelper::GetDeltaTime();
 
@@ -144,9 +153,9 @@ void Boat::DecelerateBoat()
 {
 	std::cout << "Accelerating Boat\n";
 	//sf::Vector2f position = ApplicationHelper::Normalize(position);
-	sf::Vector2f position = playerSprite.getPosition();
+	sf::Vector2f position = initialSprite.getPosition();
 	position.y += 100 * ApplicationHelper::GetDeltaTime();
-	playerSprite.setPosition(position);
+	initialSprite.setPosition(position);
 }
 
 void Boat::StartRotateBoatLeft()
@@ -198,6 +207,9 @@ void Boat::BoatShootBullet()
 		sf::Time elapsedTime = timer.getElapsedTime();
 		if (elapsedTime.asSeconds() >= shootingCD) {
 			std::cout << "Spawn Bullet\n";
+			Map& currentMap = *GameManager::GetGameManager()->GetCurrentMap();
+			BoatBullet* bb = currentMap.SpawnGameObject<BoatBullet>(GameObjectInitialInfo(GetPosition(), 0));
+			bb->SetGameObjectTransform(GetShootingLocation(), GetRotation(), bb->GetScale());
 			timer.restart();
 		}
 	}
@@ -244,4 +256,9 @@ void Boat::StopRotateBoatRight()
 		// Function ID + PlayerID
 		AddLocalNetworkDataToSend(key_RotateBoatRightID, bIsBoatRotatingRight);
 	}
+}
+
+sf::Vector2f Boat::GetShootingLocation()
+{
+	return GetPosition() + rightVector * 12.f  + forwardVector * 50.f;
 }

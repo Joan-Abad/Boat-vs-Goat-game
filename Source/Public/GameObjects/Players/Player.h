@@ -9,19 +9,15 @@
 class NetworkingManager; 
 class InputAction;
 
-struct PlayerInitialInfo
+class PlayerInitialInfo : public GameObjectInitialInfo
 {
-	PlayerInitialInfo(unsigned short uniqueID, sf::Vector2f playerPosition, float angle, const char* playerTexturePath)
+public:
+	PlayerInitialInfo(sf::Vector2f playerPosition, float angle) 
+		: GameObjectInitialInfo(playerPosition, angle)
 	{
-		this->uniqueID = uniqueID;
-		this->playerPosition = playerPosition;
-		this->angle = angle; 
-		this->playerTexturePath = playerTexturePath;
+
 	}
-	unsigned short uniqueID;
-	sf::Vector2f playerPosition;
-	float angle;
-	const char* playerTexturePath; 
+
 };
 
 //A representation of the game object + its input
@@ -31,29 +27,17 @@ class Player : public GameObject
 	friend class NetworkingManager;
 public:
 
-	Player(sf::Window & window, bool PlayerPlayable, PlayerInitialInfo playerInitialInfo);
+	Player(bool isLocallyController, GameObjectInitialInfo info);
 	virtual ~Player();
-	
-	//Always call this function for window responsiveness from child classes
-	virtual void HandlePlayerInput();
 
-	//If you want to add more stuff to the character, override this function but also call the parent class to draw character sprite
-	virtual void Draw(sf::RenderWindow& window);
+		//If you want to add more stuff to the character, override this function but also call the parent class to draw character sprite
+		virtual void Draw(sf::RenderWindow& window);
 
-	//Gets the rotation of the player sprite in angles
-	float GetRotation();
-
-	//Function that gets called each tick
-	virtual void Update();
+		//Function that gets called each tick
+		virtual void Update();
 
 	//Called after update
 	virtual void EndUpdate();
-
-	//Sets the position in the screen of the player
-	void SetPosition(sf::Vector2f newPosition);
-
-	//Sets the rotation in the screen of the player
-	void SetRotation(float angle);
 
 	NetworkingManager* GetNetworkingManager();
 
@@ -83,21 +67,4 @@ private:
 
 	//Check if this player should handle input by this process
 	bool bIsLocallyControlled;
-
-protected: 
-	
-
-	//The forward vector of the player
-	sf::Vector2f forwardVector;
-	//The right vector of the player
-	sf::Vector2f rightVector;
-
-	//Windows window where the player lives
-	sf::Window* window; 
-
-	//Texture of the player
-	sf::Texture playerTexture; 
-
-	//Sprite of the player
-	sf::Sprite playerSprite; 
 };

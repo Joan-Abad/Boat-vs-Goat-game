@@ -4,17 +4,18 @@
 
 Map::~Map()
 {
-	for (auto& player : players)
-		delete player;
+	for (auto& levelGameObject : levelGameObjects)
+		delete levelGameObject;
+
 }
 
 void Map::UpdateMap()
 {
-	for (auto& player : players)
+	int numGameObjects = levelGameObjects.size(); 
+	for (int i = 0; i < numGameObjects; i++)
 	{
-		player->HandlePlayerInput();
-		player->Update();
-		player->EndUpdate();
+		levelGameObjects[i]->Update();
+		levelGameObjects[i]->EndUpdate();
 	}
 }
 
@@ -26,4 +27,5 @@ void Map::AddDataToSendServer()
 void Map::AddPlayer(Player& player)
 {
 	players.emplace_back(&player);
+	levelGameObjects.push_back(&player);
 }
