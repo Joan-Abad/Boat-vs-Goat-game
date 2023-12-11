@@ -14,7 +14,9 @@ void Map::UpdateMap()
 	int numGameObjects = levelGameObjects.size(); 
 	for (int i = 0; i < numGameObjects; i++)
 	{
-		levelGameObjects[i]->Update();
+		if(levelGameObjects[i]->bTickEnabled)
+			levelGameObjects[i]->Update();
+
 		levelGameObjects[i]->EndUpdate();
 	}
 }

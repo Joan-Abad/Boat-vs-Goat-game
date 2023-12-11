@@ -1,10 +1,15 @@
-#include "GameObjects/BoatBullet.h"
+#include "GameObjects/Bullet.h"
 #include "Managers/AppManager.h"
 #include "Managers/Networking/NetworkingManager.h"
 #include "Managers/TextureManager.h"
 #include "ApplicationHelper.h"
 
-BoatBullet::BoatBullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(2400.f)
+Bullet::Bullet() : GameObject()
+{
+	bTickEnabled = false;
+}
+
+Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(2400.f)
 {
 	/*const char* bulletImagePath = "Art/bullet.png";
 
@@ -17,16 +22,23 @@ BoatBullet::BoatBullet(GameObjectInitialInfo initialInfo) : GameObject(initialIn
 	initialSprite.setScale(initialSprite.getScale() / 20.f);
 }
 
-void BoatBullet::Draw(sf::RenderWindow& window)
+void Bullet::Draw(sf::RenderWindow& window)
 {
 	window.draw(initialSprite);
 }
 
-void BoatBullet::Update()
+void Bullet::Update()
 {
 	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
 	{
-		//Accelerate boat bullet on forward vector direction
-		SetPosition(GetPosition() + forwardVector * bulletSpeed * ApplicationHelper::GetDeltaTime());
+		//Stop updating the object if it is out of screen
+		if (GameObjectOutOfScreen())
+		{
+			bTickEnabled = false;
+			HideGameObject();
+		}
+		else
+			//Accelerate boat bullet on forward vector direction
+			SetPosition(GetPosition() + forwardVector * bulletSpeed * ApplicationHelper::GetDeltaTime());
 	}
 }

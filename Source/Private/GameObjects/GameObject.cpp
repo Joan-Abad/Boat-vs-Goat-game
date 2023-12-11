@@ -1,14 +1,49 @@
 #include "GameObjects/GameObject.h"
 #include "ApplicationHelper.h"
+#include "Managers/AppManager.h"
+#include "Managers/GameManager.h"
+#include "Map/Map.h"
+
+GameObject::GameObject(): bTickEnabled(true)
+{
+	initialSprite.setPosition({ 0,0 });
+	initialSprite.setRotation(0);
+}
 
 GameObject::GameObject(GameObjectInitialInfo gameObjectInitialInfo) : bReplicates(false), bReplicateTransform(false),
-	forwardVector(sf::Vector2f(0.f, 1.0f)), rightVector(sf::Vector2f(-1.f, 0.f))
+	forwardVector(sf::Vector2f(0.f, 1.0f)), rightVector(sf::Vector2f(-1.f, 0.f)), bTickEnabled(true)
 {
 }
 
 void GameObject::Init()
 {
 	
+}
+
+void GameObject::DestroyActor()
+{
+	//GetCurrentMap()->GetGameObjects().()
+}
+
+void GameObject::ShowGameObject()
+{
+	initialSprite.setColor(sf::Color(255.0, 255.0, 255.0, 255.0));
+}
+
+void GameObject::HideGameObject()
+{
+	initialSprite.setColor(sf::Color::Transparent);
+}
+
+bool GameObject::GameObjectOutOfScreen()
+{
+	if (initialSprite.getPosition().x < 0 || initialSprite.getPosition().y < 0
+		|| initialSprite.getPosition().x > WINDOW_SIZE.x || initialSprite.getPosition().y > WINDOW_SIZE.y)
+	{
+		std::cout << "Game object is out of screen";
+		return true; 
+	}
+	return false; 
 }
 
 void GameObject::Draw(sf::RenderWindow& window)
@@ -74,4 +109,9 @@ sf::Vector2f GameObject::GetScale()
 sf::Vector2f GameObject::GetPosition()
 {
 	return initialSprite.getPosition();
+}
+
+Map* GameObject::GetCurrentMap()
+{
+	return GameManager::GetGameManager()->GetCurrentMap();
 }

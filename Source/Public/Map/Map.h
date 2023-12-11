@@ -15,8 +15,6 @@ public:
 	virtual void AddDataToSendServer();
 	virtual void DrawWap(Window& window) = 0;
 	virtual void EndMap() = 0;
-	inline std::vector<Player*>& GetPlayers() { return players;  };
-	void CreateGameObject(sf::Vector2f);
 
 	template<typename ActorToSpawn>
 	ActorToSpawn* SpawnGameObject(GameObjectInitialInfo objectInitialInfo) 
@@ -25,6 +23,10 @@ public:
 		levelGameObjects.emplace_back(spawnedActor);
 		return spawnedActor;
 	}
+
+	inline std::vector<Player*>& GetPlayers() { return players;  };
+	inline std::vector<GameObject*>& GetGameObjects() { return levelGameObjects; };
+
 protected: 
 	void AddPlayer(Player& player);
 	std::vector<Player*> players; 

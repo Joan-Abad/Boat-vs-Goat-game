@@ -1,8 +1,11 @@
 #pragma once
+
 #include "GameObjects/Players/Player.h"
+#include "GameObjects/Bullet.h"
 
 #define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
 #define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
+#define MaxBulletsPerBoatOnScreen 5
 
 class Sound;  
 
@@ -73,7 +76,9 @@ private:
 	Sound* shootingSound; 
 
 	float shootingCD;
+	int bulletTracker; 
 
+	std::array<Bullet*, MaxBulletsPerBoatOnScreen> bullets;
 	static const char* key_AccelerateBoatID;
 	static const char* key_RotateBoatLeftID;
 	static const char* key_RotateBoatRightID;
@@ -81,6 +86,6 @@ private:
 	static const char* key_boatPosition;
 	static const char* key_boatAngle;
 	static const char* key_boatID;
+	static const char* key_SpawnBullet;
 	static const uint32_t key_accelerateBoat;
-
 };

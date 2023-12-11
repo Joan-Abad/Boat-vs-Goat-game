@@ -5,7 +5,6 @@
 #include "Input/InputManager.h"
 #include "Managers/TextureManager.h"
 #include "Map/Map.h"
-#include "GameObjects/BoatBullet.h"
 #include "Managers/SoundManager.h"
 
 const char* Boat::key_AccelerateBoatID = "AccelerateBoatID";
@@ -15,10 +14,12 @@ const char* Boat::key_boatPosition = "boatPosition";
 const char* Boat::key_boatAngle = "boatAngle";
 const char* Boat::key_boatID= "boatID";
 const char* Boat::key_ShootBoatID = "shootBoat";
+const char* Boat::key_SpawnBullet = "spawnBullet";
+
 unsigned short Boat::boatCounter = 0; 
 
 Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f), 
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f)
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0)
 {
 
 	//Graphics part
@@ -33,6 +34,18 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	//Sound part
 	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
 	//End sound part
+	
+	Map* map = GetCurrentMap();
+
+	for (int i = 0; i < MaxBulletsPerBoatOnScreen; i++)
+	{
+		//Spawn and hide bullets
+		Bullet* bullet = map->SpawnGameObject<Bullet>(GameObjectInitialInfo());
+		bullet->bTickEnabled = false; 
+		bullet->HideGameObject();
+		bullets[i] = bullet;
+	}
+	
 
 	boatCounter++;
 
@@ -213,15 +226,22 @@ void Boat::BoatShootBullet()
 		sf::Time elapsedTime = timer.getElapsedTime();
 		if (elapsedTime.asSeconds() >= shootingCD) {
 			std::cout << "Spawn Bullet\n";
-			Map& currentMap = *GameManager::GetGameManager()->GetCurrentMap();
-			BoatBullet* bb = currentMap.SpawnGameObject<BoatBullet>(GameObjectInitialInfo(GetPosition(), 0));
-			bb->SetGameObjectTransform(GetShootingLocation(), GetRotation(), bb->GetScale());
+
+			bullets[bulletTracker]->SetGameObjectTransform(GetShootingLocation(), GetRotation(), bullets[bulletTracker]->GetScale());
+			bullets[bulletTracker]->bTickEnabled = true; 
+			bullets[bulletTracker]->ShowGameObject();
 			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+
 			if (sound)
 			{
 				sound->SetVolume(20.f);
 				sound->PlaySound();
 			}
+			bulletTracker++; 
+			
+			if (bulletTracker >= MaxBulletsPerBoatOnScreen)
+				bulletTracker = 0; 
+
 			timer.restart();
 		}
 	}

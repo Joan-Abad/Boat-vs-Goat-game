@@ -19,6 +19,7 @@ struct Transform
 class GameObjectInitialInfo 
 {
 public:
+	GameObjectInitialInfo() = default;
 	GameObjectInitialInfo(sf::Vector2f playerPosition, float angle)
 	{
 		this->playerPosition = playerPosition;
@@ -31,13 +32,26 @@ public:
 class GameObject
 {
 public:
+	GameObject();
 	GameObject(GameObjectInitialInfo gameObjectInitialInfo);
 
 	//Set true if we want this cass to replicate the data 
 	bool bReplicates;
 	bool bReplicateTransform;
+	bool bTickEnabled; 
 
 	virtual void Init();
+
+	//Destroys all the resources of the actor and removes it from the level
+	void DestroyActor();
+
+	//Will draw the actor 
+	void ShowGameObject();
+
+	//Hides the visual part of the actor 
+	void HideGameObject();
+
+	bool GameObjectOutOfScreen();
 
 	//If you want to add more stuff to the character, override this function but also call the parent class to draw character sprite
 	virtual void Draw(sf::RenderWindow& window);
@@ -71,6 +85,9 @@ public:
 
 	//Gets the rotation of the player sprite in angles
 	sf::Vector2f GetPosition();
+
+	//Gets the current map being played 
+	class Map* GetCurrentMap();
 
 	//Sprite of the player
 	sf::Sprite initialSprite;

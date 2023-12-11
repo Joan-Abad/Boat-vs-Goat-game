@@ -197,7 +197,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Private\GameObjects\BoatBullet.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\Private\Input\InputManager.cpp" />
     <ClCompile Include="Source\Private\Managers\AppManager.cpp" />
     <ClCompile Include="Source\Private\Managers\GameManager.cpp" />
@@ -219,7 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
-    <ClInclude Include="Source\Public\GameObjects\BoatBullet.h" />
+    <ClInclude Include="Source\Public\GameObjects\Bullet.h" />
     <ClInclude Include="Source\Public\GameObjects\GameObject.h" />
     <ClInclude Include="Source\Public\Input\InputManager.h" />
     <ClInclude Include="Source\Public\Managers\AppManager.h" />
@@ -237,6 +237,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Art\Background\Water.jpg" />
+    <Image Include="Art\bullet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Sound\Boat\blaster.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
