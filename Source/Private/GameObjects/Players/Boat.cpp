@@ -15,7 +15,7 @@ const char* Boat::key_ShootBoatID = "shootBoat";
 
 unsigned short Boat::boatCounter = 0; 
 
-Boat::Boat(PlayerInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f),
+Boat::Boat(PlayerInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(480.f),
 bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(450)
 {
 	Map* map = GetCurrentMap();

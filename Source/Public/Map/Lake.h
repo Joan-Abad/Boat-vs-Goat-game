@@ -18,6 +18,7 @@ public:
 	const char* boat2Path = "Art/boat/PNG/Boats_color3/Boat_color3_1.png";
 	const char* bulletPath = "Art/bullet.png";
 	const char* heartPath = "Art/heart.png";
+	const char* lakeFontPath = "Fonts/Mikeona.ttf";
 private: 
 	sf::Texture backgroundTexture;
 	sf::Sprite backgroundSprite; 

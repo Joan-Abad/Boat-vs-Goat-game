@@ -7,6 +7,7 @@
 #include "Managers/AppManager.h"
 #include "Managers/Networking/NetworkingManager.h"
 #include "Managers/SoundManager.h"
+#include "Managers/FontManager.h"
 
 Map_Lake::Map_Lake()
 {
@@ -17,6 +18,10 @@ Map_Lake::Map_Lake()
 	TM.AddTexture(boat2Path);
 	TM.AddTexture(bulletPath);
 	TM.AddTexture(heartPath);
+
+	FontManager& fontManager = *FontManager::Get();
+
+	fontManager.AddFont(lakeFontPath);
 
 	SoundManager* SM = SoundManager::Get();
 	if (SM)
