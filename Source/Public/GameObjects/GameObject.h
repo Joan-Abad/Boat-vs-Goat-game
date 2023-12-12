@@ -19,14 +19,19 @@ struct Transform
 class GameObjectInitialInfo 
 {
 public:
-	GameObjectInitialInfo() = default;
-	GameObjectInitialInfo(sf::Vector2f playerPosition, float angle)
+	GameObjectInitialInfo()
+	{
+		scale = { 1.0f, 1.0f };
+	};
+	GameObjectInitialInfo(sf::Vector2f playerPosition, float angle, sf::Vector2f scale = {1.0f,1.0f})
 	{
 		this->playerPosition = playerPosition;
 		this->angle = angle;
+		this->scale = scale; 
 	}
 	sf::Vector2f playerPosition;
 	float angle;
+	sf::Vector2f scale; 
 };
 
 class GameObject
@@ -39,6 +44,17 @@ public:
 	bool bReplicates;
 	bool bReplicateTransform;
 	bool bTickEnabled; 
+
+	//Adds the data that will be send at the end of the frame
+	//Value needs to be a supported JSON type (string, number, Json Object, array, bool or null)
+	template <typename Value>
+	void AddLocalNetworkDataToSend(const char* KEY, Value valueToSend)
+	{
+		if (!gameObjectNetData.isMember(key_gameObjectID))
+			gameObjectNetData[key_gameObjectID] = gameObjectID;
+
+		gameObjectNetData[KEY] = valueToSend;
+	}
 
 	virtual void Init();
 
@@ -98,11 +114,7 @@ public:
 	//Sprite of the player
 	sf::Sprite initialSprite;
 
-	//The forward vector of the player
-	sf::Vector2f forwardVector;
 
-	//The right vector of the player
-	sf::Vector2f rightVector;
 
 	static const char* key_gameObjectPosition;
 	static const char* key_gameObjectRot;
@@ -111,25 +123,9 @@ public:
 	//GETTERS
 	inline int GetGameObjectIDTracker() { return gameObjectIDTracker; };
 	inline int GetGameObjectID() { return gameObjectID; };
+	inline sf::Vector2f GetForwardVector() { return forwardVector; };
+	inline sf::Vector2f GetRightVector() { return rightVector; };
 protected: 
-
-	//Adds the data that will be send at the end of the frame
-	//Value needs to be a supported JSON type (string, number, Json Object, array, bool or null)
-	template <typename Value>
-	void AddLocalNetworkDataToSend(const char* KEY, Value valueToSend, int overrideID = -1)
-	{
-		if (!gameObjectNetData.isMember(key_gameObjectID))
-		{
-			if (overrideID != -1)
-				gameObjectNetData[key_gameObjectID] = overrideID;
-			else
-				gameObjectNetData[key_gameObjectID] = gameObjectID;
-		}
-			
-		
-
-		gameObjectNetData[KEY] = valueToSend;
-	}
 
 	//Passes the game object network data to the NetworkManager
 	void AddGameObjectNetDataToManagerNetData();
@@ -139,8 +135,15 @@ protected:
 
 private: 
 	
+	//The forward vector of the player
+	sf::Vector2f forwardVector;
 
+	//The right vector of the player
+	sf::Vector2f rightVector;
 
+	//Gives a unique id to the spawning game object
 	static int gameObjectIDTracker;
+
+	//The unique id of this game object
 	int gameObjectID;
 };

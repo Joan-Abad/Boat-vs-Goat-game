@@ -9,7 +9,7 @@ Bullet::Bullet() : GameObject()
 	bTickEnabled = false;
 }
 
-Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(120.f)
+Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(1200.f)
 {
 	/*const char* bulletImagePath = "Art/bullet.png";
 
@@ -40,7 +40,7 @@ void Bullet::Update()
 		else
 		{
 			//Accelerate boat bullet on forward vector direction
-			sf::Vector2f bulletPosition = GetPosition() + forwardVector * bulletSpeed * ApplicationHelper::GetDeltaTime();
+			sf::Vector2f bulletPosition = GetPosition() + GetForwardVector() * bulletSpeed * ApplicationHelper::GetDeltaTime();
 			SetPosition(bulletPosition);
 
 			Json::Value pos; 
@@ -55,6 +55,20 @@ void Bullet::Update()
 
 void Bullet::UpdateClientNetData(const Json::Value& root)
 {
+	if (root.isMember(key_gameObjectHide))
+	{
+		bool bHide = root[key_gameObjectHide].asBool();
+
+		if (bHide)
+			HideGameObject();
+		else
+			ShowGameObject();
+	}
+	if (root.isMember(key_gameObjectRot))
+	{
+		float rot = root[key_gameObjectRot].asFloat();
+		SetRotation(rot);
+	}
 	//Set position
 	if (root.isMember(key_gameObjectPosition))
 	{

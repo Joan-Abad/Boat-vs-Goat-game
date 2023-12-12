@@ -12,8 +12,8 @@ class InputAction;
 class PlayerInitialInfo : public GameObjectInitialInfo
 {
 public:
-	PlayerInitialInfo(sf::Vector2f playerPosition, float angle) 
-		: GameObjectInitialInfo(playerPosition, angle)
+	PlayerInitialInfo(sf::Vector2f playerPosition, float angle, sf::Vector2f scale = {1.0f, 1.0f})
+		: GameObjectInitialInfo(playerPosition, angle, scale)
 	{
 
 	}

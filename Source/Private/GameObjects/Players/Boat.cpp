@@ -14,8 +14,8 @@ const char* Boat::key_ShootBoatID = "shootBoat";
 
 unsigned short Boat::boatCounter = 0; 
 
-Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f), 
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(750)
+Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(180.f), 
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(125)
 {
 
 	//Graphics part
@@ -73,6 +73,8 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 
 		initialSprite.setColor(sf::Color::Cyan);
 	}
+
+	SetScale({ 0.8f, 0.8f });
 }
 
 void Boat::Init()
@@ -137,7 +139,7 @@ void Boat::AccelerateBoat()
 
 	float frameSpeed = speed * ApplicationHelper::GetDeltaTime();
 
-	position += forwardVector * frameSpeed;
+	position += GetForwardVector() * frameSpeed;
 
 	//position.y -= 100 * ApplicationHelper::GetDeltaTime();
 	SetPosition(position);
@@ -209,19 +211,18 @@ void Boat::BoatShootBullet()
 		sf::Time elapsedTime = timer.getElapsedTime();
 		if (elapsedTime.asSeconds() >= shootingCD) {
 			std::cout << "Spawn Bullet\n";
-			PrepareBullet(GetPosition(), GetRotation());
+			sf::Vector2f bulletPosition = GetShootingLocation();
 
-			Json::Value bulletPosition;
-			bulletPosition.append(GetPosition().x);
-			bulletPosition.append(GetPosition().y);
+			Json::Value valBulletPosition;
+			valBulletPosition.append(bulletPosition.x);
+			valBulletPosition.append(bulletPosition.y);
 			
 			AddLocalNetworkDataToSend(key_ShootBoatID, true);
-			AddLocalNetworkDataToSend(key_gameObjectHide, false);
-			AddLocalNetworkDataToSend(key_gameObjectPosition, bulletPosition);
-			AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
+			bullets[bulletTracker]->AddLocalNetworkDataToSend(key_gameObjectHide, false);
+			bullets[bulletTracker]->AddLocalNetworkDataToSend(key_gameObjectPosition, valBulletPosition);
+			bullets[bulletTracker]->AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
+			PrepareBullet(bulletPosition, GetRotation());
 
-
-			
 			timer.restart();
 		}
 	}
@@ -292,7 +293,7 @@ void Boat::PrepareBullet(sf::Vector2f shootingLocation, float angle)
 
 	if (sound)
 	{
-		sound->SetVolume(0.f);
+		sound->SetVolume(100.f);
 		sound->PlaySound();
 	}
 	
@@ -317,25 +318,6 @@ void Boat::UpdateClientNetData(const Json::Value& root)
 		float angle = root[key_gameObjectRot].asFloat();
 		SetRotation(angle);
 	}
-	//Spawn bullet
-	if (root.isMember(key_ShootBoatID))
-	{
-		if (root.isMember(key_gameObjectHide))
-		{
-			bool hide = root[GameObject::key_gameObjectHide].asBool();
-			if (hide)
-				HideGameObject();
-			else
-				ShowGameObject();
-		}
-		if (root.isMember(key_gameObjectPosition) && root.isMember(key_gameObjectRot))
-		{
-			const Json::Value& bulletPositionArray = root[Boat::key_gameObjectPosition];
-
-			PrepareBullet(sf::Vector2f(bulletPositionArray[0].asFloat(), bulletPositionArray[1].asFloat()),
-				root[key_gameObjectRot].asFloat());
-		}
-	}
 }
 
 void Boat::UpdateServerData(const Json::Value& root)
@@ -359,5 +341,5 @@ void Boat::UpdateServerData(const Json::Value& root)
 
 sf::Vector2f Boat::GetShootingLocation()
 {
-	return GetPosition() + rightVector * 12.f  + forwardVector * 50.f;
+	return GetPosition() + GetRightVector() * 14.f  + GetForwardVector() * 50.f;
 }

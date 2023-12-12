@@ -18,14 +18,13 @@ rightVector(sf::Vector2f(-1.f, 0.f))
 	gameObjectID = gameObjectIDTracker;
 	gameObjectIDTracker++;
 	std::cout << "Game Object ID: " << gameObjectID << std::endl;
-	initialSprite.setPosition({ 0,0 });
-	initialSprite.setRotation(0);
 }
 
 GameObject::GameObject(GameObjectInitialInfo gameObjectInitialInfo) : GameObject()
 {
 	initialSprite.setPosition({ gameObjectInitialInfo.playerPosition.x,gameObjectInitialInfo.playerPosition.y });
 	initialSprite.setRotation(gameObjectInitialInfo.angle);
+	initialSprite.setScale(gameObjectInitialInfo.scale);
 }
 
 void GameObject::Init()

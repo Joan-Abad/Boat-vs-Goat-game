@@ -142,10 +142,12 @@ void NetworkingManagerClient::RecieveDataFromServer()
 			Map& map = *GameManager::GetGameManager()->GetCurrentMap();
 			if (root.isMember("gameObjects") && root["gameObjects"].isArray())
 			{
+				Json::StreamWriterBuilder writerBuilder;
+
 				const Json::Value& gameObjects = root["gameObjects"];
+				std::string gameObjt = Json::writeString(writerBuilder, gameObjects);
 				for (const auto& gameObject : gameObjects)
 				{
-					Json::StreamWriterBuilder writerBuilder;
 					std::string goData = Json::writeString(writerBuilder, gameObject);
 
 					if (gameObject.isMember(GameObject::key_gameObjectID))
