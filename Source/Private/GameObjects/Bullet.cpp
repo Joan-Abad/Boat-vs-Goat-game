@@ -3,6 +3,7 @@
 #include "Managers/Networking/NetworkingManager.h"
 #include "Managers/TextureManager.h"
 #include "ApplicationHelper.h"
+#include "Managers/SoundManager.h"
 
 Bullet::Bullet() : GameObject()
 {
@@ -62,7 +63,11 @@ void Bullet::UpdateClientNetData(const Json::Value& root)
 		if (bHide)
 			HideGameObject();
 		else
+		{
 			ShowGameObject();
+			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+			sound->PlaySound();
+		}
 	}
 	if (root.isMember(key_gameObjectRot))
 	{

@@ -10,7 +10,7 @@
 #include "Managers/GameManager.h"
 #include "Managers/AppManager.h"
 
-#define LAN 1
+#define LAN 0
 
 class NetworkingManager
 {
