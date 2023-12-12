@@ -60,7 +60,7 @@ bool GameObject::GameObjectOutOfScreen()
 
 void GameObject::Draw(sf::RenderWindow& window)
 {
-
+	window.draw(initialSprite);
 }
 
 void GameObject::Update()

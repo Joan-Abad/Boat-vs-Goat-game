@@ -197,6 +197,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Private\GameObjects\BoatLifes.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\Private\Input\InputManager.cpp" />
     <ClCompile Include="Source\Private\Managers\AppManager.cpp" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Source\Private\Managers\Networking\NetworkingManagerServer.cpp" />
     <ClCompile Include="Source\Private\Window.cpp" />
     <ClCompile Include="Source\Private\ApplicationHelper.cpp" />
+    <ClCompile Include="Source\Public\GameObjects\BoatLifes.h" />
     <ClCompile Include="Source\Public\Input\BoatController.h" />
   </ItemGroup>
   <ItemGroup>

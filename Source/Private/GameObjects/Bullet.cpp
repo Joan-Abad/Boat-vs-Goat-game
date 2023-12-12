@@ -23,11 +23,6 @@ Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bul
 	initialSprite.setScale(initialSprite.getScale() / 20.f);
 }
 
-void Bullet::Draw(sf::RenderWindow& window)
-{
-	window.draw(initialSprite);
-}
-
 void Bullet::Update()
 {
 	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())

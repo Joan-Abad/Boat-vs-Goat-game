@@ -40,11 +40,6 @@ Player::~Player()
 
 }
 
-void Player::Draw(sf::RenderWindow& window)
-{
-	window.draw(initialSprite);
-}
-
 void Player::Update()
 {
 }

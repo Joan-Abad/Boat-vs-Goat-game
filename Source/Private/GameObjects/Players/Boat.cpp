@@ -6,6 +6,7 @@
 #include "Managers/TextureManager.h"
 #include "Map/Map.h"
 #include "Managers/SoundManager.h"
+#include "GameObjects/BoatLifes.h"
 
 const char* Boat::key_AccelerateBoatID = "AccelerateBoatID";
 const char* Boat::key_RotateBoatLeftID = "RotateBoatLeftID";
@@ -14,24 +15,30 @@ const char* Boat::key_ShootBoatID = "shootBoat";
 
 unsigned short Boat::boatCounter = 0; 
 
-Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(180.f), 
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(125)
+Boat::Boat(PlayerInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f),
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(450)
 {
+	Map* map = GetCurrentMap();
 
 	//Graphics part
 	if (boatCounter == 0)
+	{
 		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER1TEXTPATH));
+	}
 	else /*(boatCounter == 1)*/
+	{
 		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER2TEXTPATH));
-
+	}
 	initialSprite.setOrigin(initialSprite.getLocalBounds().width / 2, initialSprite.getLocalBounds().height / 2);
 	//End Graphic part
+
+	//Life UI
+	map->SpawnGameObject<BoatLifes>(GameObjectInitialInfo(), this);
 
 	//Sound part
 	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
 	//End sound part
 	std::cout << "Boat with ID: " << GetGameObjectID() << " spawned. " << std::endl;
-	Map* map = GetCurrentMap();
 
 	for (int i = 0; i < MaxBulletsPerBoatOnScreen; i++)
 	{

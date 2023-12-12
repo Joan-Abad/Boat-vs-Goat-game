@@ -19,9 +19,11 @@ struct Transform
 class GameObjectInitialInfo 
 {
 public:
-	GameObjectInitialInfo()
+	GameObjectInitialInfo() //: playerPosition{ 0.0f, 0.0f }, angle(0.f), scale({1.0f, 1.0f})
 	{
-		scale = { 1.0f, 1.0f };
+		this->playerPosition = {0.0f, 0.0f};
+		this->angle = 0.f;
+		this->scale = {1.0f, 1.0f};
 	};
 	GameObjectInitialInfo(sf::Vector2f playerPosition, float angle, sf::Vector2f scale = {1.0f,1.0f})
 	{

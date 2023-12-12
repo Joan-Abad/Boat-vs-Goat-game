@@ -17,6 +17,7 @@ public:
 	const char* boat1Path = "Art/boat/PNG/Boats_color1/Boat_color1_1.png";
 	const char* boat2Path = "Art/boat/PNG/Boats_color3/Boat_color3_1.png";
 	const char* bulletPath = "Art/bullet.png";
+	const char* heartPath = "Art/heart.png";
 private: 
 	sf::Texture backgroundTexture;
 	sf::Sprite backgroundSprite; 

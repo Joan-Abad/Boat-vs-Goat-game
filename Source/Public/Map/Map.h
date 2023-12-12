@@ -17,10 +17,10 @@ public:
 	virtual void DrawWap(Window& window) = 0;
 	virtual void EndMap() = 0;
 
-	template<typename ActorToSpawn>
-	ActorToSpawn* SpawnGameObject(GameObjectInitialInfo objectInitialInfo) 
+	template<typename ActorToSpawn, typename... Args>
+	ActorToSpawn* SpawnGameObject(Args&&... args) 
 	{
-		ActorToSpawn* spawnedActor = new ActorToSpawn(objectInitialInfo);
+		ActorToSpawn* spawnedActor = new ActorToSpawn(std::forward<Args>(args)...);
 		levelGameObjects[spawnedActor->GetGameObjectID()] = spawnedActor;
 		return spawnedActor;
 	}
