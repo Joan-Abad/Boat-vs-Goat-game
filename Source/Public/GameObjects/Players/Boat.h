@@ -43,9 +43,19 @@ private:
 	void StartRotateBoatRight();
 	void RotateBoatRight();
 	void StopRotateBoatRight();
+
+	void PrepareBullet(sf::Vector2f shootingLocation, float angle);
 #if _DEBUG
 	int timesAccelerated = 0; 
 #endif
+
+protected: 
+	
+	//Recieved data from the server. Extract any information needed
+	virtual void UpdateClientNetData(const Json::Value& root) override;
+
+	//Recived data from a client. Extract any information needed
+	virtual void UpdateServerData(const Json::Value& root);
 private: 
 	bool bBoatIsShooting;
 	bool bIsBoatAccelerating;
@@ -83,9 +93,6 @@ private:
 	static const char* key_RotateBoatLeftID;
 	static const char* key_RotateBoatRightID;
 	static const char* key_ShootBoatID;
-	static const char* key_boatPosition;
-	static const char* key_boatAngle;
-	static const char* key_boatID;
-	static const char* key_SpawnBullet;
+
 	static const uint32_t key_accelerateBoat;
 };

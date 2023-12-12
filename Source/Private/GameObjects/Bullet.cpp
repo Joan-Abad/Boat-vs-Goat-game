@@ -9,7 +9,7 @@ Bullet::Bullet() : GameObject()
 	bTickEnabled = false;
 }
 
-Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(2400.f)
+Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(120.f)
 {
 	/*const char* bulletImagePath = "Art/bullet.png";
 
@@ -38,7 +38,28 @@ void Bullet::Update()
 			HideGameObject();
 		}
 		else
+		{
 			//Accelerate boat bullet on forward vector direction
-			SetPosition(GetPosition() + forwardVector * bulletSpeed * ApplicationHelper::GetDeltaTime());
+			sf::Vector2f bulletPosition = GetPosition() + forwardVector * bulletSpeed * ApplicationHelper::GetDeltaTime();
+			SetPosition(bulletPosition);
+
+			Json::Value pos; 
+			pos.append(bulletPosition.x); 
+			pos.append(bulletPosition.y);
+
+			AddLocalNetworkDataToSend(key_gameObjectPosition, pos);
+			
+		}
+	}
+}
+
+void Bullet::UpdateClientNetData(const Json::Value& root)
+{
+	//Set position
+	if (root.isMember(key_gameObjectPosition))
+	{
+		const Json::Value& boatPositionArray = root[GameObject::key_gameObjectPosition];
+		sf::Vector2f boatPosition = sf::Vector2f(boatPositionArray[0].asFloat(), boatPositionArray[1].asFloat());
+		SetPosition(boatPosition);
 	}
 }

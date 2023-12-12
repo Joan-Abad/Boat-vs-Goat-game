@@ -10,16 +10,12 @@
 const char* Boat::key_AccelerateBoatID = "AccelerateBoatID";
 const char* Boat::key_RotateBoatLeftID = "RotateBoatLeftID";
 const char* Boat::key_RotateBoatRightID = "RotateBoatRightID";
-const char* Boat::key_boatPosition = "boatPosition";
-const char* Boat::key_boatAngle = "boatAngle";
-const char* Boat::key_boatID= "boatID";
 const char* Boat::key_ShootBoatID = "shootBoat";
-const char* Boat::key_SpawnBullet = "spawnBullet";
 
 unsigned short Boat::boatCounter = 0; 
 
 Boat::Boat(bool PlayerPlayable, PlayerInitialInfo playerInitialInfo) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(360.f), 
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0)
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(750)
 {
 
 	//Graphics part
@@ -34,7 +30,7 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	//Sound part
 	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
 	//End sound part
-	
+	std::cout << "Boat with ID: " << GetGameObjectID() << " spawned. " << std::endl;
 	Map* map = GetCurrentMap();
 
 	for (int i = 0; i < MaxBulletsPerBoatOnScreen; i++)
@@ -139,10 +135,9 @@ void Boat::AccelerateBoat()
 	//sf::Vector2f position = ApplicationHelper::Normalize(position);
 	sf::Vector2f position = initialSprite.getPosition();
 
-	speed = 750 * ApplicationHelper::GetDeltaTime();
+	float frameSpeed = speed * ApplicationHelper::GetDeltaTime();
 
-	position += forwardVector * speed;
-
+	position += forwardVector * frameSpeed;
 
 	//position.y -= 100 * ApplicationHelper::GetDeltaTime();
 	SetPosition(position);
@@ -156,7 +151,7 @@ void Boat::AccelerateBoat()
 	boatPosition.append(position.y);
 
 	//Send the data to the clients 
-	AddLocalNetworkDataToSend(key_boatPosition, boatPosition);
+	AddLocalNetworkDataToSend(key_gameObjectPosition, boatPosition);
 }
 
 void Boat::StopAccelerateBoat()
@@ -187,18 +182,6 @@ void Boat::StartRotateBoatLeft()
 	}
 }
 
-void Boat::RotateBoatLeft()
-{
-	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
-
-	std::cout << "Rotating boat left\n";
-	float tickRotation = -angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
-	float previousRotation = GetRotation();
-	float newAngleRotation = previousRotation + tickRotation;
-	SetRotation(newAngleRotation);
-	AddLocalNetworkDataToSend(key_boatAngle, GetRotation());
-}
-
 void Boat::StopRotateBoatLeft()
 {
 	bIsBoatRotatingLeft = false;
@@ -226,22 +209,19 @@ void Boat::BoatShootBullet()
 		sf::Time elapsedTime = timer.getElapsedTime();
 		if (elapsedTime.asSeconds() >= shootingCD) {
 			std::cout << "Spawn Bullet\n";
+			PrepareBullet(GetPosition(), GetRotation());
 
-			bullets[bulletTracker]->SetGameObjectTransform(GetShootingLocation(), GetRotation(), bullets[bulletTracker]->GetScale());
-			bullets[bulletTracker]->bTickEnabled = true; 
-			bullets[bulletTracker]->ShowGameObject();
-			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
-
-			if (sound)
-			{
-				sound->SetVolume(20.f);
-				sound->PlaySound();
-			}
-			bulletTracker++; 
+			Json::Value bulletPosition;
+			bulletPosition.append(GetPosition().x);
+			bulletPosition.append(GetPosition().y);
 			
-			if (bulletTracker >= MaxBulletsPerBoatOnScreen)
-				bulletTracker = 0; 
+			AddLocalNetworkDataToSend(key_ShootBoatID, true);
+			AddLocalNetworkDataToSend(key_gameObjectHide, false);
+			AddLocalNetworkDataToSend(key_gameObjectPosition, bulletPosition);
+			AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
 
+
+			
 			timer.restart();
 		}
 	}
@@ -267,6 +247,18 @@ void Boat::StartRotateBoatRight()
 	}
 }
 
+void Boat::RotateBoatLeft()
+{
+	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
+
+	std::cout << "Rotating boat left\n";
+	float tickRotation = -angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
+	float previousRotation = GetRotation();
+	float newAngleRotation = previousRotation + tickRotation;
+	SetRotation(newAngleRotation);
+	AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
+}
+
 void Boat::RotateBoatRight()
 {
 	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
@@ -276,7 +268,7 @@ void Boat::RotateBoatRight()
 		float previousRotation = GetRotation();
 		float newAngleRotation = previousRotation + tickRotation;
 		SetRotation(newAngleRotation);
-		AddLocalNetworkDataToSend(key_boatAngle, GetRotation());
+		AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
 }
 
 void Boat::StopRotateBoatRight()
@@ -288,6 +280,81 @@ void Boat::StopRotateBoatRight()
 		// Function ID + PlayerID
 		AddLocalNetworkDataToSend(key_RotateBoatRightID, bIsBoatRotatingRight);
 	}
+}
+
+void Boat::PrepareBullet(sf::Vector2f shootingLocation, float angle)
+{
+	bullets[bulletTracker]->SetGameObjectTransform(shootingLocation, angle, bullets[bulletTracker]->GetScale());
+	bullets[bulletTracker]->bTickEnabled = true;
+	bullets[bulletTracker]->ShowGameObject();
+
+	Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+
+	if (sound)
+	{
+		sound->SetVolume(0.f);
+		sound->PlaySound();
+	}
+	
+	bulletTracker++;
+
+	if (bulletTracker >= MaxBulletsPerBoatOnScreen)
+		bulletTracker = 0;
+}
+
+void Boat::UpdateClientNetData(const Json::Value& root)
+{
+	//Set position
+	if (root.isMember(key_gameObjectPosition))
+	{
+		const Json::Value& boatPositionArray = root[GameObject::key_gameObjectPosition];
+		sf::Vector2f boatPosition = sf::Vector2f(boatPositionArray[0].asFloat(), boatPositionArray[1].asFloat());
+		SetPosition(boatPosition);
+	}
+	//Set rotation
+	if (root.isMember(key_gameObjectRot))
+	{
+		float angle = root[key_gameObjectRot].asFloat();
+		SetRotation(angle);
+	}
+	//Spawn bullet
+	if (root.isMember(key_ShootBoatID))
+	{
+		if (root.isMember(key_gameObjectHide))
+		{
+			bool hide = root[GameObject::key_gameObjectHide].asBool();
+			if (hide)
+				HideGameObject();
+			else
+				ShowGameObject();
+		}
+		if (root.isMember(key_gameObjectPosition) && root.isMember(key_gameObjectRot))
+		{
+			const Json::Value& bulletPositionArray = root[Boat::key_gameObjectPosition];
+
+			PrepareBullet(sf::Vector2f(bulletPositionArray[0].asFloat(), bulletPositionArray[1].asFloat()),
+				root[key_gameObjectRot].asFloat());
+		}
+	}
+}
+
+void Boat::UpdateServerData(const Json::Value& root)
+{
+	//Shoot bullet of boat
+	if (root.isMember(key_ShootBoatID))
+		BoatShootBullet();
+
+	//Accelerate boat
+	if (root.isMember(key_AccelerateBoatID))
+		bIsBoatAccelerating = root[key_AccelerateBoatID].asBool();
+
+	//Rotate boat right
+	if (root.isMember(key_RotateBoatRightID))
+		bIsBoatRotatingRight = root[key_RotateBoatRightID].asBool();
+
+	//Rotate boat left
+	if (root.isMember(key_RotateBoatLeftID))
+		bIsBoatRotatingLeft = root[key_RotateBoatLeftID].asBool();
 }
 
 sf::Vector2f Boat::GetShootingLocation()

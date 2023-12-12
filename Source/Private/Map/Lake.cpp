@@ -50,25 +50,25 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 			playerLocallyControlled = false;
 		
 		Boat* newBoat = nullptr; 
-
+		//Should use spawn actor, not new
 		if(i == 0)
 		{
 			newBoat = new Boat(playerLocallyControlled, PlayerInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.15f, WINDOW_SIZE.y * 0.5f), 90.f));
-			AddPlayer(*newBoat);
 		}
 		else if (i == 1)
 		{
 			newBoat = new Boat(playerLocallyControlled, PlayerInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), -90.f));
-			AddPlayer(*newBoat);
 		}
 		else if (i == 2)
 		{
 			newBoat = new Boat(playerLocallyControlled, PlayerInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.5f, WINDOW_SIZE.y * 0.1f), -180.f));
-			AddPlayer(*newBoat);
 		}
 
 		if (newBoat)
+		{
 			newBoat->Init();
+			AddPlayer(newBoat->GetGameObjectID(), *newBoat);
+		}
 	}
 }
 
@@ -87,7 +87,7 @@ void Map_Lake::DrawWap(Window& window)
 
 	for (auto& go : levelGameObjects)
 	{
-		go->Draw(sfmlWindow);
+		go.second->Draw(sfmlWindow);
 	}
 
 	window.Display();

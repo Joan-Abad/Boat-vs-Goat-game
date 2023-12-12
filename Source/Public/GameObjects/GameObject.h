@@ -62,6 +62,12 @@ public:
 	//Called after update
 	virtual void EndUpdate();
 
+	//Recieved data from the server. Extract any information needed
+	virtual void UpdateClientNetData(const Json::Value &root);
+
+	//Recived data from a client. Extract any information needed
+	virtual void UpdateServerData(const Json::Value& root);
+
 	//Sets the transform of the actor
 	void SetGameObjectTransform(sf::Vector2f position = { 0,0 }, float angle = 0, sf::Vector2f scale = { 0,0 });
 
@@ -97,8 +103,44 @@ public:
 
 	//The right vector of the player
 	sf::Vector2f rightVector;
+
+	static const char* key_gameObjectPosition;
+	static const char* key_gameObjectRot;
+	static const char* key_gameObjectID;
+	static const char* key_gameObjectHide; 
+	//GETTERS
+	inline int GetGameObjectIDTracker() { return gameObjectIDTracker; };
+	inline int GetGameObjectID() { return gameObjectID; };
 protected: 
 
+	//Adds the data that will be send at the end of the frame
+	//Value needs to be a supported JSON type (string, number, Json Object, array, bool or null)
+	template <typename Value>
+	void AddLocalNetworkDataToSend(const char* KEY, Value valueToSend, int overrideID = -1)
+	{
+		if (!gameObjectNetData.isMember(key_gameObjectID))
+		{
+			if (overrideID != -1)
+				gameObjectNetData[key_gameObjectID] = overrideID;
+			else
+				gameObjectNetData[key_gameObjectID] = gameObjectID;
+		}
+			
+		
+
+		gameObjectNetData[KEY] = valueToSend;
+	}
+
+	//Passes the game object network data to the NetworkManager
+	void AddGameObjectNetDataToManagerNetData();
+
 	//Json root value. We should add here all the information we want to send by network
-	Json::Value localRootData;
+	Json::Value gameObjectNetData;
+
+private: 
+	
+
+
+	static int gameObjectIDTracker;
+	int gameObjectID;
 };

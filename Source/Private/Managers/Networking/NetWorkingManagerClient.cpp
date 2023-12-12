@@ -139,32 +139,24 @@ void NetworkingManagerClient::RecieveDataFromServer()
 		bool parsingSuccessful = reader.parse(message, root);
 		if (parsingSuccessful)
 		{
-			bool hasPlayerID = -1;
-			if (root.isMember(NetworkingManager::key_PlayerID))
+			Map& map = *GameManager::GetGameManager()->GetCurrentMap();
+			if (root.isMember("gameObjects") && root["gameObjects"].isArray())
 			{
-				hasPlayerID = root[NetworkingManager::key_PlayerID].asInt();
-				if (hasPlayerID != -1)
+				const Json::Value& gameObjects = root["gameObjects"];
+				for (const auto& gameObject : gameObjects)
 				{
-					Player* player = GameManager::GetGameManager()->GetCurrentMap()->GetPlayers()[hasPlayerID];
+					Json::StreamWriterBuilder writerBuilder;
+					std::string goData = Json::writeString(writerBuilder, gameObject);
 
-					if (player)
+					if (gameObject.isMember(GameObject::key_gameObjectID))
 					{
-						//Set position
-						if (root.isMember(Boat::key_boatPosition))
-						{
-							const Json::Value& boatPositionArray = root[Boat::key_boatPosition];
-							sf::Vector2f boatPosition = sf::Vector2f(boatPositionArray[0].asFloat(), boatPositionArray[1].asFloat());
-							player->SetPosition(boatPosition);
-						}
-						//Set rotation
-						if (root.isMember(Boat::key_boatAngle))
-						{
-							float angle = root[Boat::key_boatAngle].asFloat();
-							player->SetRotation(angle);
-						}
+						int goID = gameObject[GameObject::key_gameObjectID].asInt();
+						
+						map.GetGameObjects()[goID]->UpdateClientNetData(gameObject);
 					}
 				}
 			}
+			
 		}
 
 	}
@@ -173,13 +165,14 @@ void NetworkingManagerClient::RecieveDataFromServer()
 void NetworkingManagerClient::SendGameDataToServer()
 {
 	//If root data has some content to send, proceed. 
-	if (!GetRootData().empty())
+	if (!GetGameObjectsNetData().empty())
 	{
 		sf::Packet packet;
 
 		Json::StreamWriterBuilder writerBuilder;
-		//Work around
-		AddPacketHeader();
+
+		GetRootData()["gameObjects"] = GetGameObjectsNetData();
+
 		//finish workAround
 		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
 
@@ -187,7 +180,7 @@ void NetworkingManagerClient::SendGameDataToServer()
 
 		udpSocket.send(packet, serverAddress, gamePort);
 
-		ClearRootData();
+		ClearNetData();
 	}
 }
 

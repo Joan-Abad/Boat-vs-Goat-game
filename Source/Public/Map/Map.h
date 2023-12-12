@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <GameObjects/Players/Player.h>
 #include <SFML/Network.hpp>
-class Window; 
+#include <unordered_map>
 
+class Window; 
 
 class Map
 {
@@ -20,17 +21,18 @@ public:
 	ActorToSpawn* SpawnGameObject(GameObjectInitialInfo objectInitialInfo) 
 	{
 		ActorToSpawn* spawnedActor = new ActorToSpawn(objectInitialInfo);
-		levelGameObjects.emplace_back(spawnedActor);
+		levelGameObjects[spawnedActor->GetGameObjectID()] = spawnedActor;
 		return spawnedActor;
 	}
 
 	inline std::vector<Player*>& GetPlayers() { return players;  };
-	inline std::vector<GameObject*>& GetGameObjects() { return levelGameObjects; };
+	inline std::unordered_map<int, GameObject*>& GetGameObjects() { return levelGameObjects; };
 
 protected: 
-	void AddPlayer(Player& player);
+	void AddPlayer(int playerID, Player& player);
 	std::vector<Player*> players; 
-	std::vector<GameObject*> levelGameObjects;
+	//int = game object ID
+	std::unordered_map<int, GameObject*> levelGameObjects;
 private:
 
 

@@ -134,14 +134,17 @@ void NetworkingManagerServer::StartGameServerAndClients()
 
 void NetworkingManagerServer::SendGameDataToClients()
 {
-	if (!GetRootData().empty())
+	if (!GetGameObjectsNetData().empty())
 	{
 		sf::Packet packet;
 
 		//AddPacketHeader();
 		Json::StreamWriterBuilder writerBuilder;
-		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
+		
+		GetRootData()["gameObjects"] = GetGameObjectsNetData();
 
+		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
+		
 		packet << msgToSend;
 		//send a packet to all connected clients
 		int i = 0; 
@@ -153,7 +156,7 @@ void NetworkingManagerServer::SendGameDataToClients()
 			i++;
 		}
 
-		ClearRootData();
+		ClearNetData();
 	}
 }
 
@@ -177,34 +180,20 @@ void NetworkingManagerServer::RecieveGameDataFromClients()
 		bool parsingSuccessful = reader.parse(message, root);
 		if (parsingSuccessful)
 		{
-			//Move the boat
-			int boatID = -1;
-			if (root.isMember(NetworkingManager::key_PlayerID))
+			Map& map = *GameManager::GetGameManager()->GetCurrentMap();
+			if (root.isMember("gameObjects") && root["gameObjects"].isArray())
 			{
-				boatID = root[NetworkingManager::key_PlayerID].asInt();
-
-				Player* player = GameManager::GetGameManager()->GetCurrentMap()->GetPlayers()[boatID];
-				//TODO: change from here to a more dynamic way
-				Boat* boat = dynamic_cast<Boat*>(player);
-				if (boat)
+				const Json::Value& gameObjects = root["gameObjects"];
+				for (const auto& gameObject : gameObjects)
 				{
-					bool bAccelerateBoat = false;
-					if (root.isMember(Boat::key_AccelerateBoatID))
+					Json::StreamWriterBuilder writerBuilder;
+					std::string goData = Json::writeString(writerBuilder, gameObject);
+
+					if (gameObject.isMember(GameObject::key_gameObjectID))
 					{
-						boat->SetIsAccelerating(root[Boat::key_AccelerateBoatID].asBool());
-					}
-					bool rotateLeft = false, rotateRight = false;
-					if (root.isMember(Boat::key_RotateBoatLeftID))
-					{
-						boat->SetIsRotatingLeft(root[Boat::key_RotateBoatLeftID].asBool());
-					}
-					if (root.isMember(Boat::key_RotateBoatRightID))
-					{
-						boat->SetIsRotatingRight(root[Boat::key_RotateBoatRightID].asBool());
-					}
-					if (root.isMember(Boat::key_ShootBoatID))
-					{
-						boat->SetIsShooting(root[Boat::key_ShootBoatID].asBool());
+						int goID = gameObject[GameObject::key_gameObjectID].asInt();
+
+						map.GetGameObjects()[goID]->UpdateServerData(gameObject);
 					}
 				}
 			}

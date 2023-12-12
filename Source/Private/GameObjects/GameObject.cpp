@@ -2,17 +2,30 @@
 #include "ApplicationHelper.h"
 #include "Managers/AppManager.h"
 #include "Managers/GameManager.h"
+#include "Managers/Networking/NetworkingManager.h"
 #include "Map/Map.h"
 
-GameObject::GameObject(): bTickEnabled(true)
+const char* GameObject::key_gameObjectPosition = "goPos";
+const char* GameObject::key_gameObjectRot = "goRot";
+const char* GameObject::key_gameObjectID = "goID";
+const char* GameObject::key_gameObjectHide = "goHide";
+
+int GameObject::gameObjectIDTracker = 0; 
+
+GameObject::GameObject(): bTickEnabled(true), bReplicates(true), bReplicateTransform(false), forwardVector(sf::Vector2f(0.f, 1.0f)),
+rightVector(sf::Vector2f(-1.f, 0.f))
 {
+	gameObjectID = gameObjectIDTracker;
+	gameObjectIDTracker++;
+	std::cout << "Game Object ID: " << gameObjectID << std::endl;
 	initialSprite.setPosition({ 0,0 });
 	initialSprite.setRotation(0);
 }
 
-GameObject::GameObject(GameObjectInitialInfo gameObjectInitialInfo) : bReplicates(false), bReplicateTransform(false),
-	forwardVector(sf::Vector2f(0.f, 1.0f)), rightVector(sf::Vector2f(-1.f, 0.f)), bTickEnabled(true)
+GameObject::GameObject(GameObjectInitialInfo gameObjectInitialInfo) : GameObject()
 {
+	initialSprite.setPosition({ gameObjectInitialInfo.playerPosition.x,gameObjectInitialInfo.playerPosition.y });
+	initialSprite.setRotation(gameObjectInitialInfo.angle);
 }
 
 void GameObject::Init()
@@ -58,7 +71,20 @@ void GameObject::Update()
 
 void GameObject::EndUpdate()
 {
+	if (!gameObjectNetData.empty() && bReplicates)
+	{
+		//AddLocalNetworkDataToSend(NetworkingManager::key_PlayerID, playerID);
+		AddGameObjectNetDataToManagerNetData();
+	}
+}
 
+void GameObject::UpdateClientNetData(const Json::Value& root)
+{
+	
+}
+
+void GameObject::UpdateServerData(const Json::Value& root)
+{
 }
 
 void GameObject::SetGameObjectTransform(sf::Vector2f position, float angle, sf::Vector2f scale)
@@ -114,4 +140,21 @@ sf::Vector2f GameObject::GetPosition()
 Map* GameObject::GetCurrentMap()
 {
 	return GameManager::GetGameManager()->GetCurrentMap();
+}
+
+void GameObject::AddGameObjectNetDataToManagerNetData()
+{
+	if (!gameObjectNetData.empty())
+	{
+		Json::StreamWriterBuilder writerBuilder;
+
+		Json::Value& value = AppManager::GetAppManager()->GetNetworkManager()->GetGameObjectsNetData();
+		std::string msgToSend = Json::writeString(writerBuilder, value);
+		std::string goData = Json::writeString(writerBuilder, gameObjectNetData);
+
+		value.append(gameObjectNetData);
+		std::string postgoData = Json::writeString(writerBuilder, value);
+
+		gameObjectNetData.clear();
+	}
 }

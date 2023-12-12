@@ -32,7 +32,7 @@ Player::Player(bool isLocallyController, GameObjectInitialInfo info) : GameObjec
 	playerID = playerTrackerID;
 	playerTrackerID++;
 
-	localRootData.clear();
+	gameObjectNetData.clear();
 
 }
 Player::~Player()
@@ -49,27 +49,8 @@ void Player::Update()
 {
 }
 
-void Player::EndUpdate()
-{
-	if (!localRootData.empty() && (!GetNetworkingManager()->GetIsServer() && bIsLocallyControlled || GetNetworkingManager()->GetIsServer()))
-	{
-		AddLocalNetworkDataToSend(NetworkingManager::key_PlayerID, playerID);
-		AddLocalNetworkDataToRootData();
-	}
-}
-
 NetworkingManager* Player::GetNetworkingManager()
 {
 	return AppManager::GetAppManager()->GetNetworkManager();
-}
-
-void Player::AddLocalNetworkDataToRootData()
-{
-	if (!localRootData.empty())
-	{
-		Json::Value& value = AppManager::GetAppManager()->GetNetworkManager()->GetRootData();
-		value.copy(localRootData);
-		localRootData.clear();
-	}
 }
 

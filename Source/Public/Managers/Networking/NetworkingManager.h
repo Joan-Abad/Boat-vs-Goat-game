@@ -42,7 +42,7 @@ public:
 
 	//Gets the json string that is used to send data to server/client
 	inline Json::Value& GetRootData() { return rootData; };
-
+	inline Json::Value& GetGameObjectsNetData() { return gameObjectsData; };
 	//Communication keys
 	const static std::string accessKey;
 	const static std::string connectionWithServer;
@@ -65,11 +65,12 @@ protected:
 	void AddPacketHeader();
 
 	//Clears all the json data. Initialy when a packet is send, this should be called
-	void ClearRootData();
+	void ClearNetData();
 
 private: 
 	//Value to write that will be send each frame if contains any information
 	Json::Value rootData;
+	Json::Value gameObjectsData;
 
 	//Checks if this process is a server 
 	bool bIsServer;
