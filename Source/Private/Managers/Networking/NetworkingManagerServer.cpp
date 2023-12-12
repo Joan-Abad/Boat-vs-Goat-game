@@ -144,7 +144,7 @@ void NetworkingManagerServer::SendGameDataToClients()
 		GetRootData()["gameObjects"] = GetGameObjectsNetData();
 
 		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
-		
+		//std::cout << "Server: " << msgToSend << std::endl;
 		packet << msgToSend;
 		//send a packet to all connected clients
 		int i = 0; 

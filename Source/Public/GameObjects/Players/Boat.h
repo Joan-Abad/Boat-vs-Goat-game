@@ -5,7 +5,7 @@
 
 #define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
 #define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
-#define MaxBulletsPerBoatOnScreen 5
+#define MaxBulletsPerBoatOnScreen 6
 
 class Sound;  
 

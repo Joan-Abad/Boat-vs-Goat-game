@@ -209,14 +209,16 @@ void Boat::BoatShootBullet()
 	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
 	{
 		sf::Time elapsedTime = timer.getElapsedTime();
-		if (elapsedTime.asSeconds() >= shootingCD) {
+
+		if (elapsedTime.asSeconds() >= shootingCD)
+		{
 			std::cout << "Spawn Bullet\n";
 			sf::Vector2f bulletPosition = GetShootingLocation();
 
 			Json::Value valBulletPosition;
 			valBulletPosition.append(bulletPosition.x);
 			valBulletPosition.append(bulletPosition.y);
-			
+
 			AddLocalNetworkDataToSend(key_ShootBoatID, true);
 			bullets[bulletTracker]->AddLocalNetworkDataToSend(key_gameObjectHide, false);
 			bullets[bulletTracker]->AddLocalNetworkDataToSend(key_gameObjectPosition, valBulletPosition);
@@ -252,7 +254,6 @@ void Boat::RotateBoatLeft()
 {
 	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
 
-	std::cout << "Rotating boat left\n";
 	float tickRotation = -angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
@@ -264,7 +265,6 @@ void Boat::RotateBoatRight()
 {
 	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
 
-		std::cout << "Rotating boat right\n";
 		float tickRotation = angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
 		float previousRotation = GetRotation();
 		float newAngleRotation = previousRotation + tickRotation;
@@ -324,7 +324,7 @@ void Boat::UpdateServerData(const Json::Value& root)
 {
 	//Shoot bullet of boat
 	if (root.isMember(key_ShootBoatID))
-		BoatShootBullet();
+		bBoatIsShooting = root[key_ShootBoatID].asBool();
 
 	//Accelerate boat
 	if (root.isMember(key_AccelerateBoatID))
