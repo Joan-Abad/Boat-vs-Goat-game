@@ -51,6 +51,8 @@ void Map::CheckCollisions()
 				if (!pair2.second->bCheckCollisions)
 					continue;
 
+				if (firstGameObject.objectCollision == CollisionChannels::NoCollision || secondGameObject.objectCollision == CollisionChannels::NoCollision)
+					continue; 
 
 				//Go through the collision and check if the other object should collide
 				bool canCollide = false;

@@ -3,6 +3,9 @@
 #include "Managers/GameManager.h"
 #include "GameObjects/Players/Boat.h"
 #include "Managers/FontManager.h"
+#include "Managers/AppManager.h"
+#include "Managers/Networking/NetworkingManager.h"
+
 
 #define HEARTPATH "Art/heart.png"
 
@@ -56,3 +59,9 @@ void BoatLifes::Draw(sf::RenderWindow& window)
 	window.draw(heart);
 	window.draw(lifeText);
 }
+
+void BoatLifes::UpdateLifeText()
+{
+	lifeText.setString(std::to_string(associatedBoat->lifes));
+}
+

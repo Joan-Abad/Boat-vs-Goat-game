@@ -78,3 +78,12 @@ void Bullet::UpdateClientNetData(const Json::Value& root)
 		SetPosition(boatPosition);
 	}
 }
+
+void Bullet::OnCollisionEnter(GameObject* otherGO)
+{
+	if (otherGO)
+	{
+		objectCollision = CollisionChannels::NoCollision;
+		HideGameObject();
+	}
+}

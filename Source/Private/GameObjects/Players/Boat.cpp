@@ -8,10 +8,11 @@
 #include "Managers/SoundManager.h"
 #include "GameObjects/BoatLifes.h"
 
-const char* Boat::key_AccelerateBoatID = "AccelerateBoatID";
-const char* Boat::key_RotateBoatLeftID = "RotateBoatLeftID";
-const char* Boat::key_RotateBoatRightID = "RotateBoatRightID";
-const char* Boat::key_ShootBoatID = "shootBoat";
+const char* Boat::key_AccelerateBoatID = "AccBt";
+const char* Boat::key_RotateBoatLeftID = "RotBtLft";
+const char* Boat::key_RotateBoatRightID = "RotBtRgt";
+const char* Boat::key_ShootBoatID = "shtBt";
+const char* Boat::key_UpdateBoatLife = "updLF";
 
 unsigned short Boat::boatCounter = 0; 
 
@@ -34,7 +35,8 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 
 	//Life UI
 	GameObjectInitialInfo gi; 
-	map->SpawnGameObject<BoatLifes>(gi, this);
+	BoatLifes* boatLife = map->SpawnGameObject<BoatLifes>(gi, this);
+	boatLifeUI = boatLife;
 
 	//Sound part
 	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
@@ -135,6 +137,8 @@ void Boat::OnCollisionEnter(GameObject* otherGO)
 	if (Bullet* bullet = dynamic_cast<Bullet*>(otherGO))
 	{
 		lifes--; 
+		AddLocalNetworkDataToSend(key_UpdateBoatLife, lifes);
+		boatLifeUI->UpdateLifeText();
 	}
 }
 
@@ -347,6 +351,11 @@ void Boat::UpdateClientNetData(const Json::Value& root)
 	{
 		float angle = root[key_gameObjectRot].asFloat();
 		SetRotation(angle);
+	}
+	if (root.isMember(key_UpdateBoatLife))
+	{
+		lifes = root[key_UpdateBoatLife].asInt();
+		boatLifeUI->UpdateLifeText();
 	}
 }
 

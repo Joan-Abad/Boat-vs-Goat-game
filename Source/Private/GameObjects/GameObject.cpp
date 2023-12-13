@@ -148,6 +148,7 @@ void GameObject::OnCollisionEnter(GameObject* otherGO)
 
 void GameObject::OnColliding(GameObject* otherGO)
 {
+
 }
 
 void GameObject::OnCollissionExit(GameObject* otherGO)

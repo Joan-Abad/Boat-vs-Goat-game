@@ -2,6 +2,7 @@
 
 #include "GameObjects/Players/Player.h"
 #include "GameObjects/Bullet.h"
+#include "GameObjects/BoatLifes.h"
 
 #define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
 #define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
@@ -13,6 +14,7 @@ class Boat : public Player
 {
 	friend class NetworkingManagerClient;
 	friend class NetworkingManagerServer; 
+	friend class BoatLifes;
 public: 
 	Boat(GameObjectInitialInfo playerInitialInfo, bool PlayerPlayable);
 
@@ -73,7 +75,7 @@ private:
 	bool bIsBoatAccelerating;
 	bool bIsBoatRotatingLeft; 
 	bool bIsBoatRotatingRight;
-
+	BoatLifes* boatLifeUI; 
 
 	//How fast the boat accelerates each frame
 	sf::Vector2f boatAcceleration;
@@ -101,11 +103,12 @@ private:
 	//The lifes the player has
 	int lifes; 
 
+public: 
 	std::array<Bullet*, MaxBulletsPerBoatOnScreen> bullets;
 	static const char* key_AccelerateBoatID;
 	static const char* key_RotateBoatLeftID;
 	static const char* key_RotateBoatRightID;
 	static const char* key_ShootBoatID;
-
+	static const char* key_UpdateBoatLife;
 	static const uint32_t key_accelerateBoat;
 };
