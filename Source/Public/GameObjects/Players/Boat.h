@@ -26,6 +26,13 @@ public:
 	void SetIsRotatingRight(bool bRotatingRight);
 	void SetIsShooting(bool bIsShooting);
 
+	void DisableBoat();
+
+	inline int GetLifes() { return lifes; };
+
+	static unsigned short boatCounter;
+
+protected: 
 	//Triggered when a collision is detected with another game object
 	virtual void  OnCollisionEnter(GameObject* otherGO);
 
@@ -34,8 +41,6 @@ public:
 
 	//Triggered when a collision finished collising with another game object
 	virtual void  OnCollissionExit(GameObject* otherGO);
-
-	static unsigned short boatCounter;
 
 private:
 	//Boat mechanics
@@ -59,6 +64,7 @@ private:
 	void StopRotateBoatRight();
 
 	void PrepareBullet(sf::Vector2f shootingLocation, float angle);
+
 #if _DEBUG
 	int timesAccelerated = 0; 
 #endif
@@ -110,5 +116,6 @@ public:
 	static const char* key_RotateBoatRightID;
 	static const char* key_ShootBoatID;
 	static const char* key_UpdateBoatLife;
+	static const char* key_bulletImpact;
 	static const uint32_t key_accelerateBoat;
 };

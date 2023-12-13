@@ -134,28 +134,43 @@ void NetworkingManagerServer::StartGameServerAndClients()
 
 void NetworkingManagerServer::SendGameDataToClients()
 {
-	if (!GetGameObjectsNetData().empty())
+	//If root data has some content to send, proceed. 
+	bool hasGameObjectsData = !GetGameObjectsNetData().empty();
+	bool hasMapObjectsData = !GetMapNetData().empty();
+
+	if (hasGameObjectsData || hasMapObjectsData)
 	{
 		sf::Packet packet;
 
-		//AddPacketHeader();
 		Json::StreamWriterBuilder writerBuilder;
-		
-		GetRootData()["gameObjects"] = GetGameObjectsNetData();
 
-		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
-		//std::cout << "Server: " << msgToSend << std::endl;
-		packet << msgToSend;
-		//send a packet to all connected clients
-		int i = 0; 
+		std::string mapMsg;
+
+		if (hasMapObjectsData)
+		{
+			GetRootData()["mapData"] = GetMapNetData();
+			mapMsg = Json::writeString(writerBuilder, GetMapNetData());
+
+		}
+		if (hasGameObjectsData)
+		{
+			std::string goData;
+			mapMsg = Json::writeString(writerBuilder, GetGameObjectsNetData());
+			GetRootData()["gameObjects"] = GetGameObjectsNetData();
+			mapMsg = Json::writeString(writerBuilder, GetRootData());
+
+		}
+
+		packet << mapMsg;
+
+		int i = 0;
 		for (auto& player : players)
 		{
-			if(i != 0)
+			if (i != 0)
 				udpSocket.send(packet, player.second.ipAddress, player.second.port);
 
 			i++;
 		}
-
 		ClearNetData();
 	}
 }

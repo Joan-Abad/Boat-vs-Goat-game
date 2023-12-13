@@ -23,7 +23,7 @@ public:
 	virtual void Update();
 
 	NetworkingManager* GetNetworkingManager();
-
+	inline int GetPlayerID() { return playerID; };
 protected:
 
 	template<typename FncAdd, typename FncObject>

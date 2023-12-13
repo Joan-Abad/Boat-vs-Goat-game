@@ -11,7 +11,12 @@ public:
 	virtual void InitMap(Window& window, int playersQuantity) override;
 	virtual void UpdateMap() override;
 	virtual void DrawWap(Window& window) override;
+	//Call it from the server always
+	virtual bool CheckWinCondition() override;
 	virtual void EndMap() override;
+
+	//Recieved data from the server. Extract any information needed
+	virtual void UpdateClientNetData(const Json::Value& root);
 
 	const char* backgroundLakePath = "Art/Background/Water.jpg";
 	const char* boat1Path = "Art/boat/PNG/Boats_color1/Boat_color1_1.png";
@@ -19,8 +24,16 @@ public:
 	const char* bulletPath = "Art/bullet.png";
 	const char* heartPath = "Art/heart.png";
 	const char* lakeFontPath = "Fonts/Mikeona.ttf";
+	const char* goatPath = "Art/goat.png";
+	const char* key_win = "winCon";
+
+	bool gameOver; 
+	sf::Sprite goatSprite;
+
 private: 
+	void FinishMap(const char* playerName);
 	sf::Texture backgroundTexture;
 	sf::Sprite backgroundSprite; 
+	sf::Text winningText;
 
 };

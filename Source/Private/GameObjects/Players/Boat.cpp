@@ -13,6 +13,7 @@ const char* Boat::key_RotateBoatLeftID = "RotBtLft";
 const char* Boat::key_RotateBoatRightID = "RotBtRgt";
 const char* Boat::key_ShootBoatID = "shtBt";
 const char* Boat::key_UpdateBoatLife = "updLF";
+const char* Boat::key_bulletImpact = "buIm";
 
 unsigned short Boat::boatCounter = 0; 
 
@@ -32,7 +33,7 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	}
 	initialSprite.setOrigin(initialSprite.getLocalBounds().width / 2, initialSprite.getLocalBounds().height / 2);
 	//End Graphic part
-
+	
 	//Life UI
 	GameObjectInitialInfo gi; 
 	BoatLifes* boatLife = map->SpawnGameObject<BoatLifes>(gi, this);
@@ -87,6 +88,7 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	}
 
 	SetScale({ 0.8f, 0.8f });
+
 }
 
 void Boat::Init()
@@ -131,14 +133,29 @@ void Boat::SetIsShooting(bool bIsShooting)
 	bBoatIsShooting = bIsShooting;
 }
 
+void Boat::DisableBoat()
+{
+	bIsBoatAccelerating = false; 
+	bIsBoatRotatingLeft = false; 
+	bIsBoatRotatingRight = false; 
+	bBoatIsShooting = false; 
+}
+
 void Boat::OnCollisionEnter(GameObject* otherGO)
 {
 	std::cout << "On colliding hitted: " << otherGO->GetGameObjectID() << std::endl;
 	if (Bullet* bullet = dynamic_cast<Bullet*>(otherGO))
 	{
-		lifes--; 
-		AddLocalNetworkDataToSend(key_UpdateBoatLife, lifes);
-		boatLifeUI->UpdateLifeText();
+		bullet->AddLocalNetworkDataToSend(key_gameObjectHide, true);
+
+		if (lifes > 0)
+		{
+			lifes--;
+			AddLocalNetworkDataToSend(key_UpdateBoatLife, lifes);
+			GetCurrentMap()->CheckWinCondition();
+
+			boatLifeUI->UpdateLifeText();
+		}
 	}
 }
 
@@ -298,11 +315,11 @@ void Boat::RotateBoatRight()
 {
 	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
 
-		float tickRotation = angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
-		float previousRotation = GetRotation();
-		float newAngleRotation = previousRotation + tickRotation;
-		SetRotation(newAngleRotation);
-		AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
+	float tickRotation = angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
+	float previousRotation = GetRotation();
+	float newAngleRotation = previousRotation + tickRotation;
+	SetRotation(newAngleRotation);
+	AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
 }
 
 void Boat::StopRotateBoatRight()
@@ -339,6 +356,8 @@ void Boat::PrepareBullet(sf::Vector2f shootingLocation, float angle)
 
 void Boat::UpdateClientNetData(const Json::Value& root)
 {
+	Json::StreamWriterBuilder writerBuilder;
+	std::string mapDataString = Json::writeString(writerBuilder, root);
 	//Set position
 	if (root.isMember(key_gameObjectPosition))
 	{

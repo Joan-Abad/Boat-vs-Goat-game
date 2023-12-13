@@ -57,7 +57,10 @@ void Bullet::UpdateClientNetData(const Json::Value& root)
 		bool bHide = root[key_gameObjectHide].asBool();
 
 		if (bHide)
+		{
 			HideGameObject();
+			objectCollision = CollisionChannels::NoCollision;
+		}
 		else
 		{
 			ShowGameObject();
@@ -85,5 +88,6 @@ void Bullet::OnCollisionEnter(GameObject* otherGO)
 	{
 		objectCollision = CollisionChannels::NoCollision;
 		HideGameObject();
+
 	}
 }

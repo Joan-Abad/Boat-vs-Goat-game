@@ -63,10 +63,13 @@ public:
 	}
 
 	void Update();
+	//Trye enables input, false disable input
+	void EnableInput(bool bEnable);
 	std::unordered_set<sf::Keyboard::Key>& GetKeysPressed() { return KeysPressed; };
 	InputAction* CreateInputAction(sf::Keyboard::Key key);
 	InputAction* GetInputAction(sf::Keyboard::Key key);
 private: 
+	bool bInputEnabled; 
 	InputManager();
 	~InputManager();
 	std::unordered_set<sf::Keyboard::Key> KeysPressed;

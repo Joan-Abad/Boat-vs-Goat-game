@@ -25,7 +25,7 @@ void InputAction::SetIsKeyPressed(bool keyPressed)
 	bIsKeyPressed = keyPressed;
 }
 
-InputManager::InputManager()
+InputManager::InputManager() : bInputEnabled(true)
 {
 	//Create project input actions
 	CreateInputAction(sf::Keyboard::Key::W);
@@ -43,12 +43,17 @@ InputManager::~InputManager()
 
 void InputManager::Update()
 {
+
+
 	sf::Event inputEvent;
 	sf::RenderWindow& renderWindow = window->GetWindow();
 	while (renderWindow.pollEvent(inputEvent))
 	{
 		if (inputEvent.type == sf::Event::Closed)
 			renderWindow.close();
+
+		if (!bInputEnabled)
+			return;
 
 		if (inputEvent.type == sf::Event::KeyPressed)
 		{
@@ -91,6 +96,11 @@ void InputManager::Update()
 				OnGoingFnc();
 
 	}
+}
+
+void InputManager::EnableInput(bool bEnable)
+{
+	bInputEnabled = bEnable;
 }
 
 InputAction* InputManager::GetInputAction(sf::Keyboard::Key key)

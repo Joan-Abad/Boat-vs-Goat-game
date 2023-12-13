@@ -9,7 +9,7 @@ const std::string NetworkingManager::numPlayers = "numPlayers";
 const const char* NetworkingManager::key_PlayerID = "playerID";
 
 
-NetworkingManager::NetworkingManager() : bIsServer(false), gameObjectsData(Json::arrayValue)
+NetworkingManager::NetworkingManager() : bIsServer(false), gameObjectsData(Json::arrayValue), mapNetData(Json::arrayValue)
 {
 
 }
@@ -22,5 +22,6 @@ void NetworkingManager::AddPacketHeader()
 void NetworkingManager::ClearNetData()
 {
 	gameObjectsData.clear();
+	mapNetData.clear();
 	rootData.clear();
 }

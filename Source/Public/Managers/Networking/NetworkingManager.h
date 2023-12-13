@@ -42,6 +42,7 @@ public:
 
 	//Gets the json string that is used to send data to server/client
 	inline Json::Value& GetRootData() { return rootData; };
+	inline Json::Value& GetMapNetData() { return mapNetData; };
 	inline Json::Value& GetGameObjectsNetData() { return gameObjectsData; };
 	//Communication keys
 	const static std::string accessKey;
@@ -70,6 +71,7 @@ protected:
 private: 
 	//Value to write that will be send each frame if contains any information
 	Json::Value rootData;
+	Json::Value mapNetData; 
 	Json::Value gameObjectsData;
 
 	//Checks if this process is a server 

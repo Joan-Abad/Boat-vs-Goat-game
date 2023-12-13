@@ -8,8 +8,9 @@
 #include "Managers/Networking/NetworkingManager.h"
 #include "Managers/SoundManager.h"
 #include "Managers/FontManager.h"
+#include "Input/InputManager.h"
 
-Map_Lake::Map_Lake()
+Map_Lake::Map_Lake() : gameOver(false)
 {
 	TextureManager& TM = TextureManager::GetTextureManager();
 
@@ -18,18 +19,31 @@ Map_Lake::Map_Lake()
 	TM.AddTexture(boat2Path);
 	TM.AddTexture(bulletPath);
 	TM.AddTexture(heartPath);
+	TM.AddTexture(goatPath);
 
 	FontManager& fontManager = *FontManager::Get();
 
 	fontManager.AddFont(lakeFontPath);
-
+	
 	SoundManager* SM = SoundManager::Get();
 	if (SM)
 	{
 		SM->CreateSound("Sound/Boat/blaster.wav");
+		SM->CreateSound("Sound/winSound.wav");
 	}
 
 	backgroundSprite.setTexture(*TM.GetTexture(backgroundLakePath));
+	goatSprite.setTexture(*TM.GetTexture(goatPath));
+	goatSprite.setOrigin(goatSprite.getLocalBounds().width / 2, goatSprite.getLocalBounds().height / 2);
+	goatSprite.setPosition(WINDOW_SIZE.x/2, WINDOW_SIZE.y/2);
+	
+	sf::Vector2f winningPosition = { goatSprite.getPosition().x - goatSprite.getTexture()->getSize().x / 3, goatSprite.getPosition().y - goatSprite.getTexture()->getSize().y / 2 };
+	winningText.setString("NULL");
+	winningText.setOutlineColor(sf::Color::Black);
+	winningText.setCharacterSize(48.f);
+	winningText.setOutlineThickness(4.f);
+	winningText.setFont(*fontManager.GetFont(lakeFontPath));
+	winningText.setPosition(winningPosition);
 }
 
 Map_Lake::~Map_Lake()
@@ -98,9 +112,76 @@ void Map_Lake::DrawWap(Window& window)
 		go.second->Draw(sfmlWindow);
 	}
 
+	if (gameOver)
+	{
+		sfmlWindow.draw(goatSprite);
+		sfmlWindow.draw(winningText);
+	}
+
 	window.Display();
+}
+
+bool Map_Lake::CheckWinCondition()
+{
+	int numberBoatsAlive = 0; 
+	Boat* winningBoat = nullptr;
+	for (int i = 0; i < players.size(); i++)
+	{
+		Boat* boat= dynamic_cast<Boat*>(players[i]);
+		if (boat)
+		{
+			if (boat->GetLifes() > 0)
+			{
+				numberBoatsAlive++;
+				winningBoat = boat; 
+			}
+		}
+	}
+
+	//More than one boat alive
+	if (numberBoatsAlive > 1)
+		return false;
+	
+	std::string playerText = "Player" + std::to_string(winningBoat->GetPlayerID() + 1) + " WON ";
+	FinishMap(playerText.c_str());
+	AddLocalNetworkDataToSend(key_win, playerText.c_str());
+
+	return true;
 }
 
 void Map_Lake::EndMap()
 {
+	AddGameObjectNetDataToManagerNetData();
+}
+
+void Map_Lake::UpdateClientNetData(const Json::Value& root)
+{
+	Json::StreamWriterBuilder writerBuilder;
+	std::string mapDataString = Json::writeString(writerBuilder, root);
+
+	if (root.isMember(key_win))
+	{
+		const char* playerWon = root[key_win].asCString();
+		FinishMap(playerWon);
+	}
+
+}
+
+void Map_Lake::FinishMap(const char* playerName)
+{
+	gameOver = true;
+	std::string strMsg = playerName;
+	winningText.setString(strMsg);
+
+	for (auto& player : players)
+	{
+		Boat* boat = dynamic_cast<Boat*>(player);
+		boat->DisableBoat();
+	}
+
+	Sound* sound = SoundManager::Get()->GetSound("Sound/winSound.wav");
+	if (sound)
+		sound->PlaySound();
+
+	InputManager::GetInputManager()->EnableInput(false);
 }

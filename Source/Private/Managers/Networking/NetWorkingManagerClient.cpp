@@ -140,12 +140,26 @@ void NetworkingManagerClient::RecieveDataFromServer()
 		if (parsingSuccessful)
 		{
 			Map& map = *GameManager::GetGameManager()->GetCurrentMap();
+			Json::StreamWriterBuilder writerBuilder;
+			std::string rootmsg = Json::writeString(writerBuilder, root);
+			//Map data should not be an array. Need to check what to do
+   			if (root.isMember("mapData") && root["mapData"].isArray())
+			{
+				const Json::Value& mapsData = root["mapData"];
+
+				for (const auto& mapData : mapsData)
+				{
+					std::string mapDataString = Json::writeString(writerBuilder, mapData);
+
+					map.UpdateClientNetData(mapData);
+				}
+			}
+
 			if (root.isMember("gameObjects") && root["gameObjects"].isArray())
 			{
-				Json::StreamWriterBuilder writerBuilder;
 
-				const Json::Value& gameObjects = root["gameObjects"];
-				std::string gameObjt = Json::writeString(writerBuilder, gameObjects);
+  				const Json::Value& gameObjects = root["gameObjects"];
+ 				std::string gameObjt = Json::writeString(writerBuilder, gameObjects);
 				for (const auto& gameObject : gameObjects)
 				{
 					std::string goData = Json::writeString(writerBuilder, gameObject);
@@ -167,18 +181,31 @@ void NetworkingManagerClient::RecieveDataFromServer()
 void NetworkingManagerClient::SendGameDataToServer()
 {
 	//If root data has some content to send, proceed. 
-	if (!GetGameObjectsNetData().empty())
+	bool hasGameObjectsData = !GetGameObjectsNetData().empty();
+	bool hasMapObjectsData = !GetMapNetData().empty();
+
+	if (hasGameObjectsData || hasMapObjectsData)
 	{
 		sf::Packet packet;
 
 		Json::StreamWriterBuilder writerBuilder;
 
-		GetRootData()["gameObjects"] = GetGameObjectsNetData();
 
-		//finish workAround
-		std::string msgToSend = Json::writeString(writerBuilder, GetRootData());
+		if (hasMapObjectsData)
+		{
+			std::string mapMsg;
+			GetMapNetData()["mapData"] = GetMapNetData();
+			mapMsg = Json::writeString(writerBuilder, GetMapNetData());
+			packet << mapMsg;
 
-		packet << msgToSend;
+		}
+		if (hasGameObjectsData)
+		{
+			std::string goData; 
+			GetRootData()["gameObjects"] = GetGameObjectsNetData();
+			goData = Json::writeString(writerBuilder, GetRootData());
+			packet << goData;
+		}
 
 		udpSocket.send(packet, serverAddress, gamePort);
 

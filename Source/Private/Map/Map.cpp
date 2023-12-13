@@ -25,6 +25,12 @@ void Map::UpdateMap()
 			go.EndUpdate();
 		}
 	}
+	EndUpdate();
+}
+
+void Map::EndUpdate()
+{
+	AddGameObjectNetDataToManagerNetData();
 }
 
 void Map::CheckCollisions()
@@ -147,8 +153,33 @@ void Map::AddDataToSendServer()
 	
 }
 
+void Map::UpdateClientNetData(const Json::Value& root)
+{
+}
+
+void Map::UpdateServerData(const Json::Value& root)
+{
+}
+
 void Map::AddPlayer(int playerID, Player& player)
 {
 	players.emplace_back(&player);
 	levelGameObjects[playerID] = &player;
+}
+
+void Map::AddGameObjectNetDataToManagerNetData()
+{
+	if (!mapNetData.empty())
+	{
+		Json::StreamWriterBuilder writerBuilder;
+
+		Json::Value& value = AppManager::GetAppManager()->GetNetworkManager()->GetMapNetData();
+		std::string msgToSend = Json::writeString(writerBuilder, value);
+		std::string goData = Json::writeString(writerBuilder, mapNetData);
+
+		value.append(mapNetData);
+		std::string postgoData = Json::writeString(writerBuilder, value);
+
+		mapNetData.clear();
+	}
 }
