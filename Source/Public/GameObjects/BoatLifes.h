@@ -16,6 +16,6 @@ private:
 	Boat* associatedBoat; 
 
 	sf::Sprite heart; 
-	sf::Text lifeText; 
+	sf::Text lifeText;	
 	int fontSize; 
 };

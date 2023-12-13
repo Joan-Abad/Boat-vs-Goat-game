@@ -8,7 +8,11 @@
 
 BoatLifes::BoatLifes(GameObjectInitialInfo initialInfo, Boat* associatedBoat) : GameObject(initialInfo), fontSize(12.f)
 {
+	objectCollision = CollisionChannels::NoCollision;
+
 	this->associatedBoat = associatedBoat; 
+	bCheckCollisions = false; 
+	
 	int boatCounter = associatedBoat->boatCounter;
 	float scale = 0.5f; 
 	

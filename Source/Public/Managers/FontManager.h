@@ -1,3 +1,4 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
@@ -14,6 +15,7 @@ public:
 
 private:
 	FontManager() = default;
+	~FontManager();
 	std::unordered_map<const char*, sf::Font*> gameFonts;
 
 	static FontManager* instance;

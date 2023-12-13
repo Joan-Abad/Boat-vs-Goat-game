@@ -13,6 +13,7 @@ public:
 	~Map();
 	virtual void InitMap(Window& window, int playersQuantity) = 0;
 	virtual void UpdateMap(); 
+	void CheckCollisions();
 	virtual void AddDataToSendServer();
 	virtual void DrawWap(Window& window) = 0;
 	virtual void EndMap() = 0;

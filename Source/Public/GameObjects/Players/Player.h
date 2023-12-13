@@ -9,17 +9,6 @@
 class NetworkingManager; 
 class InputAction;
 
-class PlayerInitialInfo : public GameObjectInitialInfo
-{
-public:
-	PlayerInitialInfo(sf::Vector2f playerPosition, float angle, sf::Vector2f scale = {1.0f, 1.0f})
-		: GameObjectInitialInfo(playerPosition, angle, scale)
-	{
-
-	}
-
-};
-
 //A representation of the game object + its input
 class Player : public GameObject
 {
@@ -27,7 +16,7 @@ class Player : public GameObject
 	friend class NetworkingManager;
 public:
 
-	Player(bool isLocallyController, GameObjectInitialInfo info);
+	Player( GameObjectInitialInfo info, bool isLocallyController);
 	virtual ~Player();
 
 	//Function that gets called each tick

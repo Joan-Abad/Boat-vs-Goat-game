@@ -1,6 +1,8 @@
 #include "Map/Map.h"
 #include <iostream>
 #include "Window.h"
+#include "Managers/AppManager.h"
+#include "Managers/Networking/NetworkingManager.h"
 
 Map::~Map()
 {
@@ -11,7 +13,7 @@ Map::~Map()
 
 void Map::UpdateMap()
 {
-	int numGameObjects = levelGameObjects.size(); 
+	CheckCollisions();
 
 	for (auto& goEntry: levelGameObjects)
 	{
@@ -21,6 +23,119 @@ void Map::UpdateMap()
 		{
 			go.Update();
 			go.EndUpdate();
+		}
+	}
+}
+
+void Map::CheckCollisions()
+{
+	//Change to Map() UpdateMap function
+	//Only check collisions on server
+	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	{
+		for (auto& pair1 : levelGameObjects) {
+			if (!pair1.second->bCheckCollisions)
+				continue;
+
+			GameObject& firstGameObject = *pair1.second;
+
+			for (auto& pair2 : levelGameObjects) {
+
+				//avoid self collisions
+				if (pair1 == pair2)
+					continue;
+
+				GameObject& secondGameObject = *pair2.second;
+
+				//Ommit collisions checker
+				if (!pair2.second->bCheckCollisions)
+					continue;
+
+
+				//Go through the collision and check if the other object should collide
+				bool canCollide = false;
+				for (CollisionChannels collChannel : firstGameObject.CollisionsToRespond)
+				{
+					if (collChannel == secondGameObject.objectCollision)
+					{
+						canCollide = true;
+						break;
+					}
+				}
+
+				if (!canCollide)
+					continue;
+
+				if (!firstGameObject.bIgnoreOwner)
+				{
+					if (firstGameObject.owner == &secondGameObject)
+						continue;
+				}
+
+				bool actorIgnored = false;
+				for (auto& actorToIgnore : firstGameObject.GameActorsToIgnoreCollision)
+				{
+					if (actorToIgnore == pair2.second)
+					{
+						actorIgnored = true;
+						break;
+					}
+				}
+
+				if (actorIgnored)
+					continue;
+
+				//If passed everything, do the actual collision checking
+				sf::FloatRect bounds1 = firstGameObject.initialSprite.getGlobalBounds();
+				sf::FloatRect bounds2 = pair2.second->initialSprite.getGlobalBounds();
+
+				if (bounds1.intersects(bounds2)) {
+					bool checkIfAlreadyColliding = false;
+
+					for (auto& go : firstGameObject.goCollidingWith)
+					{
+						if (go == pair2.second)
+						{
+							//already colliding
+							checkIfAlreadyColliding = true;
+							break;
+						}
+					}
+
+					//If its the first time colliding
+					if (!checkIfAlreadyColliding)
+					{
+						firstGameObject.goCollidingWith.push_back(pair2.second);
+						pair2.second->goCollidingWith.push_back(&firstGameObject);
+						//On Colliding
+						firstGameObject.OnCollisionEnter(pair2.second);
+						pair2.second->OnCollisionEnter(&firstGameObject);
+					}
+					else
+					{
+						firstGameObject.OnColliding(pair2.second);
+						pair2.second->OnColliding(&firstGameObject);
+					}
+
+				}
+				else
+				{
+					//If they are not colliding, check if they where last frame to broadcast the on collision exit
+					for (auto& go : pair1.second->goCollidingWith)
+					{
+						if (go == pair2.second)
+						{
+							std::vector<GameObject*>& gameObjectvec1 = pair1.second->goCollidingWith;
+							std::vector<GameObject*>& gameObjectvec2 = pair2.second->goCollidingWith;
+							gameObjectvec1.erase(std::remove(gameObjectvec1.begin(), gameObjectvec1.end(), pair2.second));
+							gameObjectvec2.erase(std::remove(gameObjectvec2.begin(), gameObjectvec2.end(), pair1.second));
+							pair1.second->OnCollissionExit(pair2.second);
+							pair2.second->OnCollissionExit(pair2.second);
+						}
+					}
+				}
+
+			}
 		}
 	}
 }

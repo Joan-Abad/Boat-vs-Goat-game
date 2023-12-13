@@ -14,7 +14,7 @@ class Boat : public Player
 	friend class NetworkingManagerClient;
 	friend class NetworkingManagerServer; 
 public: 
-	Boat(PlayerInitialInfo playerInitialInfo, bool PlayerPlayable);
+	Boat(GameObjectInitialInfo playerInitialInfo, bool PlayerPlayable);
 
 	virtual void Init() override;
 	//Function that gets called each tick
@@ -23,6 +23,15 @@ public:
 	void SetIsRotatingLeft(bool bRotatingLeft);
 	void SetIsRotatingRight(bool bRotatingRight);
 	void SetIsShooting(bool bIsShooting);
+
+	//Triggered when a collision is detected with another game object
+	virtual void  OnCollisionEnter(GameObject* otherGO);
+
+	//Triggered when a collision is colliding with another game object
+	virtual void  OnColliding(GameObject* otherGO);
+
+	//Triggered when a collision finished collising with another game object
+	virtual void  OnCollissionExit(GameObject* otherGO);
 
 	static unsigned short boatCounter;
 
@@ -89,6 +98,8 @@ private:
 
 	float shootingCD;
 	int bulletTracker; 
+	//The lifes the player has
+	int lifes; 
 
 	std::array<Bullet*, MaxBulletsPerBoatOnScreen> bullets;
 	static const char* key_AccelerateBoatID;

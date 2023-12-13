@@ -14,8 +14,11 @@
 std::vector<sf::Keyboard::Key> InputAction::keysPressed;
 int Player::playerTrackerID = 0;
 
-Player::Player(bool isLocallyController, GameObjectInitialInfo info) : GameObject(GameObjectInitialInfo(info.playerPosition, info.angle))
+Player::Player(GameObjectInitialInfo info, bool isLocallyController) : GameObject(info)
 {
+	objectCollision = CollisionChannels::Player;
+	CollisionsToRespond.push_back(CollisionChannels::Bullet);
+	CollisionsToRespond.push_back(CollisionChannels::WorldStatic);
 
 	//Player Input Actions
 	this->bIsLocallyControlled = isLocallyController;

@@ -60,15 +60,15 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 		//Should use spawn actor, not new
 		if(i == 0)
 		{
-			newBoat = new Boat(PlayerInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.15f, WINDOW_SIZE.y * 0.5f), 90.f, scale), playerLocallyControlled);
+			newBoat = new Boat(GameObjectInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.15f, WINDOW_SIZE.y * 0.5f), 90.f, scale), playerLocallyControlled);
 		}
 		else if (i == 1)
 		{
-			newBoat = new Boat(PlayerInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), -90.f, scale), playerLocallyControlled);
+			newBoat = new Boat(GameObjectInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.85f, WINDOW_SIZE.y * 0.5f), -90.f, scale), playerLocallyControlled);
 		}
 		else if (i == 2)
 		{
-			newBoat = new Boat(PlayerInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.5f, WINDOW_SIZE.y * 0.1f), -180.f, scale), playerLocallyControlled);
+			newBoat = new Boat(GameObjectInitialInfo(sf::Vector2f(WINDOW_SIZE.x * 0.5f, WINDOW_SIZE.y * 0.1f), -180.f, scale), playerLocallyControlled);
 		}
 
 		if (newBoat)
@@ -82,6 +82,7 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 void Map_Lake::UpdateMap()
 {
 	Map::UpdateMap();
+
 }
 
 void Map_Lake::DrawWap(Window& window)

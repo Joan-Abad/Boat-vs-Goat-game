@@ -15,8 +15,8 @@ const char* Boat::key_ShootBoatID = "shootBoat";
 
 unsigned short Boat::boatCounter = 0; 
 
-Boat::Boat(PlayerInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(PlayerPlayable, playerInitialInfo), angleBoatSpeedEachSecond(480.f),
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(450)
+Boat::Boat(GameObjectInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(playerInitialInfo, PlayerPlayable), angleBoatSpeedEachSecond(480.f),
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(450), lifes(3)
 {
 	Map* map = GetCurrentMap();
 
@@ -33,7 +33,8 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	//End Graphic part
 
 	//Life UI
-	map->SpawnGameObject<BoatLifes>(GameObjectInitialInfo(), this);
+	GameObjectInitialInfo gi; 
+	map->SpawnGameObject<BoatLifes>(gi, this);
 
 	//Sound part
 	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
@@ -45,8 +46,10 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 		//Spawn and hide bullets
 		Bullet* bullet = map->SpawnGameObject<Bullet>(GameObjectInitialInfo());
 		bullet->bTickEnabled = false; 
+		bullet->owner = this;
 		bullet->HideGameObject();
 		bullets[i] = bullet;
+		GameActorsToIgnoreCollision.push_back(bullet);
 	}
 	
 
@@ -124,6 +127,25 @@ void Boat::SetIsRotatingRight(bool bRotatingRight)
 void Boat::SetIsShooting(bool bIsShooting)
 {
 	bBoatIsShooting = bIsShooting;
+}
+
+void Boat::OnCollisionEnter(GameObject* otherGO)
+{
+	std::cout << "On colliding hitted: " << otherGO->GetGameObjectID() << std::endl;
+	if (Bullet* bullet = dynamic_cast<Bullet*>(otherGO))
+	{
+		lifes--; 
+	}
+}
+
+void Boat::OnColliding(GameObject* otherGO)
+{
+	std::cout << "On colliding with: " << otherGO->GetGameObjectID() << std::endl;
+}
+
+void Boat::OnCollissionExit(GameObject* otherGO)
+{
+	std::cout << "On colliding exit: " << otherGO->GetGameObjectID() << std::endl;
 }
 
 void Boat::StartAccelerateBoat()
@@ -295,6 +317,7 @@ void Boat::PrepareBullet(sf::Vector2f shootingLocation, float angle)
 	bullets[bulletTracker]->SetGameObjectTransform(shootingLocation, angle, bullets[bulletTracker]->GetScale());
 	bullets[bulletTracker]->bTickEnabled = true;
 	bullets[bulletTracker]->ShowGameObject();
+	bullets[bulletTracker]->objectCollision = CollisionChannels::Bullet;
 
 	Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
 

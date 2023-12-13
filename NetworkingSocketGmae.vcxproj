@@ -217,12 +217,13 @@
     <ClCompile Include="Source\Private\Managers\Networking\NetworkingManagerServer.cpp" />
     <ClCompile Include="Source\Private\Window.cpp" />
     <ClCompile Include="Source\Private\ApplicationHelper.cpp" />
-    <ClCompile Include="Source\Public\GameObjects\BoatLifes.h" />
-    <ClCompile Include="Source\Public\Input\BoatController.h" />
-    <ClCompile Include="Source\Public\Managers\FontManager.h" />
+    <ClInclude Include="Source\Public\GameObjects\BoatLifes.h" />
+    <ClInclude Include="Source\Public\Input\BoatController.h" />
+    <ClInclude Include="Source\Public\Managers\FontManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\ApplicationHelper.h" />
+    <ClInclude Include="Source\Public\CollisionChannel\CollisionChannels.h" />
     <ClInclude Include="Source\Public\GameObjects\Bullet.h" />
     <ClInclude Include="Source\Public\GameObjects\GameObject.h" />
     <ClInclude Include="Source\Public\Input\InputManager.h" />

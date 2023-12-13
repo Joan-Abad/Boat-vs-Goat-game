@@ -4,21 +4,22 @@
 #include "Managers/TextureManager.h"
 #include "ApplicationHelper.h"
 #include "Managers/SoundManager.h"
+#include "CollisionChannel/CollisionChannels.h"
 
 Bullet::Bullet() : GameObject()
 {
 	bTickEnabled = false;
+	CollisionsToRespond.push_back(CollisionChannels::Player);
+	CollisionsToRespond.push_back(CollisionChannels::WorldStatic);
 }
 
 Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bulletSpeed(1200.f)
 {
-	/*const char* bulletImagePath = "Art/bullet.png";
-
-	if (!TextureManager::GetTextureManager().HasTexture(bulletImagePath))
-	{
-		if (TextureManager::GetTextureManager().AddTexture(bulletImagePath))
-			initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(bulletImagePath));
-	}*/
+	bIgnoreOwner = false; 
+	bTickEnabled = false;
+	CollisionsToRespond.push_back(CollisionChannels::Player);
+	CollisionsToRespond.push_back(CollisionChannels::WorldStatic);
+	objectCollision = CollisionChannels::NoCollision;
 	initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture("Art/bullet.png"));
 	initialSprite.setScale(initialSprite.getScale() / 20.f);
 }

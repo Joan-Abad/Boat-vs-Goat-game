@@ -1,6 +1,7 @@
 #pragma once
 #include <json.h>
 #include <SFML/Graphics.hpp>
+#include "CollisionChannel/CollisionChannels.h"
 
 struct Transform
 {
@@ -16,7 +17,7 @@ struct Transform
 	sf::Vector2f scale; 
 };
 
-class GameObjectInitialInfo 
+struct GameObjectInitialInfo 
 {
 public:
 	GameObjectInitialInfo() //: playerPosition{ 0.0f, 0.0f }, angle(0.f), scale({1.0f, 1.0f})
@@ -41,11 +42,19 @@ class GameObject
 public:
 	GameObject();
 	GameObject(GameObjectInitialInfo gameObjectInitialInfo);
+	virtual ~GameObject() = default;
 
 	//Set true if we want this cass to replicate the data 
 	bool bReplicates;
 	bool bReplicateTransform;
 	bool bTickEnabled; 
+	bool bCheckCollisions; 
+	bool bIgnoreOwner; 
+	GameObject* owner; 
+
+	CollisionChannels objectCollision; 
+	std::vector<CollisionChannels> CollisionsToRespond; 
+	std::vector<GameObject*> GameActorsToIgnoreCollision; 
 
 	//Adds the data that will be send at the end of the frame
 	//Value needs to be a supported JSON type (string, number, Json Object, array, bool or null)
@@ -113,10 +122,20 @@ public:
 	//Gets the current map being played 
 	class Map* GetCurrentMap();
 
+	//Triggered when a collision is detected with another game object
+	virtual void  OnCollisionEnter(GameObject* otherGO);
+
+	//Triggered when a collision is colliding with another game object
+	virtual void  OnColliding(GameObject* otherGO);
+
+	//Triggered when a collision finished collising with another game object
+	virtual void  OnCollissionExit(GameObject* otherGO);
+
 	//Sprite of the player
 	sf::Sprite initialSprite;
 
-
+	//A vector that stores the game objects that are colloding with this object
+	std::vector<GameObject*> goCollidingWith;
 
 	static const char* key_gameObjectPosition;
 	static const char* key_gameObjectRot;

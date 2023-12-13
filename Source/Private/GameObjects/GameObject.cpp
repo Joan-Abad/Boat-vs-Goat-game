@@ -12,8 +12,8 @@ const char* GameObject::key_gameObjectHide = "goHide";
 
 int GameObject::gameObjectIDTracker = 0; 
 
-GameObject::GameObject(): bTickEnabled(true), bReplicates(true), bReplicateTransform(false), forwardVector(sf::Vector2f(0.f, 1.0f)),
-rightVector(sf::Vector2f(-1.f, 0.f))
+GameObject::GameObject(): bTickEnabled(true), bReplicates(true), bReplicateTransform(false), forwardVector(sf::Vector2f(0.f, 1.0f)), 
+bCheckCollisions(true), rightVector(sf::Vector2f(-1.f, 0.f)), objectCollision(CollisionChannels::WorldStatic), bIgnoreOwner(false), owner(nullptr)
 {
 	gameObjectID = gameObjectIDTracker;
 	gameObjectIDTracker++;
@@ -139,6 +139,19 @@ sf::Vector2f GameObject::GetPosition()
 Map* GameObject::GetCurrentMap()
 {
 	return GameManager::GetGameManager()->GetCurrentMap();
+}
+
+void GameObject::OnCollisionEnter(GameObject* otherGO)
+{
+	
+}
+
+void GameObject::OnColliding(GameObject* otherGO)
+{
+}
+
+void GameObject::OnCollissionExit(GameObject* otherGO)
+{
 }
 
 void GameObject::AddGameObjectNetDataToManagerNetData()

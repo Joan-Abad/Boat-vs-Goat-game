@@ -4,6 +4,16 @@
 FontManager* FontManager::instance = nullptr;
 
 
+FontManager::~FontManager()
+{
+	for (auto& pair : gameFonts)
+	{
+		delete pair.second; // Free allocated memory
+	}
+	gameFonts.clear();
+	delete instance;
+}
+
 bool FontManager::AddFont(const char* fontPath)
 {
 	if (!HasFont(fontPath))
