@@ -199,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Private\GameObjects\BoatLifes.cpp" />
     <ClCompile Include="Source\Private\GameObjects\Bullet.cpp" />
+    <ClCompile Include="Source\Private\GameObjects\Missile.cpp" />
     <ClCompile Include="Source\Private\Input\InputManager.cpp" />
     <ClCompile Include="Source\Private\Managers\AppManager.cpp" />
     <ClCompile Include="Source\Private\Managers\FontManager.cpp" />
@@ -218,6 +219,7 @@
     <ClCompile Include="Source\Private\Window.cpp" />
     <ClCompile Include="Source\Private\ApplicationHelper.cpp" />
     <ClInclude Include="Source\Public\GameObjects\BoatLifes.h" />
+    <ClInclude Include="Source\Public\GameObjects\Missile.h" />
     <ClInclude Include="Source\Public\Input\BoatController.h" />
     <ClInclude Include="Source\Public\Managers\FontManager.h" />
   </ItemGroup>

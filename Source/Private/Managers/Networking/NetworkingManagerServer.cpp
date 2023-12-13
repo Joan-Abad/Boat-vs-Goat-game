@@ -36,6 +36,11 @@ void NetworkingManagerServer::UpdateNetworkData()
 	}
 }
 
+void NetworkingManagerServer::EndMatch()
+{
+	serverManagementData = EServerManagementData::EEndMatch;
+}
+
 void NetworkingManagerServer::WaitForClientsToConnect()
 {
 	if (bDisplayMessageWaitingForClients)
@@ -57,9 +62,6 @@ void NetworkingManagerServer::WaitForClientsToConnect()
 			std::string message;
 			packet >> message;
 
-			std::cout << "Server: Recieved a message from " << clientAddress << " on port " << clientPort << ": \n";
-			std::cout << message;
-
 			Json::Value root;
 			Json::Reader reader;
 			bool parsingSuccessful = reader.parse(message, root);
@@ -69,7 +71,6 @@ void NetworkingManagerServer::WaitForClientsToConnect()
 				bool bWantToPlay = root[accessKey].asBool();
 				if (bWantToPlay)
 				{
-					std::cout << "\nServer: Player " << players.size() << " connected\n";
 					players["Player" + players.size()] = PlayerConnectionInfo(clientAddress, clientPort);
 
 					//Send a response to the player

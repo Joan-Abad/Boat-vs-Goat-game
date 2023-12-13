@@ -18,6 +18,10 @@ public:
 	virtual void OnInit() override;
 
 	virtual void UpdateNetworkData() override;
+
+protected: 
+	virtual void EndMatch() override;
+
 private:
 	//Sets the packet to the server to be able to join the multiplayer game
 	void SetInitialPacketToServer();

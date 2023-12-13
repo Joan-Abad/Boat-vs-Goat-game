@@ -32,6 +32,9 @@ public:
 	virtual void OnInit() override;
 
 	virtual void UpdateNetworkData() override;
+
+protected:
+	virtual void EndMatch() override;
 	
 private:
 	//Code that waits for clients to connect and pass througt the Strarting Match state

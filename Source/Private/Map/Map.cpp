@@ -22,8 +22,9 @@ void Map::UpdateMap()
 		if (go.bTickEnabled)
 		{
 			go.Update();
-			go.EndUpdate();
 		}
+			go.EndUpdate();
+		
 	}
 	EndUpdate();
 }

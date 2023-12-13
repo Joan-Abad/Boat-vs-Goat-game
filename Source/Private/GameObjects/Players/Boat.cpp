@@ -7,6 +7,7 @@
 #include "Map/Map.h"
 #include "Managers/SoundManager.h"
 #include "GameObjects/BoatLifes.h"
+#include "GameObjects/Missile.h"
 
 const char* Boat::key_AccelerateBoatID = "AccBt";
 const char* Boat::key_RotateBoatLeftID = "RotBtLft";
@@ -143,10 +144,22 @@ void Boat::DisableBoat()
 
 void Boat::OnCollisionEnter(GameObject* otherGO)
 {
-	std::cout << "On colliding hitted: " << otherGO->GetGameObjectID() << std::endl;
 	if (Bullet* bullet = dynamic_cast<Bullet*>(otherGO))
 	{
 		bullet->AddLocalNetworkDataToSend(key_gameObjectHide, true);
+
+		if (lifes > 0)
+		{
+			lifes--;
+			AddLocalNetworkDataToSend(key_UpdateBoatLife, lifes);
+			GetCurrentMap()->CheckWinCondition();
+
+			boatLifeUI->UpdateLifeText();
+		}
+	}
+	else if (Missile* missile = dynamic_cast<Missile*>(otherGO))
+	{
+		missile->AddLocalNetworkDataToSend(key_gameObjectHide, true);
 
 		if (lifes > 0)
 		{
@@ -161,12 +174,12 @@ void Boat::OnCollisionEnter(GameObject* otherGO)
 
 void Boat::OnColliding(GameObject* otherGO)
 {
-	std::cout << "On colliding with: " << otherGO->GetGameObjectID() << std::endl;
+
 }
 
 void Boat::OnCollissionExit(GameObject* otherGO)
 {
-	std::cout << "On colliding exit: " << otherGO->GetGameObjectID() << std::endl;
+
 }
 
 void Boat::StartAccelerateBoat()

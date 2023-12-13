@@ -9,8 +9,11 @@
 #include "Managers/SoundManager.h"
 #include "Managers/FontManager.h"
 #include "Input/InputManager.h"
+#include <random>
+#include <ApplicationHelper.h>
+#include "GameObjects/Missile.h"
 
-Map_Lake::Map_Lake() : gameOver(false)
+Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMissileMax(2.f)
 {
 	TextureManager& TM = TextureManager::GetTextureManager();
 
@@ -20,6 +23,7 @@ Map_Lake::Map_Lake() : gameOver(false)
 	TM.AddTexture(bulletPath);
 	TM.AddTexture(heartPath);
 	TM.AddTexture(goatPath);
+	TM.AddTexture(missilePath);
 
 	FontManager& fontManager = *FontManager::Get();
 
@@ -44,6 +48,16 @@ Map_Lake::Map_Lake() : gameOver(false)
 	winningText.setOutlineThickness(4.f);
 	winningText.setFont(*fontManager.GetFont(lakeFontPath));
 	winningText.setPosition(winningPosition);
+
+	//Init missils game object pool
+	for (int i = 0; i < MaxMissilsOnScreen; i++)
+	{
+		//Spawn and hide bullets
+		Missile* missile = SpawnGameObject<Missile>(GameObjectInitialInfo());
+		missile->bTickEnabled = false;
+		missile->HideGameObject();
+		missiles[i] = missile;
+	}
 }
 
 Map_Lake::~Map_Lake()
@@ -61,6 +75,9 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 	bool playerLocallyControlled = false;
 	const unsigned short playerID = AppManager::GetAppManager()->GetNetworkManager()->GetPlayerID();
 	
+	timer.restart();
+	SetNewSpawnTimeMissle();
+
 	for (int i = 0; i < playersQuantity; i++)
 	{
 
@@ -96,6 +113,18 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 void Map_Lake::UpdateMap()
 {
 	Map::UpdateMap();
+
+	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer() && !gameOver)
+	{
+		sf::Time elapsedTime = timer.getElapsedTime();
+
+		if (elapsedTime.asSeconds() >= spawnTimeMissileMin)
+		{
+			SpawnMissile();
+			SetNewSpawnTimeMissle();
+			timer.restart();
+		}
+	}
 
 }
 
@@ -167,6 +196,72 @@ void Map_Lake::UpdateClientNetData(const Json::Value& root)
 
 }
 
+void Map_Lake::SetNewSpawnTimeMissle()
+{
+	finalSpawnTimeMissile = ApplicationHelper::GetRandomValue<float>(spawnTimeMissileMin, spawnTimeMissileMax);
+}
+
+void Map_Lake::SpawnMissile()
+{
+	std::cout << "Server: Spawn Missile";
+
+	auto& spawnedMissile = missiles[missileTracker];
+	
+	int spawnDirection = ApplicationHelper::GetRandomValue<float>(1,4);
+	sf::Vector2f spawnPoint; 
+	float rotation = 0; 
+
+	switch (spawnDirection)
+	{
+		//Up
+	case 1: 
+		spawnPoint.x = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.x - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x);
+		spawnPoint.y = TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x;
+		spawnPoint.y *= -1; 
+		rotation = 180; 
+		break;
+		//Down
+	case 2: 
+		spawnPoint.x = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.x - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x);
+		spawnPoint.y = WINDOW_SIZE.y;
+		rotation = 0;
+		break;
+		//Left
+	case 3: 
+		spawnPoint.x = -100;
+		spawnPoint.y = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.y - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().y);;
+		rotation = 90;
+		break;
+		//Right
+	case 4: 
+		spawnPoint.x = WINDOW_SIZE.x + TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x;
+
+		spawnPoint.y = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.y - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().y);
+
+		rotation = -90;
+		break;
+	default:
+		break;
+	}
+
+	spawnedMissile->InitMissile(spawnPoint, rotation);
+
+	//Replication code
+	spawnedMissile->AddLocalNetworkDataToSend(key_SpawnMissile, true);
+	Json::Value pos;
+	pos.append(spawnPoint.x);
+	pos.append(spawnPoint.y);
+	spawnedMissile->AddLocalNetworkDataToSend(key_SpawnPos, pos);
+	spawnedMissile->AddLocalNetworkDataToSend(key_SpawnRot, rotation);
+	//End Replication Code
+	
+	if (missileTracker == MaxMissilsOnScreen - 1)
+		missileTracker = 0; 
+
+
+	missileTracker++;
+}
+
 void Map_Lake::FinishMap(const char* playerName)
 {
 	gameOver = true;
@@ -177,6 +272,11 @@ void Map_Lake::FinishMap(const char* playerName)
 	{
 		Boat* boat = dynamic_cast<Boat*>(player);
 		boat->DisableBoat();
+	}
+
+	for (auto& go : levelGameObjects)
+	{
+		go.second->bTickEnabled = false; 
 	}
 
 	Sound* sound = SoundManager::Get()->GetSound("Sound/winSound.wav");

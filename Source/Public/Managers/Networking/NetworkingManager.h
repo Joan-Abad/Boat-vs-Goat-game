@@ -24,6 +24,8 @@ public:
 	//This function should be the one that handles how the data is send.
 	virtual void UpdateNetworkData() = 0;
 
+	virtual void EndMatch() = 0; 
+
 	NetworkingManager(const NetworkingManager&) = delete;
 	NetworkingManager& operator=(const NetworkingManager&) = delete;
 	

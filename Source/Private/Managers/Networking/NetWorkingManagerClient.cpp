@@ -51,6 +51,11 @@ void NetworkingManagerClient::UpdateNetworkData()
 	}
 }
 
+void NetworkingManagerClient::EndMatch()
+{
+	clientManagementData = EClientManagementData::EEndMatch;
+}
+
 void NetworkingManagerClient::WaitForServerResponse()
 {
 	//Wait the response of the server
@@ -64,9 +69,7 @@ void NetworkingManagerClient::WaitForServerResponse()
 		std::string message;
 		packet >> message;
 
-		std::cout << "Client: Recieved a message from " << clientAddress << " on port " << clientPort << ": \n";
-		std::cout << "Content: \n";
-		std::cout << message;
+
 
 		Json::Value root;
 		Json::Reader reader;
@@ -93,10 +96,6 @@ void NetworkingManagerClient::WaitForGameStart()
 	{
 		std::string message;
 		packet >> message;
-
-		std::cout << "Client: Recieved a message from " << clientAddress << " on port " << clientPort << ": \n";
-		std::cout << "Content: \n";
-		std::cout << message;
 
 		Json::Value root;
 		Json::Reader reader;
@@ -130,9 +129,6 @@ void NetworkingManagerClient::RecieveDataFromServer()
 	{
 		std::string message;
 		packet >> message;
-
-		std::cout << "Client: Recieved a message from " << serverAddress << " on port " << gamePort << ": \n";
-		std::cout << message;
 
 		Json::Value root;
 		Json::Reader reader;
