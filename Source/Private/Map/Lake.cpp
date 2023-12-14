@@ -203,7 +203,7 @@ void Map_Lake::SetNewSpawnTimeMissle()
 
 void Map_Lake::SpawnMissile()
 {
-	std::cout << "Server: Spawn Missile";
+	//std::cout << "Server: Spawn Missile";
 
 	auto& spawnedMissile = missiles[missileTracker];
 	

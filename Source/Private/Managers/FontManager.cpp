@@ -29,7 +29,7 @@ bool FontManager::AddFont(const char* fontPath)
 			}
 
 			gameFonts[fontPath] = font;
-			std::cout << "Texture " << fontPath << " created and added to the Texture Manager\n";
+			//std::cout << "Texture " << fontPath << " created and added to the Texture Manager\n";
 			return true;
 		}
 		else

@@ -24,7 +24,6 @@ void Map::UpdateMap()
 			go.Update();
 		}
 			go.EndUpdate();
-		
 	}
 	EndUpdate();
 }

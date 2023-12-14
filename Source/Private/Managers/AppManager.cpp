@@ -25,7 +25,7 @@ AppManager::~AppManager()
 void AppManager::InitGame()
 {
 	std::cout << "Welcome to boat vs goat! A game where you have to destoy the other boats to turn into the real goat\n";
-	std::cout << "Do you want to be the server +or the client? 0 for server and 1 client\n";
+	std::cout << "Do you want to be the server or the client? 0 for server and 1 client\n";
 
 
 	int response = -1;
@@ -48,12 +48,7 @@ void AppManager::InitGame()
 			std::string IP;
 			unsigned short port;
 
-			if (FORCE_SERVER_IP)
-			{
-				IP = SERVER_IP;
-			}
-			else
-				port = NetworkingManager::GetGamePort();
+			port = NetworkingManager::GetGamePort();
 
 			if (LAN)
 			{

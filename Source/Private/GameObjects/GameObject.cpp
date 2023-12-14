@@ -17,7 +17,7 @@ bCheckCollisions(true), rightVector(sf::Vector2f(-1.f, 0.f)), objectCollision(Co
 {
 	gameObjectID = gameObjectIDTracker;
 	gameObjectIDTracker++;
-	std::cout << "Game Object ID: " << gameObjectID << std::endl;
+	//std::cout << "Game Object ID: " << gameObjectID << std::endl;
 }
 
 GameObject::GameObject(GameObjectInitialInfo gameObjectInitialInfo) : GameObject()

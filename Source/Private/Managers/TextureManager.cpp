@@ -16,7 +16,7 @@ bool TextureManager::AddTexture(const char* texturePath)
 			}
 
 			gameTextures[texturePath] = texture;
-			std::cout << "Texture " << texturePath << " created and added to the Texture Manager\n";
+			//std::cout << "Texture " << texturePath << " created and added to the Texture Manager\n";
 			return true;
 		}
 		else

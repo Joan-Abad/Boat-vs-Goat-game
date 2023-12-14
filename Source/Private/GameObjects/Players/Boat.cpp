@@ -43,7 +43,7 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	//Sound part
 	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
 	//End sound part
-	std::cout << "Boat with ID: " << GetGameObjectID() << " spawned. " << std::endl;
+	//std::cout << "Boat with ID: " << GetGameObjectID() << " spawned. " << std::endl;
 
 	for (int i = 0; i < MaxBulletsPerBoatOnScreen; i++)
 	{

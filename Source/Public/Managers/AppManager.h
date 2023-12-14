@@ -7,14 +7,6 @@ class Map;
 class Window; 
 class GameManager;
 
-
-#if _DEBUG
-#define FORCE_SERVER_IP 0
-#define SERVER_IP "192.168.0.15"
-#endif
-
-
-
 //Class that handles all the Application
 class AppManager
 {
