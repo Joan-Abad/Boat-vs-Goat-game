@@ -11,7 +11,8 @@
 #include "Input/InputManager.h"
 #include <random>
 #include <ApplicationHelper.h>
-#include "GameObjects/Missile.h"
+#include "GameObjects/Cannon.h"
+#include "GameObjects/Bullet.h"
 
 Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMissileMax(2.f)
 {
@@ -32,7 +33,7 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 	SoundManager* SM = SoundManager::Get();
 	if (SM)
 	{
-		SM->CreateSound("Sound/Boat/Cannon.wav");
+		Cannon::cannonSound = SM->CreateSound("Sound/Boat/Cannon.wav");
 		SM->CreateSound("Sound/winSound.wav");
 		SM->CreateSound("Sound/PirateMusic.wav");
 	}
@@ -54,9 +55,10 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 	for (int i = 0; i < MaxMissilsOnScreen; i++)
 	{
 		//Spawn and hide bullets
-		Missile* missile = SpawnGameObject<Missile>(GameObjectInitialInfo());
+		Bullet* missile = SpawnGameObject<Bullet>(GameObjectInitialInfo());
 		missile->bTickEnabled = false;
 		missile->HideGameObject();
+		missile->objectCollision = CollisionChannels::NoCollision;
 		missiles[i] = missile;
 	}
 }
@@ -79,13 +81,7 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 	timer.restart();
 	SetNewSpawnTimeMissle();
 
-	SoundManager* SM = SoundManager::Get();
-	if (SM)
-	{
-		Sound* sound = SM->GetSound("Sound/PirateMusic.wav");
-		sound->PlaySound(true);
-		sound->SetVolume(50.f);
-	}
+	SpawnMapCannons();
 
 	for (int i = 0; i < playersQuantity; i++)
 	{
@@ -118,7 +114,13 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 		}
 	}
 
-
+	SoundManager* SM = SoundManager::Get();
+	if (SM)
+	{
+		Sound* sound = SM->GetSound("Sound/PirateMusic.wav");
+		sound->PlaySound(true);
+		sound->SetVolume(50.f);
+	}
 }
 
 void Map_Lake::UpdateMap(float DeltaTime)
@@ -211,63 +213,95 @@ void Map_Lake::SetNewSpawnTimeMissle()
 	finalSpawnTimeMissile = ApplicationHelper::GetRandomValue<float>(spawnTimeMissileMin, spawnTimeMissileMax);
 }
 
-void Map_Lake::SpawnMissile()
+void Map_Lake::SpawnMapCannons()
 {
-	//std::cout << "Server: Spawn Missile";
+	//Top screeen, bot screen, right screen and left screen
+	int cannonPerSide = 4;
 
-	auto& spawnedMissile = missiles[missileTracker];
-	
-	int spawnDirection = ApplicationHelper::GetRandomValue<float>(1,4);
-	sf::Vector2f spawnPoint; 
-	float rotation = 0; 
+	//Space between cannons -> 640
+	const int cannonPositionDiffX = WINDOW_SIZE.x / cannonPerSide;
+	const int cannonPositionDiffY = WINDOW_SIZE.y / cannonPerSide;
+	totalCannons = cannonPerSide * 4; // 4 is the window sides as it will be spawning from top, bottom, left, right
 
-	switch (spawnDirection)
+	//First cannon posttion -> 320
+	const sf::Vector2i initialCannonPosition = { cannonPositionDiffX / 2 , cannonPositionDiffY / 2 };
+	int sideSpawnTracker = 1;
+	int changeSideNum = cannonPerSide;
+	sf::Vector2i icpTracker = initialCannonPosition;
+
+	sf::Vector2f cannonTextureSize = static_cast<sf::Vector2f>(TextureManager::GetTextureManager().GetTexture(missilePath)->getSize()) ;
+	cannonTextureSize *= 0.2f;
+	std::vector<sf::Vector2i> positions;
+	int half = totalCannons / 2;
+
+	//Calculate cannon posiitons
+	for (int i = 0; i < totalCannons; i++)
 	{
-		//Up
-	case 1: 
-		spawnPoint.x = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.x - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x);
-		spawnPoint.y = TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x;
-		spawnPoint.y *= -1; 
-		rotation = 180; 
-		break;
-		//Down
-	case 2: 
-		spawnPoint.x = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.x - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x);
-		spawnPoint.y = WINDOW_SIZE.y;
-		rotation = 0;
-		break;
-		//Left
-	case 3: 
-		spawnPoint.x = -100;
-		spawnPoint.y = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.y - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().y);;
-		rotation = 90;
-		break;
-		//Right
-	case 4: 
-		spawnPoint.x = WINDOW_SIZE.x + TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().x;
+		float variantPosition = 0;
+		Cannon* missile;
+		//del 0 al 5
+		if (i < half)
+		{
+			//Down
+			if (i % 2 != 0)
+			{
+				variantPosition = WINDOW_SIZE.y; // cannon texture size
+				//320 + 640 = 960
+				missile = SpawnGameObject<Cannon>(GameObjectInitialInfo(sf::Vector2f(icpTracker.x, variantPosition), 45.f, sf::Vector2f(1.0f, 1.0f)));
+				missile->SetPosition(sf::Vector2f(icpTracker.x, variantPosition));
+				missile->bTickEnabled = false;
 
-		spawnPoint.y = ApplicationHelper::GetRandomValue<float>(0, WINDOW_SIZE.y - TextureManager::GetTextureManager().GetTexture(missilePath)->getSize().y);
+				positions.push_back(sf::Vector2i(icpTracker.x, variantPosition));
+				icpTracker.x += cannonPositionDiffX;
+			}
+			//Top
+			else
+			{
+				missile = SpawnGameObject<Cannon>(GameObjectInitialInfo(sf::Vector2f(icpTracker.x, variantPosition), 45.f, sf::Vector2f(1.0f, 1.0f)));
+				missile->SetPosition(sf::Vector2f(icpTracker.x, variantPosition));
+				missile->SetRotation(180.f);
+				positions.push_back(sf::Vector2i(icpTracker.x, variantPosition));
+			}
 
-		rotation = -90;
-		break;
-	default:
-		break;
+		}
+		//del 6 al 11
+		else
+		{
+			//Right
+			if (i % 2 != 0)
+			{
+				variantPosition = WINDOW_SIZE.x;
+				missile = SpawnGameObject<Cannon>(GameObjectInitialInfo(sf::Vector2f(variantPosition, icpTracker.y), 45.f, sf::Vector2f(1.0f, 1.0f)));
+				missile->SetPosition(sf::Vector2f(variantPosition, icpTracker.y));
+				missile->SetRotation(-90.f);
+				icpTracker.y += cannonPositionDiffY;
+			}
+			//Left
+			else
+			{
+				missile = SpawnGameObject<Cannon>(GameObjectInitialInfo(sf::Vector2f(variantPosition, icpTracker.y), 45.f, sf::Vector2f(1.0f, 1.0f)));
+				missile->SetPosition(sf::Vector2f(variantPosition, icpTracker.y));
+				missile->SetRotation(90.f);
+				positions.push_back(sf::Vector2i(variantPosition, icpTracker.y));
+			}
+
+		}
+		cannons.push_back(missile);
 	}
 
-	spawnedMissile->InitMissile(spawnPoint, rotation);
+	int i = 0;
+}
 
-	//Replication code
-	spawnedMissile->AddLocalNetworkDataToSend(key_SpawnMissile, true);
-	Json::Value pos;
-	pos.append(spawnPoint.x);
-	pos.append(spawnPoint.y);
-	spawnedMissile->AddLocalNetworkDataToSend(key_SpawnPos, pos);
-	spawnedMissile->AddLocalNetworkDataToSend(key_SpawnRot, rotation);
-	//End Replication Code
+void Map_Lake::SpawnMissile()
+{	
+	int cannonID = ApplicationHelper::GetRandomValue<float>(0,totalCannons-1);
 	
+	Cannon* cannon = cannons[cannonID];
+	cannon->ThrowCannonBall(*missiles[missileTracker]);
+
+	//End Replication Code
 	if (missileTracker == MaxMissilsOnScreen - 1)
 		missileTracker = 0; 
-
 
 	missileTracker++;
 }

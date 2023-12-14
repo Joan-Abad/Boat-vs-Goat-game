@@ -7,7 +7,7 @@
 #include "Map/Map.h"
 #include "Managers/SoundManager.h"
 #include "GameObjects/BoatLifes.h"
-#include "GameObjects/Missile.h"
+#include "GameObjects/Cannon.h"
 
 const char* Boat::key_AccelerateBoatID = "AccBt";
 const char* Boat::key_RotateBoatLeftID = "RotBtLft";
@@ -65,8 +65,8 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 		InputManager* im = InputManager::GetInputManager();
 		//Get input actions references
 		action_W = im->GetInputAction(sf::Keyboard::W);
-		action_RotateLeft = im->GetInputAction(sf::Keyboard::Key::Q);
-		action_RotateRight = im->GetInputAction(sf::Keyboard::Key::E);
+		action_RotateLeft = im->GetInputAction(sf::Keyboard::Key::A);
+		action_RotateRight = im->GetInputAction(sf::Keyboard::Key::D);
 		action_ShootBoat = im->GetInputAction(sf::Keyboard::Key::Space);
 
 		//Accelerate Boat
@@ -158,7 +158,7 @@ void Boat::OnCollisionEnter(GameObject* otherGO)
 			boatLifeUI->UpdateLifeText();
 		}
 	}
-	else if (Missile* missile = dynamic_cast<Missile*>(otherGO))
+	else if (Cannon* missile = dynamic_cast<Cannon*>(otherGO))
 	{
 		missile->AddLocalNetworkDataToSend(key_gameObjectHide, true);
 
@@ -351,6 +351,8 @@ void Boat::PrepareBullet(sf::Vector2f shootingLocation, float angle)
 	if (bulletTracker >= MaxBulletsPerBoatOnScreen)
 		bulletTracker = 0;
 }
+
+
 
 void Boat::UpdateClientNetData(const Json::Value& root)
 {

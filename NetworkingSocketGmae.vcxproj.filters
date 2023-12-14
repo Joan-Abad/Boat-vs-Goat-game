@@ -75,7 +75,7 @@
     <ClCompile Include="Source\Private\Managers\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\GameObjects\Missile.cpp">
+    <ClCompile Include="Source\Private\GameObjects\Cannon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,7 +140,7 @@
     <ClInclude Include="Source\Public\Managers\FontManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Public\GameObjects\Missile.h">
+    <ClInclude Include="Source\Public\GameObjects\Cannon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

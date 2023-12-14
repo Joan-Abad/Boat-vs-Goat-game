@@ -82,6 +82,11 @@ void Bullet::UpdateClientNetData(const Json::Value& root)
 	}
 }
 
+void Bullet::SetBulletSpeed(float bulletSpeed)
+{
+	this->bulletSpeed = bulletSpeed;
+}
+
 void Bullet::OnCollisionEnter(GameObject* otherGO)
 {
 	if (otherGO)

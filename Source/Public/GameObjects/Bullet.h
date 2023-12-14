@@ -12,7 +12,7 @@ public:
 
 	//Recieved data from the server. Extract any information needed
 	virtual void UpdateClientNetData(const Json::Value& root) override;
-
+	void SetBulletSpeed(float bulletSpeed);
 protected: 
 
 	//Triggered when a collision is detected with another game object

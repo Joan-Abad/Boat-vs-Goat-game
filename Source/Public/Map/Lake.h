@@ -5,8 +5,8 @@
 
 #define MaxMissilsOnScreen 10
 
-class Missile; 
-
+class Cannon; 
+class Bullet; 
 class Map_Lake : public Map
 {
 public:
@@ -31,7 +31,7 @@ public:
 	const char* bulletPath = "Art/bullet.png";
 	const char* heartPath = "Art/heart.png";
 	const char* goatPath = "Art/goat.png";
-	const char* missilePath = "Art/missile.png";
+	const char* missilePath = "Art/cannon.png";
 
 	//Fonts
 	const char* lakeFontPath = "Fonts/Mikeona.ttf";
@@ -46,6 +46,7 @@ public:
 	sf::Sprite goatSprite;
 
 private: 
+	void SpawnMapCannons();
 	//Missile
 	void SpawnMissile();
 	void SetNewSpawnTimeMissle();
@@ -56,9 +57,11 @@ private:
 	sf::Text winningText;
 	// Create a clock
 	sf::Clock timer;
+	int totalCannons;
 	float finalSpawnTimeMissile; 
 	float spawnTimeMissileMin;
 	float spawnTimeMissileMax; 
 	int missileTracker; 
-	std::array<Missile*, MaxMissilsOnScreen> missiles;
+	std::vector<Cannon*> cannons; 
+	std::array<Bullet*, MaxMissilsOnScreen> missiles;
 };

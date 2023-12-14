@@ -29,8 +29,8 @@ InputManager::InputManager() : bInputEnabled(true)
 {
 	//Create project input actions
 	CreateInputAction(sf::Keyboard::Key::W);
-	CreateInputAction(sf::Keyboard::Key::Q);
-	CreateInputAction(sf::Keyboard::Key::E);	
+	CreateInputAction(sf::Keyboard::Key::A);
+	CreateInputAction(sf::Keyboard::Key::D);	
 	CreateInputAction(sf::Keyboard::Key::Space);
 
 }

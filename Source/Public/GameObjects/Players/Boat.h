@@ -75,6 +75,7 @@ protected:
 
 	//Recived data from a client. Extract any information needed
 	virtual void UpdateServerData(const Json::Value& root);
+
 private: 
 	bool bBoatIsShooting;
 	bool bIsBoatAccelerating;
