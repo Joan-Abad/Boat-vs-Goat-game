@@ -63,7 +63,7 @@ public:
 	{
 		if (!gameObjectNetData.isMember(key_gameObjectID))
 			gameObjectNetData[key_gameObjectID] = gameObjectID;
-
+		//If compiler breaks here, prob means that valueToSend data is not accepted by Json::Value
 		gameObjectNetData[KEY] = valueToSend;
 	}
 

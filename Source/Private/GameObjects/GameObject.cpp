@@ -52,7 +52,6 @@ bool GameObject::GameObjectOutOfScreen()
 	if (initialSprite.getPosition().x < 0 || initialSprite.getPosition().y < 0
 		|| initialSprite.getPosition().x > WINDOW_SIZE.x || initialSprite.getPosition().y > WINDOW_SIZE.y)
 	{
-		std::cout << "Game object is out of screen";
 		return true; 
 	}
 	return false; 

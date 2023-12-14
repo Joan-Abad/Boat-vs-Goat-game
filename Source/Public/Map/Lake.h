@@ -32,6 +32,7 @@ public:
 	const char* heartPath = "Art/heart.png";
 	const char* goatPath = "Art/goat.png";
 	const char* missilePath = "Art/cannon.png";
+	const char* sharkPath = "Art/shark.png";
 
 	//Fonts
 	const char* lakeFontPath = "Fonts/Mikeona.ttf";

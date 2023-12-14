@@ -13,6 +13,7 @@
 #include <ApplicationHelper.h>
 #include "GameObjects/Cannon.h"
 #include "GameObjects/Bullet.h"
+#include "GameObjects/Shark.h"
 
 Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMissileMax(2.f)
 {
@@ -25,6 +26,9 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 	TM.AddTexture(heartPath);
 	TM.AddTexture(goatPath);
 	TM.AddTexture(missilePath);
+	TM.AddTexture(sharkPath);
+
+	Shark::sharkTexture = TM.GetTexture(sharkPath);
 
 	FontManager& fontManager = *FontManager::Get();
 
@@ -61,6 +65,8 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 		missile->objectCollision = CollisionChannels::NoCollision;
 		missiles[i] = missile;
 	}
+
+	Shark* shark = SpawnGameObject<Shark>(WINDOW_SIZE/2.f, 300.f);
 }
 
 Map_Lake::~Map_Lake()

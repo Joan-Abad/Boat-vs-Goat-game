@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Input/InputManager.h"
 #include "Managers/AppManager.h"
+#include "ApplicationHelper.h"
 
 GameManager* GameManager::instance = nullptr;
 
@@ -29,6 +30,7 @@ void GameManager::InitGameWindow()
 	window->GetWindow().setFramerateLimit(60);
 	bHasGameStarted = true; 
 	AppManager::GetAppManager()->InitGameInput();
+	ApplicationHelper::RestartClock();
 
 }
 

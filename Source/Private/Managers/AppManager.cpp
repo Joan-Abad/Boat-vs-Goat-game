@@ -75,6 +75,7 @@ void AppManager::InitGame()
 	}
 
 	NetworkManager->OnInit();
+
 }
 
 void AppManager::Update()

@@ -21,6 +21,15 @@ public:
 	}
 	inline static float const GetDeltaTime() { return DeltaTime; };
 
+	template<typename T>
+	static T Lerp(T StartingValue, T EndValue, float interpFactor)
+	{
+		T lerpValue = StartingValue + interpFactor * (EndValue - StartingValue);
+		return lerpValue; 
+	};
+	static void RestartClock();
+
+	static float AngleBetweenTwoVectors(const sf::Vector2f& a, const sf::Vector2f& b);
 private: 
 	static float DeltaTime;
 	static sf::Clock clock;

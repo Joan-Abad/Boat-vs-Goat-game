@@ -19,7 +19,7 @@ const char* Boat::key_bulletImpact = "buIm";
 unsigned short Boat::boatCounter = 0; 
 
 Boat::Boat(GameObjectInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(playerInitialInfo, PlayerPlayable), angleBoatSpeedEachSecond(60.f),
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(1.5f), bulletTracker(0), speed(150), lifes(3)
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(1.5f), bulletTracker(0), speed(150), lifes(999)
 {
 	Map* map = GetCurrentMap();
 
