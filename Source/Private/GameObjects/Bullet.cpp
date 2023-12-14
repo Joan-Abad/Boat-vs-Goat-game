@@ -33,6 +33,7 @@ void Bullet::Update(float deltaTime)
 		{
 			bTickEnabled = false;
 			HideGameObject();
+			AddLocalNetworkDataToSend(key_gameObjectHide, true);
 		}
 		else
 		{

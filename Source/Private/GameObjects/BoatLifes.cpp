@@ -42,9 +42,9 @@ BoatLifes::BoatLifes(GameObjectInitialInfo initialInfo, Boat* associatedBoat) : 
 		initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture(PLAYER2TEXTPATH));
 		initialSprite.setScale(sf::Vector2f({ scale , scale }));
 		//SetRotation(0.f);
-		float spriteOffset = initialSprite.getTexture()->getSize().x * scale;
+		float spriteOffset = initialSprite.getTexture()->getSize().x;
 		float spritePos = WINDOW_SIZE.x;
-		initialSprite.setPosition(spritePos - spriteOffset * 2, 0);
+		initialSprite.setPosition(spritePos - spriteOffset * 1.5f, 0);
 		heart.setPosition(spritePos - spriteOffset, 0);
 		lifeText.setPosition(spritePos - spriteOffset + numOffset * 1.5f, numOffset/2);
 
