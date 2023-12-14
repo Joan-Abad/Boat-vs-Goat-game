@@ -26,7 +26,7 @@ public:
 	
 	void InitGameWindow();
 	void InitGameMap(Map* map, unsigned short playerQuantity);
-	void Update();
+	void Update(float DeltaTime);
 	void AddGameMap(const std::string& mapName, Map* map);
 
 	const std::string LakeMap = "Lake";

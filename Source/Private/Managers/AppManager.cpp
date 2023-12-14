@@ -12,7 +12,7 @@
 AppManager* AppManager::instance = nullptr;
 
 
-AppManager::AppManager()
+AppManager::AppManager() : NetworkManager(nullptr)
 {
 	gameManager = GameManager::GetGameManager();
 }
@@ -79,21 +79,22 @@ void AppManager::InitGame()
 
 void AppManager::Update()
 {
-	while (!bCloseGame)
+	while (!bGameClosed)
 	{
 		NetworkManager->UpdateNetworkData();
 		if (GameManager::GetGameManager()->bHasGameStarted)
 		{
 			//Shoulw be on app manager and not on applcation helper
 			ApplicationHelper::SetDeltaTime();
+			float deltaTime = ApplicationHelper::GetDeltaTime();
 			InputManager::GetInputManager()->Update();
 
-			gameManager->Update();
+			gameManager->Update(deltaTime);
 		}
 	}
 }
 
 void AppManager::CloseGame()
 {
-
+	bGameClosed = true; 
 }

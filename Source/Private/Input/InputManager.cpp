@@ -43,8 +43,6 @@ InputManager::~InputManager()
 
 void InputManager::Update()
 {
-
-
 	sf::Event inputEvent;
 	sf::RenderWindow& renderWindow = window->GetWindow();
 	while (renderWindow.pollEvent(inputEvent))

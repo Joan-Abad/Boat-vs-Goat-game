@@ -84,7 +84,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window);
 
 	//Function that gets called each tick
-	virtual void Update();
+	virtual void Update(float deltaTime);
 
 	//Called after update
 	virtual void EndUpdate();

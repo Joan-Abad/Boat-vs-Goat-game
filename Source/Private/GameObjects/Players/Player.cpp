@@ -43,12 +43,12 @@ Player::~Player()
 
 }
 
-void Player::Update()
+void Player::Update(float deltaTime)
 {
 }
 
 NetworkingManager* Player::GetNetworkingManager()
 {
-	return AppManager::GetAppManager()->GetNetworkManager();
+	return AppManager::GetNetworkManager();
 }
 

@@ -36,12 +36,12 @@ void GameManager::InitGameMap(Map* map, unsigned short playerQuantity)
 
 }
 
-void GameManager::Update()
+void GameManager::Update(float DeltaTime)
 {
 	//Draw the game
 	if (currentGameMap && window)
 	{
-		currentGameMap->UpdateMap();
+		currentGameMap->UpdateMap(DeltaTime);
 		currentGameMap->DrawWap(*window);
 	}
 }

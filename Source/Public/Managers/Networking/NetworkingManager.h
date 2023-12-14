@@ -12,25 +12,19 @@
 
 #define LAN 1
 
+//Not a singleton due to polymorphism. To access it call AppNetworkManager
 class NetworkingManager
 {
 	friend class AppManager; 
 public:
 
 	virtual ~NetworkingManager() = default;
-	
-	virtual void OnInit() = 0;
-
-	//This function should be the one that handles how the data is send.
-	virtual void UpdateNetworkData() = 0;
-
-	virtual void EndMatch() = 0; 
 
 	NetworkingManager(const NetworkingManager&) = delete;
 	NetworkingManager& operator=(const NetworkingManager&) = delete;
 	
 	//GETTERS
-	inline const static unsigned short GetGamePort() { return gamePort; }; 
+	inline const static unsigned short GetGamePort() { return serverGamePort; }; 
 	inline const unsigned short GetPlayerID() { return playerID; };
 	inline bool GetIsServer() { return bIsServer; };
 
@@ -56,13 +50,24 @@ public:
 
 protected:
 	NetworkingManager();
+	
+	//Called when Networking Manager is assigned for the first time
+	virtual void OnInit() = 0;
 
+	//This function should be the one that handles how the data is send.
+	virtual void UpdateNetworkData() = 0;
+
+	//Sets the EndMatch flag on each NetworkingManager. Used to stop recieving gameplay networking data. 
+	virtual void EndMatch() = 0;
+
+	//Main socket used to send packets to the client
 	sf::UdpSocket udpSocket; 
-	std::vector<sf::Packet> packetsToSendThisFrame;
+
 	//The plyer id associated with the application player
 	unsigned short playerID; 
 
-	static unsigned short gamePort;
+	//The main gameport 
+	static unsigned short serverGamePort;
 
 	//Adds the packet header for the server to be able to read it
 	void AddPacketHeader();

@@ -29,12 +29,12 @@ void Missile::InitMissile(sf::Vector2f position, float angle)
 	objectCollision = CollisionChannels::Bullet;
 }
 
-void Missile::Update()
+void Missile::Update(float deltaTime)
 {
-	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (AppManager::GetNetworkManager()->GetIsServer())
 	{
 		//Accelerate boat bullet on forward vector direction
-		sf::Vector2f bulletPosition = GetPosition() + GetForwardVector() * missileSpeed * ApplicationHelper::GetDeltaTime();
+		sf::Vector2f bulletPosition = GetPosition() + GetForwardVector() * missileSpeed * deltaTime;
 		SetPosition(bulletPosition);
 
 		Json::Value pos;

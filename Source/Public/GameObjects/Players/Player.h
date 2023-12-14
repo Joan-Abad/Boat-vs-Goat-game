@@ -20,7 +20,7 @@ public:
 	virtual ~Player();
 
 	//Function that gets called each tick
-	virtual void Update();
+	virtual void Update(float deltaTime);
 
 	NetworkingManager* GetNetworkingManager();
 	inline int GetPlayerID() { return playerID; };

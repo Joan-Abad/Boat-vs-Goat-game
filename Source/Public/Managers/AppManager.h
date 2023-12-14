@@ -22,10 +22,18 @@ public:
 
 	//Init the application asking the player if wants to be the server or client
 	void InitGame();
+
+	//Calls all the update of the game
 	void Update();
+
+	//When we want to close the application, we should call this function
 	void CloseGame();
+
+	//Destructor
 	~AppManager();
-	NetworkingManager* GetNetworkManager() { return NetworkManager; };
+
+	//Gets the NetworkManager
+	static NetworkingManager* GetNetworkManager() { return instance->NetworkManager; };
 
 private: 
 	AppManager();
@@ -37,7 +45,8 @@ private:
 	GameManager* gameManager; 
 
 	//Handles the lifetime of the applcation
-	bool bCloseGame = false; 
+	bool bGameClosed = false; 
 
+	//singleton instance of the app manager
 	static AppManager* instance; 
 };

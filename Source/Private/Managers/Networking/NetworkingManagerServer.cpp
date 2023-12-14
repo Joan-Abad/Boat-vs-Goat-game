@@ -219,10 +219,10 @@ void NetworkingManagerServer::RecieveGameDataFromClients()
 
 void NetworkingManagerServer::OnInit()
 {
-	udpSocket.bind(gamePort);
+	udpSocket.bind(serverGamePort);
 
 	//Set the server as its own player
-	players["player0"] = PlayerConnectionInfo(sf::IpAddress::getLocalAddress(), gamePort);
+	players["player0"] = PlayerConnectionInfo(sf::IpAddress::getLocalAddress(), serverGamePort);
 
 	udpSocket.setBlocking(false);
 }

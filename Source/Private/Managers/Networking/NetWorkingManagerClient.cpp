@@ -203,7 +203,7 @@ void NetworkingManagerClient::SendGameDataToServer()
 			packet << goData;
 		}
 
-		udpSocket.send(packet, serverAddress, gamePort);
+		udpSocket.send(packet, serverAddress, serverGamePort);
 
 		ClearNetData();
 	}
@@ -221,5 +221,5 @@ void NetworkingManagerClient::SetInitialPacketToServer()
 	std::string msgToSend = Json::writeString(writerBuilder, root);
 	packet << msgToSend;
 
-	sf::Socket::Status status = udpSocket.send(packet, serverAddress, gamePort);
+	sf::Socket::Status status = udpSocket.send(packet, serverAddress, serverGamePort);
 }

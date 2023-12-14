@@ -97,18 +97,18 @@ void Boat::Init()
 	timer.restart();
 }
 
-void Boat::Update()
+void Boat::Update(float deltaTime)
 {
-	Player::Update();
+	Player::Update(deltaTime);
 
-	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (AppManager::GetNetworkManager()->GetIsServer())
 	{
 		if (bIsBoatAccelerating)
-			AccelerateBoat();
+			AccelerateBoat(deltaTime);
 		if (bIsBoatRotatingLeft)
-			RotateBoatLeft();
+			RotateBoatLeft(deltaTime);
 		if (bIsBoatRotatingRight)
-			RotateBoatRight();
+			RotateBoatRight(deltaTime);
 		if (bBoatIsShooting)
 			BoatShootBullet();
 	}
@@ -185,22 +185,20 @@ void Boat::OnCollissionExit(GameObject* otherGO)
 void Boat::StartAccelerateBoat()
 {
 	bIsBoatAccelerating = true;
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		AddLocalNetworkDataToSend(key_AccelerateBoatID, bIsBoatAccelerating);
 	}
 
 }
 
-void Boat::AccelerateBoat()
+void Boat::AccelerateBoat(float deltaTime)
 {
-	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
-
 	//std::cout << "Accelerating Boat\n";
 	//sf::Vector2f position = ApplicationHelper::Normalize(position);
 	sf::Vector2f position = initialSprite.getPosition();
 
-	float frameSpeed = speed * ApplicationHelper::GetDeltaTime();
+	float frameSpeed = speed * deltaTime;
 
 	position += GetForwardVector() * frameSpeed;
 
@@ -222,25 +220,16 @@ void Boat::AccelerateBoat()
 void Boat::StopAccelerateBoat()
 {
 	bIsBoatAccelerating = false;
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		AddLocalNetworkDataToSend(key_AccelerateBoatID, bIsBoatAccelerating);
 	}
 }
 
-void Boat::DecelerateBoat()
-{
-	std::cout << "Accelerating Boat\n";
-	//sf::Vector2f position = ApplicationHelper::Normalize(position);
-	sf::Vector2f position = initialSprite.getPosition();
-	position.y += 100 * ApplicationHelper::GetDeltaTime();
-	initialSprite.setPosition(position);
-}
-
 void Boat::StartRotateBoatLeft()
 {
 	bIsBoatRotatingLeft = true;
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		// Function ID + PlayerID
 		AddLocalNetworkDataToSend(key_RotateBoatLeftID, bIsBoatRotatingLeft);
@@ -250,7 +239,7 @@ void Boat::StartRotateBoatLeft()
 void Boat::StopRotateBoatLeft()
 {
 	bIsBoatRotatingLeft = false;
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		// Function ID + PlayerID
 		AddLocalNetworkDataToSend(key_RotateBoatLeftID, bIsBoatRotatingLeft);
@@ -260,7 +249,7 @@ void Boat::StopRotateBoatLeft()
 void Boat::StartShootBullet()
 {
 	bBoatIsShooting = true;
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		AddLocalNetworkDataToSend(key_ShootBoatID, bBoatIsShooting);
 	}
@@ -269,7 +258,7 @@ void Boat::StartShootBullet()
 
 void Boat::BoatShootBullet()
 {
-	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (AppManager::GetNetworkManager()->GetIsServer())
 	{
 		sf::Time elapsedTime = timer.getElapsedTime();
 
@@ -296,7 +285,7 @@ void Boat::BoatShootBullet()
 void Boat::StopShootBullet()
 {
 	bBoatIsShooting = false;
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		AddLocalNetworkDataToSend(key_ShootBoatID, bBoatIsShooting);
 	}
@@ -307,28 +296,24 @@ void Boat::StartRotateBoatRight()
 	bIsBoatRotatingRight = true;
 	// Function ID + PlayerID
 
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		AddLocalNetworkDataToSend(key_RotateBoatRightID, bIsBoatRotatingRight);
 	}
 }
 
-void Boat::RotateBoatLeft()
+void Boat::RotateBoatLeft(float deltaTime)
 {
-	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
-
-	float tickRotation = -angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
+	float tickRotation = -angleBoatSpeedEachSecond * deltaTime;
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
 	SetRotation(newAngleRotation);
 	AddLocalNetworkDataToSend(key_gameObjectRot, GetRotation());
 }
 
-void Boat::RotateBoatRight()
+void Boat::RotateBoatRight(float deltaTime)
 {
-	NetworkingManager& netManager = *AppManager::GetAppManager()->GetNetworkManager();
-
-	float tickRotation = angleBoatSpeedEachSecond * ApplicationHelper::GetDeltaTime();
+	float tickRotation = angleBoatSpeedEachSecond * deltaTime;
 	float previousRotation = GetRotation();
 	float newAngleRotation = previousRotation + tickRotation;
 	SetRotation(newAngleRotation);
@@ -339,7 +324,7 @@ void Boat::StopRotateBoatRight()
 {
 	bIsBoatRotatingRight = false;
 
-	if (!AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (!AppManager::GetNetworkManager()->GetIsServer())
 	{
 		// Function ID + PlayerID
 		AddLocalNetworkDataToSend(key_RotateBoatRightID, bIsBoatRotatingRight);
@@ -378,6 +363,7 @@ void Boat::UpdateClientNetData(const Json::Value& root)
 		sf::Vector2f boatPosition = sf::Vector2f(boatPositionArray[0].asFloat(), boatPositionArray[1].asFloat());
 		SetPosition(boatPosition);
 	}
+
 	//Set rotation
 	if (root.isMember(key_gameObjectRot))
 	{

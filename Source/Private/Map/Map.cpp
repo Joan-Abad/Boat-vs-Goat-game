@@ -11,7 +11,7 @@ Map::~Map()
 
 }
 
-void Map::UpdateMap()
+void Map::UpdateMap(float deltaTime)
 {
 	CheckCollisions();
 
@@ -21,7 +21,7 @@ void Map::UpdateMap()
 
 		if (go.bTickEnabled)
 		{
-			go.Update();
+			go.Update(deltaTime);
 		}
 			go.EndUpdate();
 	}
@@ -37,7 +37,7 @@ void Map::CheckCollisions()
 {
 	//Change to Map() UpdateMap function
 	//Only check collisions on server
-	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (AppManager::GetNetworkManager()->GetIsServer())
 	{
 		for (auto& pair1 : levelGameObjects) {
 			if (!pair1.second->bCheckCollisions)
@@ -173,7 +173,7 @@ void Map::AddGameObjectNetDataToManagerNetData()
 	{
 		Json::StreamWriterBuilder writerBuilder;
 
-		Json::Value& value = AppManager::GetAppManager()->GetNetworkManager()->GetMapNetData();
+		Json::Value& value = AppManager::GetNetworkManager()->GetMapNetData();
 		std::string msgToSend = Json::writeString(writerBuilder, value);
 		std::string goData = Json::writeString(writerBuilder, mapNetData);
 

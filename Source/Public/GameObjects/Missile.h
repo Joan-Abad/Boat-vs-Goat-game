@@ -9,7 +9,7 @@ public:
 	void InitMissile(sf::Vector2f position, float angle);
 protected: 
 	//Function that gets called each tick
-	virtual void Update();
+	virtual void Update(float deltaTime);
 
 	//Recieved data from the server. Extract any information needed
 	virtual void UpdateClientNetData(const Json::Value& root) override;

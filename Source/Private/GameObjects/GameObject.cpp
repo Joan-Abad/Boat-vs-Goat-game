@@ -63,7 +63,7 @@ void GameObject::Draw(sf::RenderWindow& window)
 	window.draw(initialSprite);
 }
 
-void GameObject::Update()
+void GameObject::Update(float deltaTime)
 {
 
 }
@@ -161,7 +161,7 @@ void GameObject::AddGameObjectNetDataToManagerNetData()
 	{
 		Json::StreamWriterBuilder writerBuilder;
 
-		Json::Value& value = AppManager::GetAppManager()->GetNetworkManager()->GetGameObjectsNetData();
+		Json::Value& value = AppManager::GetNetworkManager()->GetGameObjectsNetData();
 		std::string msgToSend = Json::writeString(writerBuilder, value);
 		std::string goData = Json::writeString(writerBuilder, gameObjectNetData);
 

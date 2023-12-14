@@ -73,7 +73,7 @@ Map_Lake::~Map_Lake()
 void Map_Lake::InitMap(Window& window, int playersQuantity)
 {
 	bool playerLocallyControlled = false;
-	const unsigned short playerID = AppManager::GetAppManager()->GetNetworkManager()->GetPlayerID();
+	const unsigned short playerID = AppManager::GetNetworkManager()->GetPlayerID();
 	
 	timer.restart();
 	SetNewSpawnTimeMissle();
@@ -110,11 +110,11 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 	}
 }
 
-void Map_Lake::UpdateMap()
+void Map_Lake::UpdateMap(float DeltaTime)
 {
-	Map::UpdateMap();
+	Map::UpdateMap(DeltaTime);
 
-	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer() && !gameOver)
+	if (AppManager::GetNetworkManager()->GetIsServer() && !gameOver)
 	{
 		sf::Time elapsedTime = timer.getElapsedTime();
 

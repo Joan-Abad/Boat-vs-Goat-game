@@ -24,9 +24,9 @@ Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bul
 	initialSprite.setScale(initialSprite.getScale() / 20.f);
 }
 
-void Bullet::Update()
+void Bullet::Update(float deltaTime)
 {
-	if (AppManager::GetAppManager()->GetNetworkManager()->GetIsServer())
+	if (AppManager::GetNetworkManager()->GetIsServer())
 	{
 		//Stop updating the object if it is out of screen
 		if (GameObjectOutOfScreen())
@@ -37,7 +37,7 @@ void Bullet::Update()
 		else
 		{
 			//Accelerate boat bullet on forward vector direction
-			sf::Vector2f bulletPosition = GetPosition() + GetForwardVector() * bulletSpeed * ApplicationHelper::GetDeltaTime();
+			sf::Vector2f bulletPosition = GetPosition() + GetForwardVector() * bulletSpeed * deltaTime;
 			SetPosition(bulletPosition);
 
 			Json::Value pos; 

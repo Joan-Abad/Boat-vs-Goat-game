@@ -12,7 +12,7 @@ public:
 	Map() = default;
 	~Map();
 	virtual void InitMap(Window& window, int playersQuantity) = 0;
-	virtual void UpdateMap(); 
+	virtual void UpdateMap(float deltaTime); 
 	void EndUpdate();
 	void CheckCollisions();
 	virtual void AddDataToSendServer();

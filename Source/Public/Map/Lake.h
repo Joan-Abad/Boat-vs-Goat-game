@@ -13,7 +13,7 @@ public:
 	Map_Lake();
 	~Map_Lake();
 	virtual void InitMap(Window& window, int playersQuantity) override;
-	virtual void UpdateMap() override;
+	virtual void UpdateMap(float DeltaTime) override;
 	virtual void DrawWap(Window& window) override;
 	//Call it from the server always
 	virtual bool CheckWinCondition() override;

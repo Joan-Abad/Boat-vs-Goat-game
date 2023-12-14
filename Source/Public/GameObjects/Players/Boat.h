@@ -20,7 +20,7 @@ public:
 
 	virtual void Init() override;
 	//Function that gets called each tick
-	virtual void Update() override;
+	virtual void Update(float deltaTime) override;
 	void SetIsAccelerating(bool bIsAcelerating);
 	void SetIsRotatingLeft(bool bRotatingLeft);
 	void SetIsRotatingRight(bool bRotatingRight);
@@ -45,14 +45,11 @@ protected:
 private:
 	//Boat mechanics
 	void StartAccelerateBoat();
-	void AccelerateBoat();
+	void AccelerateBoat(float deltaTime);
 	void StopAccelerateBoat();
 
-	//Not used for now
-	void DecelerateBoat();
-
 	void StartRotateBoatLeft();
-	void RotateBoatLeft();
+	void RotateBoatLeft(float deltaTime);
 	void StopRotateBoatLeft();
 
 	void StartShootBullet();
@@ -60,7 +57,7 @@ private:
 	void StopShootBullet();
 
 	void StartRotateBoatRight();
-	void RotateBoatRight();
+	void RotateBoatRight(float deltaTime);
 	void StopRotateBoatRight();
 
 	void PrepareBullet(sf::Vector2f shootingLocation, float angle);
