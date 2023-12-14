@@ -24,8 +24,10 @@ public:
 
 	//Textures
 	const char* backgroundLakePath = "Art/Background/Water.jpg";
-	const char* boat1Path = "Art/boat/PNG/Boats_color1/Boat_color1_1.png";
-	const char* boat2Path = "Art/boat/PNG/Boats_color3/Boat_color3_1.png";
+	const char* boat1Path = "Art/PirateBoats/RedBoat.png";
+	const char* boat2Path = "Art/PirateBoats/BlueBoat.png";
+	const char* boat3Path = "Art/PirateBoats/GreenBoat.png";
+	const char* boat4Path = "Art/PirateBoats/YellowBoat.png";
 	const char* bulletPath = "Art/bullet.png";
 	const char* heartPath = "Art/heart.png";
 	const char* goatPath = "Art/goat.png";

@@ -4,8 +4,10 @@
 #include "GameObjects/Bullet.h"
 #include "GameObjects/BoatLifes.h"
 
-#define PLAYER1TEXTPATH "Art/boat/PNG/Boats_color1/Boat_color1_1.png"
-#define PLAYER2TEXTPATH "Art/boat/PNG/Boats_color3/Boat_color3_1.png"
+#define PLAYER1TEXTPATH "Art/PirateBoats/RedBoat.png"
+#define PLAYER2TEXTPATH "Art/PirateBoats/BlueBoat.png"
+#define PLAYER3TEXTPATH "Art/PirateBoats/GreenBoat.png"
+#define PLAYER4TEXTPATH "Art/PirateBoats/YellowBoat.png"
 #define MaxBulletsPerBoatOnScreen 6
 
 class Sound;  

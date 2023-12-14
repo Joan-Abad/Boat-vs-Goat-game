@@ -43,57 +43,64 @@ InputManager::~InputManager()
 
 void InputManager::Update()
 {
-	sf::Event inputEvent;
-	sf::RenderWindow& renderWindow = window->GetWindow();
-	while (renderWindow.pollEvent(inputEvent))
-	{
-		if (inputEvent.type == sf::Event::Closed)
-			renderWindow.close();
+	/*bool isGameClosed = AppManager::GetAppManager()->GetIsGameClosed();
+	while (!isGameClosed)
+	{*/
+		sf::Event inputEvent;
+		sf::RenderWindow& renderWindow = window->GetWindow();
+		auto threadID = std::this_thread::get_id();
 
-		if (!bInputEnabled)
-			return;
-
-		if (inputEvent.type == sf::Event::KeyPressed)
+		//std::cout << "Checking input from thread: " << threadID << std::endl; 
+		while (renderWindow.pollEvent(inputEvent))
 		{
-			auto pair = KeysPressed.insert(inputEvent.key.code);
-			if(pair.second)
-				std::cout << "Key added: " << inputEvent.key.code << std::endl;
+			if (inputEvent.type == sf::Event::Closed)
+				renderWindow.close();
 
-			auto keyInputActionMapping = keyInputActionMappings[inputEvent.key.code];
+			if (!bInputEnabled)
+				return;
 
-			if (keyInputActionMapping)
+			if (inputEvent.type == sf::Event::KeyPressed)
 			{
-				for (auto TriggerFunction : keyInputActionMapping->OnKeyTriggered)
-					TriggerFunction();
+				auto pair = KeysPressed.insert(inputEvent.key.code);
+				//if (pair.second)
+					//std::cout << "Key added: " << inputEvent.key.code << std::endl;
+
+				auto keyInputActionMapping = keyInputActionMappings[inputEvent.key.code];
+
+				if (keyInputActionMapping)
+				{
+					for (auto TriggerFunction : keyInputActionMapping->OnKeyTriggered)
+						TriggerFunction();
+				}
 			}
+			else if (inputEvent.type == sf::Event::KeyReleased)
+			{
+				KeysPressed.erase(inputEvent.key.code);
+				//std::cout << "Key removed: " << inputEvent.key.code << std::endl;
+
+				auto keyInputActionMapping = keyInputActionMappings[inputEvent.key.code];
+
+				if (keyInputActionMapping)
+				{
+					for (auto TriggerFunction : keyInputActionMapping->OnKeyReleased)
+						TriggerFunction();
+				}
+			}
+
+
 		}
-		else if (inputEvent.type == sf::Event::KeyReleased)
+
+		//Trigger on going fncs
+		for (auto key : KeysPressed)
 		{
-			KeysPressed.erase(inputEvent.key.code);
-			std::cout << "Key removed: " << inputEvent.key.code << std::endl;
+			auto keyInputAction = keyInputActionMappings[key];
 
-			auto keyInputActionMapping = keyInputActionMappings[inputEvent.key.code];
+			if (keyInputAction)
+				for (auto OnGoingFnc : keyInputAction->OnKeyOnGoing)
+					OnGoingFnc();
 
-			if (keyInputActionMapping)
-			{
-				for (auto TriggerFunction : keyInputActionMapping->OnKeyReleased)
-					TriggerFunction();
-			}
 		}
-
-
-	}
-
-	//Trigger on going fncs
-	for (auto key : KeysPressed)
-	{
-		auto keyInputAction = keyInputActionMappings[key];
-
-		if (keyInputAction)
-			for (auto OnGoingFnc : keyInputAction->OnKeyOnGoing)
-				OnGoingFnc();
-
-	}
+	//}
 }
 
 void InputManager::EnableInput(bool bEnable)

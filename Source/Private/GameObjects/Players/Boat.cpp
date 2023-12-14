@@ -18,8 +18,8 @@ const char* Boat::key_bulletImpact = "buIm";
 
 unsigned short Boat::boatCounter = 0; 
 
-Boat::Boat(GameObjectInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(playerInitialInfo, PlayerPlayable), angleBoatSpeedEachSecond(480.f),
-bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(0.25f), bulletTracker(0), speed(450), lifes(3)
+Boat::Boat(GameObjectInitialInfo playerInitialInfo, bool PlayerPlayable) : Player(playerInitialInfo, PlayerPlayable), angleBoatSpeedEachSecond(60.f),
+bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(false), shootingCD(1.5f), bulletTracker(0), speed(150), lifes(3)
 {
 	Map* map = GetCurrentMap();
 
@@ -41,7 +41,7 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 	boatLifeUI = boatLife;
 
 	//Sound part
-	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+	shootingSound = SoundManager::Get()->GetSound("Sound/Boat/Cannon.wav");
 	//End sound part
 	//std::cout << "Boat with ID: " << GetGameObjectID() << " spawned. " << std::endl;
 
@@ -85,10 +85,11 @@ bIsBoatAccelerating (false), bIsBoatRotatingLeft(false), bIsBoatRotatingRight(fa
 		action_ShootBoat->OnKeyTriggered.push_back(BindAction(&Boat::StartShootBullet, this));
 		action_ShootBoat->OnKeyReleased.push_back(BindAction(&Boat::StopShootBullet, this));
 
-		initialSprite.setColor(sf::Color::Cyan);
+		//initialSprite.setColor(sf::Color::Cyan);
 	}
+	//initialSprite.setRotation(180.f);
 
-	SetScale({ 0.8f, 0.8f });
+	SetScale({ 1.f, 1.f });
 
 }
 
@@ -166,7 +167,6 @@ void Boat::OnCollisionEnter(GameObject* otherGO)
 			lifes--;
 			AddLocalNetworkDataToSend(key_UpdateBoatLife, lifes);
 			GetCurrentMap()->CheckWinCondition();
-
 			boatLifeUI->UpdateLifeText();
 		}
 	}
@@ -338,7 +338,7 @@ void Boat::PrepareBullet(sf::Vector2f shootingLocation, float angle)
 	bullets[bulletTracker]->ShowGameObject();
 	bullets[bulletTracker]->objectCollision = CollisionChannels::Bullet;
 
-	Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+	Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/Cannon.wav");
 
 	if (sound)
 	{

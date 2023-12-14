@@ -9,7 +9,7 @@ const char* Missile::key_SpawnPos = "spPo";
 const char* Missile::key_SpawnRot = "spRo";
 
 
-Missile::Missile(GameObjectInitialInfo initialInfo) : tickAcceleration(sf::Vector2f(0.0f, 0.0f)), missileSpeed(300.f)
+Missile::Missile(GameObjectInitialInfo initialInfo) : tickAcceleration(sf::Vector2f(0.0f, 0.0f)), missileSpeed(150.f)
 {
 	initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture("Art/missile.png"));
 	objectCollision = CollisionChannels::NoCollision;
@@ -81,5 +81,10 @@ void Missile::UpdateClientNetData(const Json::Value& root)
 
 void Missile::OnCollisionEnter(GameObject* otherGO)
 {
-	
+	if (otherGO)
+	{
+		objectCollision = CollisionChannels::NoCollision;
+		HideGameObject();
+
+	}
 }

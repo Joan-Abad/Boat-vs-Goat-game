@@ -22,7 +22,17 @@ void NetworkingManagerClient::OnInit()
 	SetInitialPacketToServer();
 }
 
-void NetworkingManagerClient::UpdateNetworkData()
+void NetworkingManagerClient::PostUpdateNetworkData()
+{
+	switch (clientManagementData)
+	{
+	case EClientManagementData::EPlayMatch:
+		SendGameDataToServer();
+		break; 
+	}
+}
+
+void NetworkingManagerClient::PreUpdateNetworkData()
 {
 	switch (clientManagementData)
 	{
@@ -42,7 +52,6 @@ void NetworkingManagerClient::UpdateNetworkData()
 		break;
 	case EClientManagementData::EPlayMatch:
 		RecieveDataFromServer();
-		SendGameDataToServer();
 		break;
 	case EClientManagementData::EEndMatch:
 		break;
@@ -112,6 +121,7 @@ void NetworkingManagerClient::WaitForGameStart()
 				GameManager* gm = GameManager::GetGameManager();
 				gm->InitGameWindow();
 				gm->InitGameMap(gm->GetMap(gm->LakeMap), matchNumPlayers);
+				
 			}
 			else
 				std::cout << "Data not correct\n";

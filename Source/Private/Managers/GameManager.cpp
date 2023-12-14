@@ -3,6 +3,7 @@
 #include "Map/Lake.h"
 #include "Window.h"
 #include "Input/InputManager.h"
+#include "Managers/AppManager.h"
 
 GameManager* GameManager::instance = nullptr;
 
@@ -27,6 +28,8 @@ void GameManager::InitGameWindow()
 	window = new Window(WINDOW_NAME, WINDOW_SIZE);
 	window->GetWindow().setFramerateLimit(60);
 	bHasGameStarted = true; 
+	AppManager::GetAppManager()->InitGameInput();
+
 }
 
 void GameManager::InitGameMap(Map* map, unsigned short playerQuantity)

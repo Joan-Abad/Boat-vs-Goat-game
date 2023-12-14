@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <thread>
 
 class NetworkingManager; 
 class Map; 
@@ -29,12 +30,15 @@ public:
 	//When we want to close the application, we should call this function
 	void CloseGame();
 
+	//Starts to check for game Input
+	void InitGameInput();
+
 	//Destructor
 	~AppManager();
 
 	//Gets the NetworkManager
 	static NetworkingManager* GetNetworkManager() { return instance->NetworkManager; };
-
+	inline bool GetIsGameClosed() { return bGameClosed; };
 private: 
 	AppManager();
 
@@ -43,6 +47,8 @@ private:
 
 	//Handles all related to the game
 	GameManager* gameManager; 
+
+	std::thread inputThread;
 
 	//Handles the lifetime of the applcation
 	bool bGameClosed = false; 

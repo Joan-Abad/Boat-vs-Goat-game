@@ -17,7 +17,9 @@ public:
 
 	virtual void OnInit() override;
 
-	virtual void UpdateNetworkData() override;
+	virtual void PreUpdateNetworkData() override;
+	
+	virtual void PostUpdateNetworkData() override;
 
 protected: 
 	virtual void EndMatch() override;

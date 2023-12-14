@@ -21,7 +21,7 @@ Bullet::Bullet(GameObjectInitialInfo initialInfo) : GameObject(initialInfo), bul
 	CollisionsToRespond.push_back(CollisionChannels::WorldStatic);
 	objectCollision = CollisionChannels::NoCollision;
 	initialSprite.setTexture(*TextureManager::GetTextureManager().GetTexture("Art/bullet.png"));
-	initialSprite.setScale(initialSprite.getScale() / 20.f);
+	initialSprite.setScale(0.035f, 0.035f);
 }
 
 void Bullet::Update(float deltaTime)
@@ -64,7 +64,7 @@ void Bullet::UpdateClientNetData(const Json::Value& root)
 		else
 		{
 			ShowGameObject();
-			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/blaster.wav");
+			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/Cannon.wav");
 			sound->PlaySound();
 		}
 	}

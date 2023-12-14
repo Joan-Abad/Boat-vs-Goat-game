@@ -32,8 +32,9 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 	SoundManager* SM = SoundManager::Get();
 	if (SM)
 	{
-		SM->CreateSound("Sound/Boat/blaster.wav");
+		SM->CreateSound("Sound/Boat/Cannon.wav");
 		SM->CreateSound("Sound/winSound.wav");
+		SM->CreateSound("Sound/PirateMusic.wav");
 	}
 
 	backgroundSprite.setTexture(*TM.GetTexture(backgroundLakePath));
@@ -78,6 +79,14 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 	timer.restart();
 	SetNewSpawnTimeMissle();
 
+	SoundManager* SM = SoundManager::Get();
+	if (SM)
+	{
+		Sound* sound = SM->GetSound("Sound/PirateMusic.wav");
+		sound->PlaySound(true);
+		sound->SetVolume(50.f);
+	}
+
 	for (int i = 0; i < playersQuantity; i++)
 	{
 
@@ -108,6 +117,8 @@ void Map_Lake::InitMap(Window& window, int playersQuantity)
 			AddPlayer(newBoat->GetGameObjectID(), *newBoat);
 		}
 	}
+
+
 }
 
 void Map_Lake::UpdateMap(float DeltaTime)
@@ -174,7 +185,6 @@ bool Map_Lake::CheckWinCondition()
 	std::string playerText = "Player" + std::to_string(winningBoat->GetPlayerID() + 1) + " WON ";
 	FinishMap(playerText.c_str());
 	AddLocalNetworkDataToSend(key_win, playerText.c_str());
-
 	return true;
 }
 
@@ -267,6 +277,9 @@ void Map_Lake::FinishMap(const char* playerName)
 	gameOver = true;
 	std::string strMsg = playerName;
 	winningText.setString(strMsg);
+
+	SoundManager* SM = SoundManager::Get();
+	SM->GetSound("Sound/PirateMusic.wav")->StopSound();
 
 	for (auto& player : players)
 	{

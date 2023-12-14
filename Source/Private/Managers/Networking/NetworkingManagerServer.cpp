@@ -11,7 +11,7 @@ NetworkingManagerServer::NetworkingManagerServer() : serverManagementData(EServe
 
 }
 
-void NetworkingManagerServer::UpdateNetworkData()
+void NetworkingManagerServer::PreUpdateNetworkData()
 {
 	switch (serverManagementData)
 	{
@@ -27,7 +27,6 @@ void NetworkingManagerServer::UpdateNetworkData()
 		break;
 	case EServerManagementData::EPlayMatch:
 		RecieveGameDataFromClients();
-		SendGameDataToClients();
 		break;
 	case EServerManagementData::EEndMatch:
 		break;
@@ -127,8 +126,8 @@ void NetworkingManagerServer::StartGameServerAndClients()
 	//Player Server initializes its own game
 	serverManagementData = EServerManagementData::EPlayMatch;
 	GameManager::GetGameManager()->InitGameWindow();
-	GameManager* gm = GameManager::GetGameManager();
-	
+
+	GameManager* gm = GameManager::GetGameManager();	
 	gm->InitGameMap(gm->GetMap(gm->LakeMap), players.size());
 
 }
@@ -225,4 +224,14 @@ void NetworkingManagerServer::OnInit()
 	players["player0"] = PlayerConnectionInfo(sf::IpAddress::getLocalAddress(), serverGamePort);
 
 	udpSocket.setBlocking(false);
+}
+
+void NetworkingManagerServer::PostUpdateNetworkData()
+{
+	switch (serverManagementData)
+	{
+	case EServerManagementData::EPlayMatch:
+		SendGameDataToClients();
+		break;
+	}
 }

@@ -12,7 +12,7 @@
 AppManager* AppManager::instance = nullptr;
 
 
-AppManager::AppManager() : NetworkManager(nullptr)
+AppManager::AppManager() : NetworkManager(nullptr), bGameClosed(false)
 {
 	gameManager = GameManager::GetGameManager();
 }
@@ -81,13 +81,14 @@ void AppManager::Update()
 {
 	while (!bGameClosed)
 	{
-		NetworkManager->UpdateNetworkData();
+		NetworkManager->PreUpdateNetworkData();
 		if (GameManager::GetGameManager()->bHasGameStarted)
 		{
 			//Shoulw be on app manager and not on applcation helper
 			ApplicationHelper::SetDeltaTime();
 			float deltaTime = ApplicationHelper::GetDeltaTime();
 			InputManager::GetInputManager()->Update();
+			NetworkManager->PostUpdateNetworkData();
 
 			gameManager->Update(deltaTime);
 		}
@@ -97,4 +98,10 @@ void AppManager::Update()
 void AppManager::CloseGame()
 {
 	bGameClosed = true; 
+	inputThread.join();
+}
+
+void AppManager::InitGameInput()
+{
+	//inputThread = std::thread(&InputManager::Update, InputManager::GetInputManager());
 }

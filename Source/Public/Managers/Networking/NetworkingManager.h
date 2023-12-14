@@ -54,8 +54,11 @@ protected:
 	//Called when Networking Manager is assigned for the first time
 	virtual void OnInit() = 0;
 
-	//This function should be the one that handles how the data is send.
-	virtual void UpdateNetworkData() = 0;
+	//This function should be the one that handles how the data is recieved/update pre objects update.
+	virtual void PreUpdateNetworkData() = 0;
+
+	//Called after the update of all game objects
+	virtual void PostUpdateNetworkData() = 0; 	
 
 	//Sets the EndMatch flag on each NetworkingManager. Used to stop recieving gameplay networking data. 
 	virtual void EndMatch() = 0;

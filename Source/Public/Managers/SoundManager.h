@@ -8,7 +8,8 @@ class Sound
 public:
 	Sound(const char* soundPath);
 	void SetVolume(float soundVolume);
-	void PlaySound();
+	void PlaySound(bool loop = false);
+	void StopSound();
 private:
 	sf::SoundBuffer soundBuffer;
 

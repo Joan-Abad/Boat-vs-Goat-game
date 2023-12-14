@@ -20,9 +20,15 @@ void Sound::SetVolume(float soundVolume)
 	sound.setVolume(soundVolume);
 }
 
-void Sound::PlaySound()
+void Sound::PlaySound(bool loop)
 {
 	sound.play();
+	sound.setLoop(loop);
+}
+
+void Sound::StopSound()
+{
+	sound.stop();
 }
 
 Sound* SoundManager::CreateSound(const char* soundPath)
