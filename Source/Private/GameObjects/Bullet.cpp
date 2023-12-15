@@ -67,6 +67,22 @@ void Bullet::UpdateClientNetData(const Json::Value& root)
 			ShowGameObject();
 			Sound* sound = SoundManager::Get()->GetSound("Sound/Boat/Cannon.wav");
 			sound->PlaySound();
+
+			if (root.isMember("spPo"))
+			{
+				const Json::Value& boatPositionArray = root["spPo"];
+
+				Json::StreamWriterBuilder writerBuilder;
+				std::string msgToSend = Json::writeString(writerBuilder, boatPositionArray);
+
+				sf::Vector2f boatPosition = sf::Vector2f(boatPositionArray[0].asFloat(), boatPositionArray[1].asFloat());
+				std::cout << "BoatPosition x: " << boatPosition.x << " - y: " << boatPosition.y << std::endl;
+			}
+			if (root.isMember("spRo"))
+			{
+				float rot = root["spRo"].asFloat();
+				SetRotation(rot);
+			}
 		}
 	}
 	if (root.isMember(key_gameObjectRot))

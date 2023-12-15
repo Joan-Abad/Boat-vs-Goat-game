@@ -2,8 +2,11 @@
 #include "Managers/AppManager.h"
 #include "Managers/Networking/NetworkingManager.h"
 #include "ApplicationHelper.h"
+#include "Managers/SoundManager.h"
 
 sf::Texture* Shark::sharkTexture = nullptr;
+//Spawn shark sound
+const char* Shark::key_spawnSharkNoise = "spSS";
 
 Shark::Shark(sf::Vector2f initLocation, float radius) : GameObject(), timeToReachLocation(4.f), alphaTracker(0.f)
 {
@@ -15,10 +18,13 @@ Shark::Shark(sf::Vector2f initLocation, float radius) : GameObject(), timeToReac
 
 	SetPosition(initLocation);
 	initialSprite.setTexture(*sharkTexture);
-	SetMoveToLocation();
+	
+	SetNewLocationToMove();
 	initialSprite.setOrigin(initialSprite.getLocalBounds().width / 2, initialSprite.getLocalBounds().height / 2);
-	float angle = ApplicationHelper::AngleBetweenTwoVectors(GetForwardVector(), destinationLocation - initLocation);
+	
+	float angle = FindRotationDirection(initLocation);
 	SetRotation(angle);
+	SetScale(sf::Vector2f(0.6f, 0.6f));
 }
 
 void Shark::Update(float deltaTime)
@@ -36,17 +42,15 @@ void Shark::Update(float deltaTime)
 		{
 			alphaTracker = 0; 
 			lastLocation = destinationLocation;
-			SetMoveToLocation();
-			sf::Vector2f vec = destinationLocation - lastLocation;
-			float angle = ApplicationHelper::AngleBetweenTwoVectors(GetForwardVector(), vec);
+			SetNewLocationToMove();	
+			float angle = FindRotationDirection(lastLocation);
 			SetRotation(angle);
-			std::cout << "SharkAngle: " << angle << std::endl; 
 			AddLocalNetworkDataToSend(key_gameObjectRot, angle);
 		}
 	}
 }
 
-void Shark::SetMoveToLocation()
+void Shark::SetNewLocationToMove()
 {
 	sf::Vector2f sharkDirection = sf::Vector2f(1.f, 0.f);
 	float directionRotaiton = ApplicationHelper::GetRandomValue(0.f, 360.f);
@@ -54,6 +58,19 @@ void Shark::SetMoveToLocation()
 
 	this->destinationLocation = this->initLocation + directedDistance;
 
+}
+
+float Shark::FindRotationDirection(sf::Vector2f startingLocation)
+{
+	sf::Vector2f posDiff = destinationLocation - startingLocation;
+	posDiff.y *= -1;
+
+	float angle = ApplicationHelper::AngleBetweenTwoVectors(sf::Vector2f(0, 1.0f), posDiff);
+
+	if (posDiff.x < 0)
+		angle *= -1;
+
+	return angle;
 }
 
 void Shark::UpdateClientNetData(const Json::Value& root)
@@ -68,5 +85,9 @@ void Shark::UpdateClientNetData(const Json::Value& root)
 	{
 		float rot = root[key_gameObjectRot].asFloat();
 		SetRotation(rot);
+	}
+	if (root.isMember(key_spawnSharkNoise))
+	{
+		SoundManager::Get()->GetSound("Sound/SharkBite.wav")->PlaySound();
 	}
 }

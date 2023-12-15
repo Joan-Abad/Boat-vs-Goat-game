@@ -3,7 +3,6 @@
 
 SoundManager* SoundManager::instance;
 
-
 Sound::Sound(const char* soundPath)
 {
 	if (!soundBuffer.loadFromFile(soundPath))
@@ -22,8 +21,11 @@ void Sound::SetVolume(float soundVolume)
 
 void Sound::PlaySound(bool loop)
 {
-	sound.play();
-	sound.setLoop(loop);
+	if (SOUND_ENABLED)
+	{
+		sound.play();
+		sound.setLoop(loop);
+	}
 }
 
 void Sound::StopSound()

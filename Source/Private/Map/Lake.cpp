@@ -15,7 +15,7 @@
 #include "GameObjects/Bullet.h"
 #include "GameObjects/Shark.h"
 
-Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMissileMax(2.f)
+Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMissileMax(2.f), cannonToSpawnPerSide(4)
 {
 	TextureManager& TM = TextureManager::GetTextureManager();
 
@@ -40,6 +40,7 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 		Cannon::cannonSound = SM->CreateSound("Sound/Boat/Cannon.wav");
 		SM->CreateSound("Sound/winSound.wav");
 		SM->CreateSound("Sound/PirateMusic.wav");
+		SM->CreateSound("Sound/SharkBite.wav");
 	}
 
 	backgroundSprite.setTexture(*TM.GetTexture(backgroundLakePath));
@@ -55,6 +56,9 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 	winningText.setFont(*fontManager.GetFont(lakeFontPath));
 	winningText.setPosition(winningPosition);
 
+	SpawnGameObject<Shark>(WINDOW_SIZE/2.5f, 300.f);
+	SpawnGameObject<Shark>(WINDOW_SIZE / 1.5f, 300.f);
+
 	//Init missils game object pool
 	for (int i = 0; i < MaxMissilsOnScreen; i++)
 	{
@@ -65,8 +69,6 @@ Map_Lake::Map_Lake() : gameOver(false), spawnTimeMissileMin(0.8f), spawnTimeMiss
 		missile->objectCollision = CollisionChannels::NoCollision;
 		missiles[i] = missile;
 	}
-
-	Shark* shark = SpawnGameObject<Shark>(WINDOW_SIZE/2.f, 300.f);
 }
 
 Map_Lake::~Map_Lake()
@@ -222,17 +224,16 @@ void Map_Lake::SetNewSpawnTimeMissle()
 void Map_Lake::SpawnMapCannons()
 {
 	//Top screeen, bot screen, right screen and left screen
-	int cannonPerSide = 4;
 
 	//Space between cannons -> 640
-	const int cannonPositionDiffX = WINDOW_SIZE.x / cannonPerSide;
-	const int cannonPositionDiffY = WINDOW_SIZE.y / cannonPerSide;
-	totalCannons = cannonPerSide * 4; // 4 is the window sides as it will be spawning from top, bottom, left, right
+	const int cannonPositionDiffX = WINDOW_SIZE.x / cannonToSpawnPerSide;
+	const int cannonPositionDiffY = WINDOW_SIZE.y / cannonToSpawnPerSide;
+	totalCannons = cannonToSpawnPerSide * 4; // 4 is the window sides as it will be spawning from top, bottom, left, right
 
 	//First cannon posttion -> 320
 	const sf::Vector2i initialCannonPosition = { cannonPositionDiffX / 2 , cannonPositionDiffY / 2 };
 	int sideSpawnTracker = 1;
-	int changeSideNum = cannonPerSide;
+	int changeSideNum = cannonToSpawnPerSide;
 	sf::Vector2i icpTracker = initialCannonPosition;
 
 	sf::Vector2f cannonTextureSize = static_cast<sf::Vector2f>(TextureManager::GetTextureManager().GetTexture(missilePath)->getSize()) ;

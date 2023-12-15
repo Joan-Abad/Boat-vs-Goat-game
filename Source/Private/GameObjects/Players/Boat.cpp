@@ -8,6 +8,7 @@
 #include "Managers/SoundManager.h"
 #include "GameObjects/BoatLifes.h"
 #include "GameObjects/Cannon.h"
+#include "GameObjects/Shark.h"
 
 const char* Boat::key_AccelerateBoatID = "AccBt";
 const char* Boat::key_RotateBoatLeftID = "RotBtLft";
@@ -145,22 +146,26 @@ void Boat::DisableBoat()
 
 void Boat::OnCollisionEnter(GameObject* otherGO)
 {
+	GameObject* damagableActor = nullptr;
 	if (Bullet* bullet = dynamic_cast<Bullet*>(otherGO))
 	{
-		bullet->AddLocalNetworkDataToSend(key_gameObjectHide, true);
-
-		if (lifes > 0)
-		{
-			lifes--;
-			AddLocalNetworkDataToSend(key_UpdateBoatLife, lifes);
-			GetCurrentMap()->CheckWinCondition();
-
-			boatLifeUI->UpdateLifeText();
-		}
+		damagableActor = otherGO;
+		damagableActor->AddLocalNetworkDataToSend(key_gameObjectHide, true);
 	}
 	else if (Cannon* missile = dynamic_cast<Cannon*>(otherGO))
 	{
-		missile->AddLocalNetworkDataToSend(key_gameObjectHide, true);
+		damagableActor = otherGO;
+		damagableActor->AddLocalNetworkDataToSend(key_gameObjectHide, true);
+	}
+	else if (Shark* shark = dynamic_cast<Shark*>(otherGO))
+	{
+		damagableActor = otherGO;
+		SoundManager::Get()->GetSound("Sound/SharkBite.wav")->PlaySound();
+		shark->AddLocalNetworkDataToSend(Shark::key_spawnSharkNoise, true);
+	}
+
+	if (damagableActor)
+	{
 
 		if (lifes > 0)
 		{

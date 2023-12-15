@@ -155,6 +155,10 @@ void NetworkingManagerServer::SendGameDataToClients()
 		if (hasGameObjectsData)
 		{
 			std::string goData;
+			for(auto& gd : GetGameObjectsNetData())
+				if (gd.isMember(GameObject::key_gameObjectHide))
+					int i = 0; 
+
 			mapMsg = Json::writeString(writerBuilder, GetGameObjectsNetData());
 			GetRootData()["gameObjects"] = GetGameObjectsNetData();
 			mapMsg = Json::writeString(writerBuilder, GetRootData());

@@ -2,6 +2,8 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 
+#define SOUND_ENABLED 0
+
 class Sound
 {
 	friend class SoundManager; 
@@ -31,6 +33,7 @@ public:
 	Sound* CreateSound(const char* soundPath);
 	bool RemoveSound(const char* soundPath);
 	Sound* GetSound(const char* soundPath);
+
 private:
 	SoundManager() = default;
 	~SoundManager();

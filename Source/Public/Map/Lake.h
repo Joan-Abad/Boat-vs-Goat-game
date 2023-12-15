@@ -63,6 +63,7 @@ private:
 	float spawnTimeMissileMin;
 	float spawnTimeMissileMax; 
 	int missileTracker; 
+	int cannonToSpawnPerSide; 
 	std::vector<Cannon*> cannons; 
 	std::array<Bullet*, MaxMissilsOnScreen> missiles;
 };

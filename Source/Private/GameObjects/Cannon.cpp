@@ -9,8 +9,8 @@ const char* Cannon::key_SpawnMissile = "spMI";
 const char* Cannon::key_SpawnPos = "spPo";
 const char* Cannon::key_SpawnRot = "spRo";
 
-float Cannon::minCannonBallSpeed = 250.f;
-float Cannon::maxCannonBallSpeed = 350.f;
+float Cannon::minCannonBallSpeed = 200.f;
+float Cannon::maxCannonBallSpeed = 250.f;
 Sound* Cannon::cannonSound = nullptr; 
 
 Cannon::Cannon(GameObjectInitialInfo initialInfo) : tickAcceleration(sf::Vector2f(0.0f, 0.0f))
@@ -53,7 +53,7 @@ void Cannon::Update(float deltaTime)
 
 void Cannon::ThrowCannonBall(Bullet& bullet)
 {
-	sf::Vector2f spawnPoint = GetPosition();
+	sf::Vector2f spawnPoint = GetPosition() + GetRightVector() * 12.5f;
 	bullet.ShowGameObject();
 	bullet.SetPosition(spawnPoint);
 	bullet.SetRotation(GetRotation());
@@ -69,6 +69,11 @@ void Cannon::ThrowCannonBall(Bullet& bullet)
 	Json::Value pos;
 	pos.append(spawnPoint.x);
 	pos.append(spawnPoint.y);
+
+	Json::StreamWriterBuilder writerBuilder;
+	std::string msgToSend = Json::writeString(writerBuilder, pos);
+
+	std::cout << "BoatPosition x: " << spawnPoint.x << " - y: " << spawnPoint.y << std::endl;
 	bullet.AddLocalNetworkDataToSend(key_SpawnPos, pos);
 	bullet.AddLocalNetworkDataToSend(key_SpawnRot, GetRotation());
 }

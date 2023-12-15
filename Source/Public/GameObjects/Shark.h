@@ -12,9 +12,12 @@ public:
 	virtual void Update(float deltaTime);
 
 
-	void SetMoveToLocation();
+	void SetNewLocationToMove();
+
+	float FindRotationDirection(sf::Vector2f startingLocation);
 
 	static sf::Texture* sharkTexture; 
+	static const char* key_spawnSharkNoise;
 
 protected: 
 	//Recieved data from the server. Extract any information needed
