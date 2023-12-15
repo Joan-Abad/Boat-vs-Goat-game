@@ -1,4 +1,4 @@
-#BoatvsGoat
+# BoatvsGoat
 
 Boat vs Goat is a PVP game project where the objective of the player is to destroy the other pirate boats who are also players.
 
