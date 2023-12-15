@@ -1,1 +1,1 @@
-<img align="left" style="width:260px" src="https://github.com/Joan-Abad/NetworkingSocketGame/gif/BoatVsGoatGif.gif" width="288px">
+<img align="left" style="width:260px" src="[https://github.com/Joan-Abad/NetworkingSocketGame/gif/BoatVsGoatGif.gif](https://github.com/Joan-Abad/NetworkingSocketGame/tree/main/gif)https://github.com/Joan-Abad/NetworkingSocketGame/tree/main/gif/BoatVsGoatGif.gif" width="288px">
