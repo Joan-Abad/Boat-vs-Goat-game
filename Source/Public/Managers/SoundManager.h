@@ -2,7 +2,7 @@
 #include <SFML/Audio.hpp>
 #include <unordered_map>
 
-#define SOUND_ENABLED 0
+#define SOUND_ENABLED 1
 
 class Sound
 {
