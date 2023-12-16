@@ -25,7 +25,7 @@ Assets used in this project:
 * [SFML] used for graphics, input and networking
 [SFML]: https://www.sfml-dev.org/
 * [JsonCPP] used for packet serialization
-[JsonCPP]
+[JsonCPP]: https://github.com/open-source-parsers/jsoncpp.git
 * [Kenney Pirate Pack]: for graphics
 [Kenney Pirate Pack]: https://kenney-assets.itch.io/pirate-pack
 
